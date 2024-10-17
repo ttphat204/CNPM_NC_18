@@ -10,3 +10,4 @@ const { getCategories } = require("../Controllers/category_controller");
 router.route("/").post(createProduct).get(getProducts).get(getCategories);
 
 module.exports = router;
+

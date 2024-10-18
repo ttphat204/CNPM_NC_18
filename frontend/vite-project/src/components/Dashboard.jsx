@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Bar, Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, PointElement, LineElement } from 'chart.js';
-import { ChevronDownIcon, UserIcon, DocumentReportIcon, CogIcon } from '@heroicons/react/solid';
+import { ChevronDownIcon, UserIcon, CubeIcon, ClipboardCheckIcon, OfficeBuildingIcon, TagIcon, CollectionIcon, ChartBarIcon} from '@heroicons/react/solid';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, PointElement, LineElement);
 
@@ -37,7 +37,10 @@ const trafficData = {
 const Dashboard = () => {
   const [showUserMenu, setShowUserMenu] = useState(false); // Trạng thái cho menu người dùng
   const [showProductMenu, setShowProductMenu] = useState(false); // Trạng thái cho menu quản lý sản phẩm
-  const [showOrderMenu, setShowOrderMenu] = useState(false); // Trạng thái cho menu quản lý đơn hàng
+  const [showOrderMenu, setShowOrderMenu] = useState(false);// Trạng thái cho menu quản lý đơn hàng
+  const [showNCCMenu, setShowNCCMenu] = useState(false);
+  const [showDiscount, setDiscoiunt] = useState(false);
+  const [showCategory, setCategory] = useState(false);
   const [userCount, setUserCount] = useState(0); // Trạng thái cho số lượng người dùng
 
   // Hàm gọi API để lấy số lượng người dùng
@@ -64,9 +67,6 @@ const Dashboard = () => {
   }
 };
 
-
-
-
   useEffect(() => {
     fetchUserCount(); // Gọi API khi component được mount
   }, []);
@@ -78,7 +78,7 @@ const Dashboard = () => {
         <ul>
           <li className="mb-2">
             <a href="#" className="flex items-center hover:text-gray-300">
-              <UserIcon className="w-5 h-5 mr-2" />
+              <ChartBarIcon className="w-5 h-5 mr-2" />
               Dashboard
             </a>
           </li>
@@ -91,9 +91,6 @@ const Dashboard = () => {
             {showUserMenu && (
               <ul className="ml-4 mt-2">
                 <li className="mb-1">
-                  <a href="#" className="hover:text-gray-300">Thêm người dùng</a>
-                </li>
-                <li className="mb-1">
                   <a href="#" className="hover:text-gray-300">Danh sách người dùng</a>
                 </li>
               </ul>
@@ -101,7 +98,7 @@ const Dashboard = () => {
           </li>
           <li className="mb-2">
             <button onClick={() => setShowProductMenu(!showProductMenu)} className="flex items-center hover:text-gray-300 w-full text-left">
-              <DocumentReportIcon className="w-5 h-5 mr-2" />
+              <CubeIcon className="w-5 h-5 mr-2" />
               Quản lý sản phẩm
               <ChevronDownIcon className={`w-5 h-5 ml-auto transition-transform ${showProductMenu ? 'rotate-180' : ''}`} />
             </button>
@@ -118,7 +115,7 @@ const Dashboard = () => {
           </li>
           <li className="mb-2">
             <button onClick={() => setShowOrderMenu(!showOrderMenu)} className="flex items-center hover:text-gray-300 w-full text-left">
-              <DocumentReportIcon className="w-5 h-5 mr-2" />
+              <ClipboardCheckIcon className="w-5 h-5 mr-2" />
               Quản lý đơn hàng
               <ChevronDownIcon className={`w-5 h-5 ml-auto transition-transform ${showOrderMenu ? 'rotate-180' : ''}`} />
             </button>
@@ -134,32 +131,78 @@ const Dashboard = () => {
             )}
           </li>
           <li className="mb-2">
-            <a href="#" className="flex items-center hover:text-gray-300">
-              <CogIcon className="w-5 h-5 mr-2" />
-              Cài đặt
-            </a>
+            <button onClick={() => setShowNCCMenu(!showNCCMenu)} className="flex items-center hover:text-gray-300 w-full text-left">
+              <OfficeBuildingIcon className="w-5 h-5 mr-2" />
+              Quản lý nhà cung cấp
+              <ChevronDownIcon className={`w-5 h-5 ml-auto transition-transform ${showNCCMenu ? 'rotate-180' : ''}`} />
+            </button>
+            {showNCCMenu && (
+              <ul className="ml-4 mt-2">
+                <li className="mb-1">
+                  <a href="#" className="hover:text-gray-300">Thêm nhà cung cấp</a>
+                </li>
+                <li className="mb-1">
+                  <a href="#" className="hover:text-gray-300">Danh sách nhà cung cấp</a>
+                </li>
+              </ul>
+            )}
+          </li>
+          <li className="mb-2">
+            <button onClick={() => setDiscoiunt(!showDiscount)} className="flex items-center hover:text-gray-300 w-full text-left">
+              <TagIcon className="w-5 h-5 mr-2" />
+              Quản lý khuyến mãi
+              <ChevronDownIcon className={`w-5 h-5 ml-auto transition-transform ${showDiscount ? 'rotate-180' : ''}`} />
+            </button>
+            {showDiscount && (
+              <ul className="ml-4 mt-2">
+                <li className="mb-1">
+                  <a href="#" className="hover:text-gray-300">Thêm khuyến mãi</a>
+                </li>
+                <li className="mb-1">
+                  <a href="#" className="hover:text-gray-300">Danh sách khuyến mãi</a>
+                </li>
+              </ul>
+            )}
+          </li>
+          <li className="mb-2">
+            <button onClick={() => setCategory(!showCategory)} className="flex items-center hover:text-gray-300 w-full text-left">
+              <CollectionIcon className="w-5 h-5 mr-2" />
+              Quản lý danh mục
+              <ChevronDownIcon className={`w-5 h-5 ml-auto transition-transform ${showCategory ? 'rotate-180' : ''}`} />
+            </button>
+            {showCategory && (
+              <ul className="ml-4 mt-2">
+                <li className="mb-1">
+                  <a href="#" className="hover:text-gray-300">Thêm danh mục</a>
+                </li>
+                <li className="mb-1">
+                  <a href="#" className="hover:text-gray-300">Danh sách danh mục</a>
+                </li>
+              </ul>
+            )}
           </li>
         </ul>
       </nav>
+      <main className="flex-1 p-6 bg-gray-100">
+        <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
 
-      {/* Nội dung chính */}
-      <div className="flex-1 p-6 bg-gray-100">
-        <h1 className="text-2xl font-bold mb-6">Thông tin doanh thu</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white shadow-md rounded-lg p-6">
-            <h3 className="text-xl font-semibold mb-4">Số lượng người dùng</h3>
-            <p className="text-3xl font-bold"><strong>{userCount}</strong></p>
+          <div className="bg-white p-4 rounded shadow">
+            <h2 className="text-lg font-semibold mb-2">Số lượng người dùng</h2>
+            <p className="text-2xl">{userCount}</p>
           </div>
-          <div className="bg-white shadow-md rounded-lg p-6">
-            <h3 className="text-xl font-semibold mb-4">Doanh số hàng tháng</h3>
-            <Bar data={salesData} options={{ responsive: true, scales: { y: { beginAtZero: true } } }} />
+
+          <div className="bg-white p-4 rounded shadow">
+            <h2 className="text-lg font-semibold mb-2">Doanh số</h2>
+            <Bar data={salesData} />
           </div>
-          <div className="bg-white shadow-md rounded-lg p-6 col-span-1 md:col-span-2">
-            <h3 className="text-xl font-semibold mb-4">Lưu lượng truy cập website</h3>
-            <Line data={trafficData} options={{ responsive: true, scales: { y: { beginAtZero: true } } }} />
+
+          <div className="bg-white p-4 rounded shadow">
+            <h2 className="text-lg font-semibold mb-2">Lưu lượng truy cập</h2>
+            <Line data={trafficData} />
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

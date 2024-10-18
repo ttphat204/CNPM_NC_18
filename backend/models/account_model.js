@@ -14,12 +14,13 @@ const accountSchema = mongoose.Schema({
     type: String,
   },
   phone: {
-    type: Number,
+    type: Number, // Sử dụng String thay vì Number cho số điện thoại
     required: true,
   },
   email: {
     type: String,
     unique: true,
+    match: [/\S+@\S+\.\S+/, 'Email không hợp lệ'], // Kiểm tra định dạng email
   },
 });
 

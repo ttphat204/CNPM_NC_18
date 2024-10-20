@@ -278,6 +278,7 @@ const AddProduct = () => {
               placeholder="Nhập mô tả sản phẩm"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
               rows="4"
+              maxLength={1000}
             ></textarea>
           </div>
 

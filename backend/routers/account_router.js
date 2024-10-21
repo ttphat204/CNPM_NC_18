@@ -6,6 +6,7 @@ const {
   getAccounts,
 } = require("../Controllers/account_controller");
 
-router.route("/").post(createAccount).get(getAccounts);
+router.route("/list").get(getAccounts)
+router.route("/create").post(createAccount)
 
 module.exports = router;

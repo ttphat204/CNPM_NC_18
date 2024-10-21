@@ -1,14 +1,15 @@
-import './App.css'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Signup from './Login/Register';
 
 function App() {
-
   return (
-    <>
-       <h1 className="text-3xl font-bold underline bg-red-200">
-      Hello world!
-    </h1>
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Signup />} />
+        {/* Các route khác */}
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;

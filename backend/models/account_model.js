@@ -14,7 +14,7 @@ const accountSchema = mongoose.Schema({
     type: String,
   },
   phone: {
-    type: Number,
+    type: String,
     required: true,
   },
   email: {

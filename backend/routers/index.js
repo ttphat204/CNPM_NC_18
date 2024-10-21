@@ -4,6 +4,7 @@ const accountRouter = require("./account_router");
 const productRouter = require("./product_router");
 const discountRouter = require("./discount_router");
 const cartRouter = require("./cart_router");
+const orderRouter = require("./order_router");
 
 module.exports = (app) => {
   app.use("/api/categories", categoryRouter);
@@ -12,4 +13,5 @@ module.exports = (app) => {
   app.use("/api/products", productRouter);
   app.use("/api/discounts", discountRouter);
   app.use("/api/carts", cartRouter);
+  app.use("/api/orders", orderRouter);
 };

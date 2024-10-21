@@ -1,7 +1,6 @@
-
-import { useState, useEffect } from 'react';
-import { Bar } from "react-chartjs-2";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -31,63 +30,13 @@ ChartJS.register(
   LineElement
 );
 
-// Dữ liệu biểu đồ doanh số
-const salesData = {
-  labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6"],
-  datasets: [
-    {
-      label: "Doanh số ($)",
-      data: [12000, 15000, 10000, 18000, 19000, 22000],
-      backgroundColor: "rgba(54, 162, 235, 0.5)",
-      borderColor: "rgba(54, 162, 235, 1)",
-      borderWidth: 1,
-    },
-  ],
-};
-
-
-
-// Dữ liệu biểu đồ lưu lượng truy cập
-
-const Dashboard = () => {
-
-
-
+const AddCategory = () => {
   const [showUserMenu, setShowUserMenu] = useState(false); // Trạng thái cho menu người dùng
   const [showProductMenu, setShowProductMenu] = useState(false); // Trạng thái cho menu quản lý sản phẩm
   const [showOrderMenu, setShowOrderMenu] = useState(false); // Trạng thái cho menu quản lý đơn hàng
   const [showNCCMenu, setShowNCCMenu] = useState(false);
   const [showDiscount, setDiscoiunt] = useState(false);
   const [showCategory, setCategory] = useState(false);
-  const [userCount, setUserCount] = useState(0); // Trạng thái cho số lượng người dùng
-
-  // Hàm gọi API để lấy số lượng người dùng
-  const fetchUserCount = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/accounts/count"); // Gọi endpoint mới
-      console.log("Response:", response);
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const data = await response.json();
-      console.log("Data received:", data);
-
-      // Kiểm tra nếu data.count có sẵn
-      if (data && data.count !== undefined) {
-        setUserCount(data.count);
-      } else {
-        console.error("Count not found in response data");
-      }
-    } catch (error) {
-      console.error("Error fetching user count:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchUserCount(); // Gọi API khi component được mount
-  }, []);
 
   return (
     <div className="flex min-h-screen">
@@ -108,8 +57,9 @@ const Dashboard = () => {
               <UserIcon className="w-5 h-5 mr-2" />
               Quản lý người dùng
               <ChevronDownIcon
-                className={`w-5 h-5 ml-auto transition-transform ${showUserMenu ? "rotate-180" : ""
-                  }`}
+                className={`w-5 h-5 ml-auto transition-transform ${
+                  showUserMenu ? "rotate-180" : ""
+                }`}
               />
             </button>
             {showUserMenu && (
@@ -130,8 +80,9 @@ const Dashboard = () => {
               <CubeIcon className="w-5 h-5 mr-2" />
               Quản lý sản phẩm
               <ChevronDownIcon
-                className={`w-5 h-5 ml-auto transition-transform ${showProductMenu ? "rotate-180" : ""
-                  }`}
+                className={`w-5 h-5 ml-auto transition-transform ${
+                  showProductMenu ? "rotate-180" : ""
+                }`}
               />
             </button>
             {showProductMenu && (
@@ -157,8 +108,9 @@ const Dashboard = () => {
               <ClipboardCheckIcon className="w-5 h-5 mr-2" />
               Quản lý đơn hàng
               <ChevronDownIcon
-                className={`w-5 h-5 ml-auto transition-transform ${showOrderMenu ? "rotate-180" : ""
-                  }`}
+                className={`w-5 h-5 ml-auto transition-transform ${
+                  showOrderMenu ? "rotate-180" : ""
+                }`}
               />
             </button>
             {showOrderMenu && (
@@ -184,8 +136,9 @@ const Dashboard = () => {
               <OfficeBuildingIcon className="w-5 h-5 mr-2" />
               Quản lý nhà cung cấp
               <ChevronDownIcon
-                className={`w-5 h-5 ml-auto transition-transform ${showNCCMenu ? "rotate-180" : ""
-                  }`}
+                className={`w-5 h-5 ml-auto transition-transform ${
+                  showNCCMenu ? "rotate-180" : ""
+                }`}
               />
             </button>
             {showNCCMenu && (
@@ -211,8 +164,9 @@ const Dashboard = () => {
               <TagIcon className="w-5 h-5 mr-2" />
               Quản lý khuyến mãi
               <ChevronDownIcon
-                className={`w-5 h-5 ml-auto transition-transform ${showDiscount ? "rotate-180" : ""
-                  }`}
+                className={`w-5 h-5 ml-auto transition-transform ${
+                  showDiscount ? "rotate-180" : ""
+                }`}
               />
             </button>
             {showDiscount && (
@@ -238,8 +192,9 @@ const Dashboard = () => {
               <CollectionIcon className="w-5 h-5 mr-2" />
               Quản lý danh mục
               <ChevronDownIcon
-                className={`w-5 h-5 ml-auto transition-transform ${showCategory ? "rotate-180" : ""
-                  }`}
+                className={`w-5 h-5 ml-auto transition-transform ${
+                  showCategory ? "rotate-180" : ""
+                }`}
               />
             </button>
             {showCategory && (
@@ -260,26 +215,57 @@ const Dashboard = () => {
         </ul>
       </nav>
       <main className="flex-1 p-6 bg-gray-100">
-        <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
-          <div className="bg-white p-4 rounded shadow flex flex-col justify-center items-center">
-            <h2 className="text-lg font-semibold mb-2">Số lượng người dùng</h2>
-            <p className="text-2xl text-red-500">{userCount}</p>
-            <h2 className="text-lg font-semibold mb-2">Hiện đã tạo tài khoản sử dụng</h2>
+        <h1 className="text-3xl font-bold mb-6">Thêm danh mục</h1>
+        <form className="bg-white p-6 rounded-lg shadow-md">
+          {/* Tên danh mục */}
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
+              htmlFor="categoryName"
+            >
+              Tên danh mục
+            </label>
+            <input
+              type="text"
+              id="categoryName"
+              placeholder="Nhập tên danh mục"
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
+            />
           </div>
 
-          <div className="bg-white p-4 rounded shadow">
-            <h2 className="text-lg font-semibold mb-2">Doanh số</h2>
-            <Bar data={salesData} />
-          </div>
-          <div>
-            <h2>test</h2>
+          {/* Chọn nhà cung cấp */}
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
+              htmlFor="NCC"
+            >
+              Chọn nhà cung cấp
+            </label>
+            <select
+              id="NCC"
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
+            >
+              <option value="" disabled selected>
+                -- Chọn nhà cung cấp --
+              </option>
+              <option value="electronics">Nhà cung cấp 1</option>
+              <option value="fashion">Nhà cung cấp 2</option>
+              <option value="home-appliances">Nhà cung cấp 3</option>
+              <option value="books">Nhà cung cấp 4</option>
+              <option value="other">Nhà cung cấp 5</option>
+            </select>
           </div>
 
-        </div>
+          <button
+            type="submit"
+            className="bg-[#ffd040] text-white font-bold py-2 px-4 rounded hover:bg-[#e6b800] focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
+          >
+            Thêm danh mục
+          </button>
+        </form>
       </main>
     </div>
-  )
+  );
 };
 
-export default Dashboard;
+export default AddCategory;

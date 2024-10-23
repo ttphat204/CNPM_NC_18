@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import {
   Chart as ChartJS,
@@ -37,6 +38,16 @@ const AddProduct = () => {
   const [showNCCMenu, setShowNCCMenu] = useState(false);
   const [showDiscount, setDiscoiunt] = useState(false);
   const [showCategory, setCategory] = useState(false);
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    // Fetch categories created by admin
+    axios
+      .get("http://localhost:5000/api/categories") // Assuming this endpoint fetches all categories
+      .then((res) => setCategories(res.data))
+      .catch((err) => console.error("Error fetching categories:", err));
+  }, []);
 
   return (
     <div className="flex min-h-screen">
@@ -285,23 +296,28 @@ const AddProduct = () => {
           {/* Chọn danh mục sản phẩm */}
           <div className="mb-4">
             <label
+              htmlFor="categoryId"
               className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
-              htmlFor="category"
             >
-              Chọn danh mục sản phẩm
+              Danh mục
             </label>
             <select
-              id="category"
+              id="categoryId"
+              name="categoryId"
+              required
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
+              placeholder="Chọn danh mục"
             >
-              <option value="" disabled selected>
-                -- Chọn danh mục --
-              </option>
-              <option value="electronics">Điện tử</option>
-              <option value="fashion">Thời trang</option>
-              <option value="home-appliances">Đồ gia dụng</option>
-              <option value="books">Sách</option>
-              <option value="other">Khác</option>
+              <option value="">Chọn danh mục</option>
+              {categories.map((category) => (
+                <option
+                  className="text-slate-950"
+                  key={category._id}
+                  value={category._id}
+                >
+                  {category.category_name}
+                </option>
+              ))}
             </select>
           </div>
 

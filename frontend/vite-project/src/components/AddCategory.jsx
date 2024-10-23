@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import {
   Chart as ChartJS,
@@ -37,6 +38,16 @@ const AddCategory = () => {
   const [showNCCMenu, setShowNCCMenu] = useState(false);
   const [showDiscount, setDiscoiunt] = useState(false);
   const [showCategory, setCategory] = useState(false);
+
+  const [NCCs, setNCCs] = useState([]);
+
+  useEffect(() => {
+    // Fetch NCC created by admin
+    axios
+      .get("http://localhost:5000/api/NCC") // Assuming this endpoint fetches all NCC
+      .then((res) => setNCCs(res.data))
+      .catch((err) => console.error("Error fetching categories:", err));
+  }, []);
 
   return (
     <div className="flex min-h-screen">
@@ -236,23 +247,28 @@ const AddCategory = () => {
           {/* Chọn nhà cung cấp */}
           <div className="mb-4">
             <label
+              htmlFor="NCCId"
               className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
-              htmlFor="NCC"
             >
-              Chọn nhà cung cấp
+              Nhà cung cấp
             </label>
             <select
-              id="NCC"
+              id="NCCId"
+              name="NCCId"
+              required
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
+              placeholder="Chọn nhà cung cấp"
             >
-              <option value="" disabled selected>
-                -- Chọn nhà cung cấp --
-              </option>
-              <option value="electronics">Nhà cung cấp 1</option>
-              <option value="fashion">Nhà cung cấp 2</option>
-              <option value="home-appliances">Nhà cung cấp 3</option>
-              <option value="books">Nhà cung cấp 4</option>
-              <option value="other">Nhà cung cấp 5</option>
+              <option value="">Chọn nhà cung cấp</option>
+              {NCCs.map((NCC) => (
+                <option
+                  className="text-slate-950"
+                  key={NCC._id}
+                  value={NCC._id}
+                >
+                  {NCC.NCC_name}
+                </option>
+              ))}
             </select>
           </div>
 

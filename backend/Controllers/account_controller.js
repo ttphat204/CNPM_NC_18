@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const accountModel = require("../models/account_model");
+const Traffic = require("../models/traffic_model"); // Gọi model traffic
 
 module.exports = {
   createAccount: async (req, res) => {

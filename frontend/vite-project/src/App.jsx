@@ -21,6 +21,7 @@ function App() {
           <Route path="/AddProduct" element={<AddProduct />} />
           <Route path="/AddCategory" element={<AddCategory />} />
           <Route path="/AddNCC" element={<AddNCC />} />
+          <Route path='/ListNCC' element={<ListNCC />} />
         </Routes>
       </div>
     </Router>

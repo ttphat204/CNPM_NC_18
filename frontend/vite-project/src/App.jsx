@@ -6,7 +6,6 @@ import Dashboard from "./components/Dashboard";
 import AddProduct from "./components/AddProduct";
 import AddCategory from "./components/AddCategory";
 import AddNCC from "./components/AddNCC";
-import "./App.css";
 
 function App() {
   return (
@@ -17,7 +16,6 @@ function App() {
           <Route path="/dk" element={<Register />} />
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />
-
           {/* Các route liên quan đến dashboard và quản lý */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/AddProduct" element={<AddProduct />} />

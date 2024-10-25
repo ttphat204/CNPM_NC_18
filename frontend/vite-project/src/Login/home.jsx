@@ -5,14 +5,15 @@ import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from 'react-router-dom';
 
 const home = () => {
+    const navigate = useNavigate();
 
     const handleLogout = () => {
-        axios.get('http://localhost:5000/api/auth/logout')
-            .then(() => {
-
-                useNavigate('/'); // Điều hướng về trang đăng nhập sau khi đăng xuất
+        axios.get('http://localhost:5000/api/auth/logout', { withCredentials: true })
+            .then(response => {
+                console.log(response.data);
+                navigate('/');
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log("Lỗi đăng xuất:", err));
     };
 
     return (

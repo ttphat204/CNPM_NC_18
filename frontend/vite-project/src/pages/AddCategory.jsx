@@ -1,7 +1,7 @@
-
-import { useState, useEffect } from 'react';
-import { Bar } from "react-chartjs-2";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -31,62 +31,22 @@ ChartJS.register(
   LineElement
 );
 
-// Dữ liệu biểu đồ doanh số
-const salesData = {
-  labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6"],
-  datasets: [
-    {
-      label: "Doanh số ($)",
-      data: [12000, 15000, 10000, 18000, 19000, 22000],
-      backgroundColor: "rgba(54, 162, 235, 0.5)",
-      borderColor: "rgba(54, 162, 235, 1)",
-      borderWidth: 1,
-    },
-  ],
-};
-
-
-
-// Dữ liệu biểu đồ lưu lượng truy cập
-
-const Dashboard = () => {
-
-
-
+const AddCategory = () => {
   const [showUserMenu, setShowUserMenu] = useState(false); // Trạng thái cho menu người dùng
   const [showProductMenu, setShowProductMenu] = useState(false); // Trạng thái cho menu quản lý sản phẩm
   const [showOrderMenu, setShowOrderMenu] = useState(false); // Trạng thái cho menu quản lý đơn hàng
   const [showNCCMenu, setShowNCCMenu] = useState(false);
   const [showDiscount, setDiscoiunt] = useState(false);
   const [showCategory, setCategory] = useState(false);
-  const [userCount, setUserCount] = useState(0); // Trạng thái cho số lượng người dùng
 
-  // Hàm gọi API để lấy số lượng người dùng
-  const fetchUserCount = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/accounts/count"); // Gọi endpoint mới
-      console.log("Response:", response);
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const data = await response.json();
-      console.log("Data received:", data);
-
-      // Kiểm tra nếu data.count có sẵn
-      if (data && data.count !== undefined) {
-        setUserCount(data.count);
-      } else {
-        console.error("Count not found in response data");
-      }
-    } catch (error) {
-      console.error("Error fetching user count:", error);
-    }
-  };
+  const [NCCs, setNCCs] = useState([]);
 
   useEffect(() => {
-    fetchUserCount(); // Gọi API khi component được mount
+    // Fetch NCC created by admin
+    axios
+      .get("http://localhost:5000/api/NCC") // Assuming this endpoint fetches all NCC
+      .then((res) => setNCCs(res.data))
+      .catch((err) => console.error("Error fetching categories:", err));
   }, []);
 
   return (
@@ -260,26 +220,62 @@ const Dashboard = () => {
         </ul>
       </nav>
       <main className="flex-1 p-6 bg-gray-100">
-        <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
-          <div className="bg-white p-4 rounded shadow flex flex-col justify-center items-center">
-            <h2 className="text-lg font-semibold mb-2">Số lượng người dùng</h2>
-            <p className="text-2xl text-red-500">{userCount}</p>
-            <h2 className="text-lg font-semibold mb-2">Hiện đã tạo tài khoản sử dụng</h2>
+        <h1 className="text-3xl font-bold mb-6">Thêm danh mục</h1>
+        <form className="bg-white p-6 rounded-lg shadow-md">
+          {/* Tên danh mục */}
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
+              htmlFor="categoryName"
+            >
+              Tên danh mục
+            </label>
+            <input
+              type="text"
+              id="categoryName"
+              placeholder="Nhập tên danh mục"
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
+            />
           </div>
 
-          <div className="bg-white p-4 rounded shadow">
-            <h2 className="text-lg font-semibold mb-2">Doanh số</h2>
-            <Bar data={salesData} />
-          </div>
-          <div>
-            <h2>test</h2>
+          {/* Chọn nhà cung cấp */}
+          <div className="mb-4">
+            <label
+              htmlFor="NCCId"
+              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
+            >
+              Nhà cung cấp
+            </label>
+            <select
+              id="NCCId"
+              name="NCCId"
+              required
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
+              placeholder="Chọn nhà cung cấp"
+            >
+              <option value="">Chọn nhà cung cấp</option>
+              {NCCs.map((NCC) => (
+                <option
+                  className="text-slate-950"
+                  key={NCC._id}
+                  value={NCC._id}
+                >
+                  {NCC.NCC_name}
+                </option>
+              ))}
+            </select>
           </div>
 
-        </div>
+          <button
+            type="submit"
+            className="bg-[#ffd040] text-white font-bold py-2 px-4 rounded hover:bg-[#e6b800] focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
+          >
+            Thêm danh mục
+          </button>
+        </form>
       </main>
     </div>
-  )
+  );
 };
 
-export default Dashboard;
+export default AddCategory;

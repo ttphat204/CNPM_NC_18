@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import {
   Chart as ChartJS,
@@ -30,13 +31,23 @@ ChartJS.register(
   LineElement
 );
 
-const AddNCC = () => {
+const AddCategory = () => {
   const [showUserMenu, setShowUserMenu] = useState(false); // Trạng thái cho menu người dùng
   const [showProductMenu, setShowProductMenu] = useState(false); // Trạng thái cho menu quản lý sản phẩm
   const [showOrderMenu, setShowOrderMenu] = useState(false); // Trạng thái cho menu quản lý đơn hàng
   const [showNCCMenu, setShowNCCMenu] = useState(false);
   const [showDiscount, setDiscoiunt] = useState(false);
   const [showCategory, setCategory] = useState(false);
+
+  const [NCCs, setNCCs] = useState([]);
+
+  useEffect(() => {
+    // Fetch NCC created by admin
+    axios
+      .get("http://localhost:5000/api/NCC") // Assuming this endpoint fetches all NCC
+      .then((res) => setNCCs(res.data))
+      .catch((err) => console.error("Error fetching categories:", err));
+  }, []);
 
   return (
     <div className="flex min-h-screen">
@@ -57,9 +68,8 @@ const AddNCC = () => {
               <UserIcon className="w-5 h-5 mr-2" />
               Quản lý người dùng
               <ChevronDownIcon
-                className={`w-5 h-5 ml-auto transition-transform ${
-                  showUserMenu ? "rotate-180" : ""
-                }`}
+                className={`w-5 h-5 ml-auto transition-transform ${showUserMenu ? "rotate-180" : ""
+                  }`}
               />
             </button>
             {showUserMenu && (
@@ -80,9 +90,8 @@ const AddNCC = () => {
               <CubeIcon className="w-5 h-5 mr-2" />
               Quản lý sản phẩm
               <ChevronDownIcon
-                className={`w-5 h-5 ml-auto transition-transform ${
-                  showProductMenu ? "rotate-180" : ""
-                }`}
+                className={`w-5 h-5 ml-auto transition-transform ${showProductMenu ? "rotate-180" : ""
+                  }`}
               />
             </button>
             {showProductMenu && (
@@ -108,9 +117,8 @@ const AddNCC = () => {
               <ClipboardCheckIcon className="w-5 h-5 mr-2" />
               Quản lý đơn hàng
               <ChevronDownIcon
-                className={`w-5 h-5 ml-auto transition-transform ${
-                  showOrderMenu ? "rotate-180" : ""
-                }`}
+                className={`w-5 h-5 ml-auto transition-transform ${showOrderMenu ? "rotate-180" : ""
+                  }`}
               />
             </button>
             {showOrderMenu && (
@@ -136,9 +144,8 @@ const AddNCC = () => {
               <OfficeBuildingIcon className="w-5 h-5 mr-2" />
               Quản lý nhà cung cấp
               <ChevronDownIcon
-                className={`w-5 h-5 ml-auto transition-transform ${
-                  showNCCMenu ? "rotate-180" : ""
-                }`}
+                className={`w-5 h-5 ml-auto transition-transform ${showNCCMenu ? "rotate-180" : ""
+                  }`}
               />
             </button>
             {showNCCMenu && (
@@ -164,9 +171,8 @@ const AddNCC = () => {
               <TagIcon className="w-5 h-5 mr-2" />
               Quản lý khuyến mãi
               <ChevronDownIcon
-                className={`w-5 h-5 ml-auto transition-transform ${
-                  showDiscount ? "rotate-180" : ""
-                }`}
+                className={`w-5 h-5 ml-auto transition-transform ${showDiscount ? "rotate-180" : ""
+                  }`}
               />
             </button>
             {showDiscount && (
@@ -192,9 +198,8 @@ const AddNCC = () => {
               <CollectionIcon className="w-5 h-5 mr-2" />
               Quản lý danh mục
               <ChevronDownIcon
-                className={`w-5 h-5 ml-auto transition-transform ${
-                  showCategory ? "rotate-180" : ""
-                }`}
+                className={`w-5 h-5 ml-auto transition-transform ${showCategory ? "rotate-180" : ""
+                  }`}
               />
             </button>
             {showCategory && (
@@ -215,61 +220,57 @@ const AddNCC = () => {
         </ul>
       </nav>
       <main className="flex-1 p-6 bg-gray-100">
-        <h1 className="text-3xl font-bold mb-6">Thêm nhà cung cấp</h1>
+        <h1 className="text-3xl font-bold mb-6">Thêm danh mục</h1>
         <form className="bg-white p-6 rounded-lg shadow-md">
-          {/* Tên nhà cung cấp */}
+          {/* Tên danh mục */}
           <div className="mb-4">
             <label
               className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
-              htmlFor="NCCName"
+              htmlFor="categoryName"
             >
-              Tên nhà cung cấp
+              Tên danh mục
             </label>
             <input
               type="text"
-              id="NCCName"
-              placeholder="Nhập tên nhà cung cấp"
+              id="categoryName"
+              placeholder="Nhập tên danh mục"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
             />
           </div>
 
-          {/* Số điện thoại nhà cung cấp */}
+          {/* Chọn nhà cung cấp */}
           <div className="mb-4">
             <label
+              htmlFor="NCCId"
               className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
-              htmlFor="NCCPhone"
             >
-              Số điện thoại nhà cung cấp
+              Nhà cung cấp
             </label>
-            <input
-              type="number"
-              id="NCCPrice"
-              placeholder="Nhập số điện thoại"
+            <select
+              id="NCCId"
+              name="NCCId"
+              required
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
-            />
-          </div>
-
-          {/* Địa chỉ nhà cung cấp */}
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
-              htmlFor="NCCAddress"
+              placeholder="Chọn nhà cung cấp"
             >
-              Địa chỉ nhà cung cấp
-            </label>
-            <input
-              type="text"
-              id="NCCAddress"
-              placeholder="Nhập địa chỉ nhà cung cấp"
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
-            />
+              <option value="">Chọn nhà cung cấp</option>
+              {NCCs.map((NCC) => (
+                <option
+                  className="text-slate-950"
+                  key={NCC._id}
+                  value={NCC._id}
+                >
+                  {NCC.NCC_name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <button
             type="submit"
             className="bg-[#ffd040] text-white font-bold py-2 px-4 rounded hover:bg-[#e6b800] focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
           >
-            Thêm nhà cung cấp
+            Thêm danh mục
           </button>
         </form>
       </main>
@@ -277,4 +278,4 @@ const AddNCC = () => {
   );
 };
 
-export default AddNCC;
+export default AddCategory;

@@ -1,10 +1,25 @@
 const accountModel = require("../models/account_model");
+const Traffic = require("../models/traffic_model"); // Gọi model traffic
 
 module.exports = {
   createAccount: async (req, res) => {
     try {
       const body = req.body;
+      
+      // Tạo tài khoản mới
       const newAccount = await accountModel.create(body);
+      
+      // Lưu lại thông tin traffic
+      const currentDate = new Date().toISOString().slice(0, 10); // Lấy ngày hiện tại
+
+      // Cập nhật traffic hoặc tạo mới cho ngày hiện tại
+      await Traffic.updateOne(
+        { date: currentDate }, // Kiểm tra xem đã có traffic cho ngày hiện tại chưa
+        { $inc: { newAccounts: 1 } }, // Tăng số lượng tài khoản mới lên 1
+        { upsert: true } // Nếu chưa có traffic cho ngày này thì tạo mới
+      );
+      
+      // Trả về tài khoản mới được tạo
       return res.status(201).json(newAccount);
     } catch (error) {
       // Xử lý lỗi và trả về thông báo phù hợp

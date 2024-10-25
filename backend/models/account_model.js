@@ -1,26 +1,30 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const accountSchema = mongoose.Schema({
+const accountSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true,
+    unique: true
   },
   password: {
     type: String,
-    required: true,
-  },
-  name: {
-    type: String,
+    required: true
   },
   phone: {
     type: String,
-    required: true,
+    required: true
   },
   email: {
     type: String,
-    unique: true,
+    required: true
+  }, name: {
+    type: String,
+    required: true
   },
 });
 
-module.exports = mongoose.model("account", accountSchema);
+// Tạo model từ schema
+const userModel = mongoose.model('account', accountSchema);
+
+// Xuất model
+module.exports = userModel; 

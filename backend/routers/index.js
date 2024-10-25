@@ -1,9 +1,10 @@
+const express = require("express");
 const categoryRouter = require("./category_router");
 const NCCRouter = require("./NCC_router");
 const accountRouter = require("./account_router");
 const productRouter = require("./product_router");
 const discountRouter = require("./discount_router");
-const authRouter = require("./account_router");
+const authRouter = require("./auth");
 
 module.exports = (app) => {
   app.use("/api/categories", categoryRouter);

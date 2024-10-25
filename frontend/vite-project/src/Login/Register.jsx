@@ -8,13 +8,46 @@ const Signup = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [phone, setPhone] = useState('');
+
+    // Thêm các state để lưu trữ lỗi
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+
+    // Hàm kiểm tra lỗi
+    const validate = () => {
+        const newErrors = {};
+        if (!username || username.length < 4) {
+            newErrors.username = "Tên đăng nhập phải có ít nhất 4 ký tự.";
+        }
+        const phoneRegex = /^[0-9]{10}$/;
+        if (!phone || !phoneRegex.test(phone)) {
+            newErrors.phone = "Số điện thoại phải có 10 chữ số.";
+        }
+        const emailRegex = /^[^\s@]+@gmail\.com$/;
+        if (!email || !emailRegex.test(email)) {
+            newErrors.email = "Chỉ chấp nhận email @gmail.com.";
+        }
+        if (!password || password.length < 6) {
+            newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự.";
+        }
+        return newErrors;
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:5000/api/auth/create', {
-            username, name, email, password, phone
+        const validationErrors = validate();
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
+
+        // Nếu không có lỗi, gửi yêu cầu đến server
+        axios.post('http://localhost:5000/api/accounts/create', {
+            username, name, email, password, phone,
+        }, {
+            withCredentials: true
         })
+
             .then(res => {
                 if (res.data.success) {
                     navigate('/');
@@ -22,8 +55,13 @@ const Signup = () => {
                 }
             })
             .catch(err => {
-                console.error(err);
-                alert('Đăng ký thất bại. Vui lòng thử lại.');
+                if (err.response && err.response.data && err.response.data.message) {
+                    // Hiển thị thông báo lỗi từ server
+                    setErrors({ server: err.response.data.message });
+                } else {
+                    console.error(err);
+                    alert('Đăng ký thất bại. Vui lòng thử lại.');
+                }
             });
     };
 
@@ -49,6 +87,8 @@ const Signup = () => {
                             placeholder="Nhập tên đăng nhập"
                             onChange={(e) => setUsername(e.target.value)}
                         />
+                        {errors.username && <p className="text-red-500">{errors.username}</p>}
+                        {errors.server && <p className="text-red-500">{errors.server}</p>} {/* Hiển thị lỗi server */}
                     </div>
                     <div>
                         <label className="block text-gray-700 mb-2">Số điện thoại</label>
@@ -58,6 +98,7 @@ const Signup = () => {
                             placeholder="Nhập số điện thoại"
                             onChange={(e) => setPhone(e.target.value)}
                         />
+                        {errors.phone && <p className="text-red-500">{errors.phone}</p>}
                     </div>
                     <div>
                         <label className="block text-gray-700 mb-2">Email</label>
@@ -67,6 +108,7 @@ const Signup = () => {
                             placeholder="Nhập email"
                             onChange={(e) => setEmail(e.target.value)}
                         />
+                        {errors.email && <p className="text-red-500">{errors.email}</p>}
                     </div>
                     <div>
                         <label className="block text-gray-700 mb-2">Mật khẩu</label>
@@ -76,6 +118,7 @@ const Signup = () => {
                             placeholder="Nhập mật khẩu"
                             onChange={(e) => setPassword(e.target.value)}
                         />
+                        {errors.password && <p className="text-red-500">{errors.password}</p>}
                     </div>
                     <button
                         type="submit"

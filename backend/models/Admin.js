@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const adminSchema = new mongoose.Schema({
     username: {
@@ -16,7 +16,8 @@ const adminSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("Admin", adminSchema);
+// Tạo model từ schema
+const adminModel = mongoose.model('Admin', adminSchema);
 
-
-
+// Xuất model
+module.exports = adminModel; 

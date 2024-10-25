@@ -47,18 +47,18 @@ function ListNCC() {
                                 <th className="py-3 px-4 border-b text-left text-gray-600">Tên nhà cung cấp</th>
                                 <th className="py-3 px-4 border-b text-left text-gray-600">Địa chỉ</th>
                                 <th className="py-3 px-4 border-b text-left text-gray-600">Số ĐT</th>
-                                <th className="py-3 px-4 border-b text-center text-gray-600">Hành động</th> {/* Căn giữa tiêu đề hành động */}
+                                <th className="py-3 px-4 border-b text-center text-gray-600">Hành động</th> 
                             </tr>
                         </thead>
                         <tbody>
                             {nccList.map((NCC, index) => (
                                 <tr key={NCC._id || index} className="hover:bg-gray-100">
-                                    <td className="py-2 px-4 border-b text-left">{NCC._id}</td> {/* Căn trái */}
-                                    <td className="py-2 px-4 border-b text-left">{NCC.NCC_name}</td> {/* Căn trái */}
-                                    <td className="py-2 px-4 border-b text-left">{NCC.NCC_address}</td> {/* Căn trái */}
-                                    <td className="py-2 px-4 border-b text-left">{NCC.NCC_phone}</td> {/* Căn trái */}
-                                    <td className="py-2 px-4 border-b text-center"> {/* Căn giữa nội dung ô hành động */}
-                                        <div className="flex justify-center space-x-2"> {/* Sử dụng Flexbox để căn chỉnh */}
+                                    <td className="py-2 px-4 border-b text-left">{NCC._id}</td> 
+                                    <td className="py-2 px-4 border-b text-left">{NCC.NCC_name}</td> 
+                                    <td className="py-2 px-4 border-b text-left">{NCC.NCC_address}</td> 
+                                    <td className="py-2 px-4 border-b text-left">{NCC.NCC_phone}</td> 
+                                    <td className="py-2 px-4 border-b text-center"> 
+                                        <div className="flex justify-center space-x-2"> 
                                             <button className="bg-blue-500 text-white px-4 py-1 rounded">Sửa</button>
                                             <button className="bg-red-500 text-white px-4 py-1 rounded">Xóa</button>
                                         </div>

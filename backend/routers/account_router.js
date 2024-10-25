@@ -4,6 +4,13 @@ const router = express.Router();
 const {
   createAccount,
   getAccounts,
+} = require("../Controllers/account_controller");
+
+// Register
+router.route("/list").get(getAccounts);
+router.route("/create").post(createAccount);
+
+const {
   getAccountCount, // Nhập phương thức mới
 } = require("../Controllers/account_controller"); // Kiểm tra chính tả đường dẫn
 

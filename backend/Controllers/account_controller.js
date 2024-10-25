@@ -1,39 +1,63 @@
+const bcrypt = require("bcrypt");
 const accountModel = require("../models/account_model");
 const Traffic = require("../models/traffic_model"); // Gọi model traffic
 
 module.exports = {
   createAccount: async (req, res) => {
-    try {
-      const body = req.body;
-      
-      // Tạo tài khoản mới
-      const newAccount = await accountModel.create(body);
-      
-      // Lưu lại thông tin traffic
-      const currentDate = new Date().toISOString().slice(0, 10); // Lấy ngày hiện tại
+    const { username, name, email, password, phone } = req.body;
 
-      // Cập nhật traffic hoặc tạo mới cho ngày hiện tại
-      await Traffic.updateOne(
-        { date: currentDate }, // Kiểm tra xem đã có traffic cho ngày hiện tại chưa
-        { $inc: { newAccounts: 1 } }, // Tăng số lượng tài khoản mới lên 1
-        { upsert: true } // Nếu chưa có traffic cho ngày này thì tạo mới
-      );
-      
-      // Trả về tài khoản mới được tạo
-      return res.status(201).json(newAccount);
+    // Validate đầu vào
+    if (!username || username.length < 4) {
+      return res.status(400).json({ success: false, message: "Tên đăng nhập phải có ít nhất 4 ký tự." });
+    }
+
+    const emailRegex = /^[^\s@]+@gmail\.com$/;
+    if (!email || !emailRegex.test(email)) {
+      return res.status(400).json({ success: false, message: "Chỉ chấp nhận email @gmail.com." });
+    }
+
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phone || !phoneRegex.test(phone)) {
+      return res.status(400).json({ success: false, message: "Số điện thoại phải có 10 chữ số." });
+    }
+
+    if (!password || password.length < 6) {
+      return res.status(400).json({ success: false, message: "Mật khẩu phải có ít nhất 6 ký tự." });
+    }
+
+    try {
+      // Kiểm tra xem Username đã tồn tại chưa
+      const existingUser = await accountModel.findOne({ username });
+      if (existingUser) {
+        return res.status(400).json({ success: false, message: "Username đã tồn tại." });
+      }
+
+      // Băm mật khẩu với 10 rounds
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Tạo tài khoản mới với mật khẩu đã được băm
+      const newAccount = await accountModel.create({
+        username,
+        name,
+        email,
+        password: hashedPassword,  // Lưu mật khẩu đã được mã hóa
+        phone
+      });
+
+      return res.status(201).json({ success: true, account: newAccount });
     } catch (error) {
-      // Xử lý lỗi và trả về thông báo phù hợp
-      return res.status(400).json({ message: "Tạo tài khoản thất bại: ", error: error.message });
+      console.error(error);
+      return res.status(500).json({ success: false, message: "Tạo tài khoản thất bại." });
     }
   },
 
   getAccounts: async (req, res) => {
     try {
       const accounts = await accountModel.find();
-      return res.status(200).json(accounts);
+      return res.status(200).json({ success: true, accounts });
     } catch (error) {
-      // Xử lý lỗi và trả về thông báo phù hợp
-      return res.status(500).json({ message: "Lấy thông tin tài khoản không thành công: ", error: error.message });
+      console.error(error);
+      return res.status(500).json({ success: false, message: "Lỗi khi lấy tài khoản." });
     }
   },
 
@@ -43,8 +67,8 @@ module.exports = {
       const count = await accountModel.countDocuments(); // Đếm số lượng tài khoản
       return res.status(200).json({ count }); // Trả về số lượng tài khoản
     } catch (error) {
-      // Xử lý lỗi và trả về thông báo phù hợp
-      return res.status(500).json({ message: "Lấy số lượng tài khoản không thành công: ", error: error.message });
+      console.error(error);
+      return res.status(500).json({ success: false, message: "Lấy số lượng tài khoản không thành công: ", error: error.message });
     }
-  },
+  }
 };

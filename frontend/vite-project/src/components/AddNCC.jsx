@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import {
   Chart as ChartJS,
@@ -37,6 +38,36 @@ const AddNCC = () => {
   const [showNCCMenu, setShowNCCMenu] = useState(false);
   const [showDiscount, setDiscoiunt] = useState(false);
   const [showCategory, setCategory] = useState(false);
+
+  const [NCCs, setNCCs] = useState([]);
+  const [NCC, setNCC] = useState({
+    NCC_name: "NCC_name",
+    NCC_phone: "NCC_phone",
+    NCC_address: "NCC_address",
+  });
+
+  useEffect(() => {
+    // Fetch NCC created by admin
+    axios
+      .get("http://localhost:5000/api/NCC") // Assuming this endpoint fetches all NCC
+      .then((res) => setNCCs(res.data))
+      .catch((err) => console.error("Error fetching NCCs:", err));
+  }, []);
+
+  const createNCC = () => {
+    axios
+      .post("http://localhost:5000/api/NCC", NCC)
+      .then((res) => {
+        console.log("NCC created:", res.data);
+        setNCCs([...NCCs, res.data]);
+      })
+      .catch((err) => console.error("Error creating supplier:", err));
+  };
+
+  const handleNCCChange = (e) => {
+    const { name, value } = e.target;
+    setNCC((prevState) => ({ ...prevState, [name]: value }));
+  };
 
   return (
     <div className="flex min-h-screen">
@@ -230,6 +261,8 @@ const AddNCC = () => {
               id="NCCName"
               placeholder="Nhập tên nhà cung cấp"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
+              value={NCCs.NCC_name}
+              onChange={handleNCCChange}
             />
           </div>
 
@@ -246,6 +279,8 @@ const AddNCC = () => {
               id="NCCPrice"
               placeholder="Nhập số điện thoại"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
+              value={NCCs.NCC_phone}
+              onChange={handleNCCChange}
             />
           </div>
 
@@ -262,12 +297,15 @@ const AddNCC = () => {
               id="NCCAddress"
               placeholder="Nhập địa chỉ nhà cung cấp"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
+              value={NCCs.NCC_address}
+              onChange={handleNCCChange}
             />
           </div>
 
           <button
             type="submit"
             className="bg-[#ffd040] text-white font-bold py-2 px-4 rounded hover:bg-[#e6b800] focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
+            onClick={createNCC}
           >
             Thêm nhà cung cấp
           </button>

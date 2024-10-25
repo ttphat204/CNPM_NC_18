@@ -2,9 +2,13 @@ const NCCModel = require("../models/NCC_model");
 
 module.exports = {
   createNCC: async (req, res) => {
-    const body = req.body;
-    const newNCC = await NCCModel.create(body);
-    return res.status(201).json(newNCC);
+    try {
+      const newNCC = new NCCModel(req.body);
+      const savedNCC = await newNCC.save();
+      res.json(savedNCC);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
   },
   getNCCs: async (req, res) => {
     const NCCs = await NCCModel.find();

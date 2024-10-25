@@ -26,6 +26,26 @@ function ListNCC() {
         fetchNCC();
     }, []);
 
+    const deleteNCC = async (id) => {
+        const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa nhà cung cấp này?");
+        if (!confirmDelete) return;
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/NCC/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete');
+            }
+
+            // Cập nhật trạng thái để loại bỏ NCC đã xóa
+            setNccList(nccList.filter(ncc => ncc._id !== id));
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
     if (loading) {
         return <div className="flex justify-center items-center min-h-screen"><p className="text-lg">Loading...</p></div>;
     }
@@ -47,20 +67,25 @@ function ListNCC() {
                                 <th className="py-3 px-4 border-b text-left text-gray-600">Tên nhà cung cấp</th>
                                 <th className="py-3 px-4 border-b text-left text-gray-600">Địa chỉ</th>
                                 <th className="py-3 px-4 border-b text-left text-gray-600">Số ĐT</th>
-                                <th className="py-3 px-4 border-b text-center text-gray-600">Hành động</th> 
+                                <th className="py-3 px-4 border-b text-center text-gray-600">Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
                             {nccList.map((NCC, index) => (
                                 <tr key={NCC._id || index} className="hover:bg-gray-100">
-                                    <td className="py-2 px-4 border-b text-left">{NCC._id}</td> 
-                                    <td className="py-2 px-4 border-b text-left">{NCC.NCC_name}</td> 
-                                    <td className="py-2 px-4 border-b text-left">{NCC.NCC_address}</td> 
-                                    <td className="py-2 px-4 border-b text-left">{NCC.NCC_phone}</td> 
-                                    <td className="py-2 px-4 border-b text-center"> 
-                                        <div className="flex justify-center space-x-2"> 
+                                    <td className="py-2 px-4 border-b text-left">{NCC._id}</td>
+                                    <td className="py-2 px-4 border-b text-left">{NCC.NCC_name}</td>
+                                    <td className="py-2 px-4 border-b text-left">{NCC.NCC_address}</td>
+                                    <td className="py-2 px-4 border-b text-left">{NCC.NCC_phone}</td>
+                                    <td className="py-2 px-4 border-b text-center">
+                                        <div className="flex justify-center space-x-2">
                                             <button className="bg-blue-500 text-white px-4 py-1 rounded">Sửa</button>
-                                            <button className="bg-red-500 text-white px-4 py-1 rounded">Xóa</button>
+                                            <button
+                                                className="bg-red-500 text-white px-4 py-1 rounded"
+                                                onClick={() => deleteNCC(NCC._id)}
+                                            >
+                                                Xóa
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>

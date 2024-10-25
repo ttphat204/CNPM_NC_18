@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   createAccount,
   getAccounts,
+<<<<<<< HEAD
 
 } = require("../Controllers/account_controller");
 
@@ -12,5 +13,18 @@ router.route("/list").get(getAccounts);
 router.route("/create").post(createAccount);
 
 
+=======
+  getAccountCount, // Nhập phương thức mới
+} = require("../Controllers/account_controller"); // Kiểm tra chính tả đường dẫn
+
+// Định nghĩa các route cho tài khoản
+router
+  .route("/")
+  .post(createAccount) // Đường dẫn để tạo tài khoản
+  .get(getAccounts); // Đường dẫn để lấy danh sách tài khoản
+
+// Thêm route mới để lấy số lượng tài khoản
+router.route("/count").get(getAccountCount); // Đường dẫn để lấy số lượng tài khoản
+>>>>>>> 52972455daec6ba1d831af5bcb894f39c46fd809
 
 module.exports = router;

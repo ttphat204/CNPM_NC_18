@@ -59,4 +59,15 @@ module.exports = {
       return res.status(500).json({ success: false, message: "Lỗi khi lấy tài khoản." });
     }
   },
+
+  // Phương thức mới để lấy số lượng tài khoản
+  getAccountCount: async (req, res) => {
+    try {
+      const count = await accountModel.countDocuments(); // Đếm số lượng tài khoản
+      return res.status(200).json({ count }); // Trả về số lượng tài khoản
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ success: false, message: "Lấy số lượng tài khoản không thành công: ", error: error.message });
+    }
+  }
 };

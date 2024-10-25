@@ -45,9 +45,9 @@ const Sidebar = () => {
                     {showUserMenu && (
                         <ul className="ml-4 mt-2">
                             <li className="mb-1">
-                                <a href="#" className="hover:text-gray-300">
+                                <Link to="/ListUser" className="hover:text-gray-300">
                                     Danh sách người dùng
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     )}
@@ -72,9 +72,9 @@ const Sidebar = () => {
                                 </Link>
                             </li>
                             <li className="mb-1">
-                                <a href="#" className="hover:text-gray-300">
+                                <Link to="/ListProduct" className="hover:text-gray-300">
                                     Danh sách sản phẩm
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     )}
@@ -94,14 +94,14 @@ const Sidebar = () => {
                     {showOrderMenu && (
                         <ul className="ml-4 mt-2">
                             <li className="mb-1">
-                                <a href="#" className="hover:text-gray-300">
+                                <Link to="/ListOrder" className="hover:text-gray-300">
                                     Danh sách đơn hàng
-                                </a>
+                                </Link>
                             </li>
                             <li className="mb-1">
-                                <a href="#" className="hover:text-gray-300">
+                                <Link to="/ViewOrder" className="hover:text-gray-300">
                                     Theo dõi đơn hàng
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     )}
@@ -148,14 +148,14 @@ const Sidebar = () => {
                     {showDiscount && (
                         <ul className="ml-4 mt-2">
                             <li className="mb-1">
-                                <a href="#" className="hover:text-gray-300">
+                                <Link to="/AddDiscount" className="hover:text-gray-300">
                                     Thêm khuyến mãi
-                                </a>
+                                </Link>
                             </li>
                             <li className="mb-1">
-                                <a href="#" className="hover:text-gray-300">
+                                <Link to="/ListDiscount" className="hover:text-gray-300">
                                     Danh sách khuyến mãi
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     )}
@@ -180,9 +180,9 @@ const Sidebar = () => {
                                 </Link>
                             </li>
                             <li className="mb-1">
-                                <a href="#" className="hover:text-gray-300">
+                                <Link to="/ListCategory" className="hover:text-gray-300">
                                     Danh sách danh mục
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     )}

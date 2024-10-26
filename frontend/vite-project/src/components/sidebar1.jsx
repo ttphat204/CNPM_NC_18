@@ -11,8 +11,25 @@ import {
     CollectionIcon,
     ChartBarIcon,
 } from "@heroicons/react/solid";
+import React from "react";
+import axios from 'axios';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        axios.get('http://localhost:5000/api/auth/logout', { withCredentials: true })
+            .then(response => {
+                console.log(response.data);
+                navigate('/');
+            })
+            .catch(err => console.log("Lỗi đăng xuất:", err));
+    };
+
+
     const [showUserMenu, setShowUserMenu] = useState(false);
     const [showProductMenu, setShowProductMenu] = useState(false);
     const [showOrderMenu, setShowOrderMenu] = useState(false);
@@ -25,7 +42,7 @@ const Sidebar = () => {
             <h2 className="text-lg font-semibold mb-4">Menu Admin</h2>
             <ul>
                 <li className="mb-2">
-                    <Link to="/" className="flex items-center hover:text-gray-300">
+                    <Link to="/dashboard" className="flex items-center hover:text-gray-300">
                         <ChartBarIcon className="w-5 h-5 mr-2" />
                         Dashboard
                     </Link>
@@ -186,10 +203,23 @@ const Sidebar = () => {
                             </li>
                         </ul>
                     )}
+
+                    <div className="mt-12">
+                        <div className="flex justify-center">
+                            <button
+                                onClick={handleLogout} // Logout function
+                                className="flex flex-col items-center text-center bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+                            >
+                                <p className="text-lg font-semibold">ĐĂNG XUẤT</p>
+                                <FontAwesomeIcon className="text-2xl" icon={faSignOutAlt} /> {/* Logout icon */}
+                            </button>
+                        </div>
+                    </div>
                 </li>
             </ul>
         </nav>
     );
 };
+
 
 export default Sidebar;

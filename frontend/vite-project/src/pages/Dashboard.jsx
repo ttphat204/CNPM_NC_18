@@ -81,9 +81,6 @@ const Dashboard = () => {
             <h2 className="text-lg font-semibold mb-2">Doanh số</h2>
             <Bar data={salesData} />
           </div>
-          <div>
-            <h2>test</h2>
-          </div>
         </div>
       </main>
     </div>

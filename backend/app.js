@@ -1,20 +1,20 @@
-
-
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./configs/database");
 const router = require("./routers");
-require('dotenv').config();
+require("dotenv").config();
 
 const app = express();
 // Middleware
-app.use(cors({
-  origin: process.env.REACT_URL,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  optionsSuccessStatus: 200,
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: process.env.REACT_URL,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 200,
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

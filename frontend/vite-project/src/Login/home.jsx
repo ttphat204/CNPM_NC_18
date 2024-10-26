@@ -3,9 +3,10 @@ import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from 'react-router-dom';
-
 const Home = () => {
     const navigate = useNavigate();
+    const navigate = useNavigate(); // Hook must be called at the top level
+
 
     const handleLogout = () => {
         axios.get('http://localhost:5000/api/auth/logout', { withCredentials: true })

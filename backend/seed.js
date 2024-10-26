@@ -9,7 +9,7 @@ mongoose.connect('mongodb://localhost:27017/Sieuthi', { useNewUrlParser: true, u
 
 async function AdminAccount() {
     const admins = [
-        { username: 'admin1', password: '123456', role: 'adminPage1' }
+        { username: 'admin1', password: 'adminpassword1', role: 'adminPage1' }
 
     ];
 

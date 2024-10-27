@@ -7,34 +7,34 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
-    
+
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate()
     axios.defaults.withCredentials = true;
     const handleSubmit = () => {
-      axios.post('http://localhost:5000/api/auth/login', { username, password })
-        .then(res => {
-          if (res.data.login) {
-           
-            
-            console.log("User ID in Login:", res.data.userId);
-            switch (res.data.role) {
-              case 'adminPage1':
-                navigate('/dashboard');
-                break;
-              default:
-                navigate('/home');
-                break;
-            }
-          } else {
-            console.log("Đăng nhập không thành công");
-          }
-          console.log(res)
-        })
-        .catch(err => console.log(err))
+        axios.post('http://localhost:5000/api/auth/login', { username, password })
+            .then(res => {
+                if (res.data.login) {
+
+
+                    console.log("User ID in Login:", res.data.userId);
+                    switch (res.data.role) {
+                        case 'adminPage1':
+                            navigate('/dashboard');
+                            break;
+                        default:
+                            navigate('/home');
+                            break;
+                    }
+                } else {
+                    console.log("Đăng nhập không thành công");
+                }
+                console.log(res)
+            })
+            .catch(err => console.log(err))
     }
-  
+
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">

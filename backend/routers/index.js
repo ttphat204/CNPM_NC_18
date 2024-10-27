@@ -3,7 +3,7 @@ const NCCRouter = require("./NCC_router");
 const accountRouter = require("./account_router");
 const productRouter = require("./product_router");
 const discountRouter = require("./discount_router");
-const traffic = require("./traffic_router")
+const traffic = require("./traffic_router");
 const cartRouter = require("./cart_router");
 const orderRouter = require("./order_router");
 const authRouter = require("./auth");
@@ -17,5 +17,4 @@ module.exports = (app) => {
   app.use("/api/carts", cartRouter);
   app.use("/api/orders", orderRouter);
   app.use("/api/auth", authRouter);
-
 };

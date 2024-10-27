@@ -1,82 +1,97 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import Sidebar from "../components/sidebar1";
 import axios from "axios";
 
-import Sidebar from "../components/sidebar1";
-
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  PointElement,
-  LineElement,
-} from "chart.js";
-import {
-  ChevronDownIcon,
-  UserIcon,
-  CubeIcon,
-  ClipboardCheckIcon,
-  OfficeBuildingIcon,
-  TagIcon,
-  CollectionIcon,
-  ChartBarIcon,
-} from "@heroicons/react/solid";
-
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  PointElement,
-  LineElement
-);
-
 const AddCategory = () => {
-  const [showUserMenu, setShowUserMenu] = useState(false); // Trạng thái cho menu người dùng
-  const [showProductMenu, setShowProductMenu] = useState(false); // Trạng thái cho menu quản lý sản phẩm
-  const [showOrderMenu, setShowOrderMenu] = useState(false); // Trạng thái cho menu quản lý đơn hàng
-  const [showNCCMenu, setShowNCCMenu] = useState(false);
-  const [showDiscount, setDiscoiunt] = useState(false);
-  const [showCategory, setCategory] = useState(false);
-
+  const [CategoryName, setCategoryName] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessages, setErrorMessages] = useState({});
   const [NCCs, setNCCs] = useState([]);
 
   useEffect(() => {
-    // Fetch NCC created by admin
+    // Fetch NCCs created by admin
     axios
       .get("http://localhost:5000/api/NCC") // Assuming this endpoint fetches all NCC
       .then((res) => setNCCs(res.data))
-      .catch((err) => console.error("Error fetching categories:", err));
+      .catch((err) => console.error("Error fetching NCC:", err));
   }, []);
+
+  // Hàm kiểm tra hợp lệ của thông tin
+  const validateForm = () => {
+    const newErrorMessages = {};
+
+    if (!CategoryName.trim()) {
+      newErrorMessages.CategoryName = "Tên nhà cung cấp không được để trống.";
+    }
+
+    setErrorMessages(newErrorMessages); // Cập nhật thông báo lỗi
+    return Object.keys(newErrorMessages).length === 0; // Trả về true nếu không có lỗi
+  };
+
+  // Hàm xử lý gửi dữ liệu
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return; // Nếu không hợp lệ, dừng lại
+
+    const NCCId = document.getElementById("NCCId").value;
+
+    try {
+      const response = await fetch("http://localhost:5000/api/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category_name: CategoryName,
+          NCC: NCCId,
+        }),
+      });
+
+      if (response.ok) {
+        setSuccessMessage("Thêm danh mục thành công!");
+        setCategoryName("");
+        setErrorMessages({}); // Reset thông báo lỗi
+      } else {
+        setSuccessMessage("Có lỗi xảy ra, vui lòng thử lại.");
+      }
+    } catch (error) {
+      setSuccessMessage("Lỗi kết nối, vui lòng thử lại.", error);
+    }
+  };
 
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-
-
       <main className="flex-1 p-6 bg-gray-100">
         <h1 className="text-3xl font-bold mb-6">Thêm danh mục</h1>
-        <form className="bg-white p-6 rounded-lg shadow-md">
-          {/* Tên danh mục */}
+        <form
+          className="bg-white p-6 rounded-lg shadow-md"
+          onSubmit={handleSubmit}
+        >
+          {/* Nhập tên danh mục  */}
           <div className="mb-4">
             <label
               className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
-              htmlFor="categoryName"
+              htmlFor="CategoryName"
             >
               Tên danh mục
             </label>
             <input
               type="text"
-              id="categoryName"
-              placeholder="Nhập tên danh mục"
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
+              id="CateogryName"
+              placeholder="Nhập tên nhà cung cấp"
+              value={CategoryName}
+              onChange={(e) => setCategoryName(e.target.value)}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${
+                errorMessages.CategoryName ? "border-red-500" : ""
+              }`}
             />
+            {errorMessages.CategoryName && (
+              <p className="text-red-500 text-sm">
+                {errorMessages.CategoryName}
+              </p>
+            )}{" "}
           </div>
 
-          {/* Chọn nhà cung cấp */}
+          {/* Chọn nhà cung cấp  */}
           <div className="mb-4">
             <label
               htmlFor="NCCId"
@@ -111,6 +126,9 @@ const AddCategory = () => {
             Thêm danh mục
           </button>
         </form>
+        {successMessage && (
+          <p className="mt-4 text-green-500">{successMessage}</p>
+        )}
       </main>
     </div>
   );

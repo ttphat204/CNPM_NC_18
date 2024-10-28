@@ -115,11 +115,12 @@ const ShoppingCart = () => {
           </div>
           {/* <Link to='/ship'> */}
             <button className="w-full bg-yellow-400 text-white py-2 rounded-md">
-              Thanh Toán
+              Thanh Toán 
             </button>
           {/* </Link> */}
         </div>
       </div>
+
       <Footer />
     </>
   );

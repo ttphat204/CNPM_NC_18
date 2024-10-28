@@ -1,24 +1,28 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLock, faPhone } from "@fortawesome/free-solid-svg-icons";
-
-
-import React, { useState } from "react";
+import { faLock, faPhone, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
-
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const navigate = useNavigate()
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(''); // Trạng thái lỗi
+    const navigate = useNavigate();
     axios.defaults.withCredentials = true;
+
     const handleSubmit = () => {
+        if (!username || !password) { // Kiểm tra nếu chưa nhập tài khoản hoặc mật khẩu
+            setErrorMessage("Vui lòng nhập tài khoản và mật khẩu.");
+            return;
+        }
+
         axios.post('http://localhost:5000/api/auth/login', { username, password })
             .then(res => {
                 if (res.data.login) {
-
-
                     console.log("User ID in Login:", res.data.userId);
+                    setErrorMessage(""); // Xóa lỗi nếu đăng nhập thành công
                     switch (res.data.role) {
                         case 'adminPage1':
                             navigate('/dashboard');
@@ -28,47 +32,56 @@ const Login = () => {
                             break;
                     }
                 } else {
-                    console.log("Đăng nhập không thành công");
+                    setErrorMessage("Đăng nhập không thành công. Vui lòng kiểm tra lại tài khoản.");
                 }
-                console.log(res)
             })
-            .catch(err => console.log(err))
-    }
-
+            .catch(err => {
+                console.log(err);
+                setErrorMessage("Tài khoản hoặc mật khẩu không chính xác , Vui lòng thử lại.");
+            });
+    };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="w-full max-w-lg bg-white p-8 rounded-lg shadow-md">
                 <h3 className="text-2xl font-bold text-center mb-6">ĐĂNG NHẬP</h3>
+
+                {errorMessage && (
+                    <p className="text-red-500 text-center mb-4">{errorMessage}</p>
+                )}
+
                 <input
                     type="text"
                     placeholder="Tên đăng nhập / Số điện thoại"
                     onChange={(e) => setUsername(e.target.value)}
                     className="w-full h-12 border border-gray-300 rounded-md p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 />
-                <input
-                    type="password"
-                    placeholder="Mật khẩu"
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full h-12 border border-gray-300 rounded-md p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-                <div className="flex items-center justify-between mb-4">
-                    <FontAwesomeIcon className="text-gray-500" icon={faLock} />
-                    <a href="#" className="text-sm text-yellow-500">QUÊN MẬT KHẨU</a>
+                <div className="relative">
+                    <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Mật khẩu"
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full h-12 border border-gray-300 rounded-md p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    />
+                    <span
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute top-3 right-3 cursor-pointer text-gray-500"
+                    >
+                        <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                    </span>
                 </div>
+
                 <button
                     className="w-full h-12 bg-yellow-500 text-white font-bold rounded-md hover:bg-yellow-600 transition duration-200"
                     onClick={handleSubmit}
                 >
                     ĐĂNG NHẬP
                 </button>
+
                 <p className="text-center text-sm mt-4">
                     Liên hệ tổng đài Hỗ trợ khách hàng khi quên Tài khoản/Mật khẩu
                 </p>
                 <p className="text-center text-sm">Hotline: (028) 3622 4567</p>
-                <div className="flex justify-center mt-6">
-
-                </div>
                 <div className="mt-8">
                     <h3 className="text-xl font-bold text-center mb-4">ĐĂNG KÝ</h3>
                     <div className="flex justify-center">
@@ -79,9 +92,7 @@ const Login = () => {
                         </Link>
                     </div>
                 </div>
-
             </div>
-
         </div>
     );
 }

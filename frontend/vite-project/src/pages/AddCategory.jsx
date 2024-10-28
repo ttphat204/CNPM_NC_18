@@ -11,7 +11,7 @@ const AddCategory = () => {
   useEffect(() => {
     // Fetch NCCs created by admin
     axios
-      .get("http://localhost:5000/api/NCC") // Assuming this endpoint fetches all NCC
+      .get("http://localhost:5000/api/NCC")
       .then((res) => setNCCs(res.data))
       .catch((err) => console.error("Error fetching NCC:", err));
   }, []);

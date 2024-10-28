@@ -179,6 +179,33 @@ const Sidebar = () => {
                 </li>
                 <li className="mb-2">
                     <button
+                        onClick={() => setDiscount(!showDiscount)}
+                        className="flex items-center hover:text-gray-300 w-full text-left"
+                    >
+                        <TagIcon className="w-5 h-5 mr-2" />
+                        Quản lý khuyến mãi
+                        <ChevronDownIcon
+                            className={`w-5 h-5 ml-auto transition-transform ${showDiscount ? "rotate-180" : ""
+                                }`}
+                        />
+                    </button>
+                    {showDiscount && (
+                        <ul className="ml-4 mt-2">
+                            <li className="mb-1">
+                                <Link to="/KhuyenMai" className="hover:text-gray-300">
+                                    Thêm khuyến mãi
+                                </Link>
+                            </li>
+                            <li className="mb-1">
+                                <Link to="/ListDiscount" className="hover:text-gray-300">
+                                    Danh sách khuyến mãi
+                                </Link>
+                            </li>
+                        </ul>
+                    )}
+                </li>
+                <li className="mb-2">
+                    <button
                         onClick={() => setCategory(!showCategory)}
                         className="flex items-center hover:text-gray-300 w-full text-left"
                     >

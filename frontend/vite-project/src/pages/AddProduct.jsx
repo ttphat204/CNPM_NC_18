@@ -56,8 +56,7 @@ const AddProduct = () => {
           img: ProductImg,
           des_product: ProductDes,
           category: CategoryId,
-          discount: ProductDis,
-          newPrice: ProductNewPrice,
+    
         }),
       });
 
@@ -67,8 +66,8 @@ const AddProduct = () => {
         setProductPrice("");
         setProductImg("");
         setProductDes("");
-        setProductDis("");
-        setProductNewPrice("");
+  
+    
         setErrorMessages({}); // Reset thông báo lỗi
       } else {
         setSuccessMessage("Có lỗi xảy ra, vui lòng thử lại.");
@@ -209,44 +208,7 @@ const AddProduct = () => {
           </div>
 
           {/* Nhập discount  */}
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
-              htmlFor="ProductDis"
-            >
-              Giảm giá
-            </label>
-            <input
-              type="text"
-              id="ProductDis"
-              placeholder="Nhập giảm giá"
-              value={ProductDis}
-              onChange={(e) => setProductDis(e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${
-                errorMessages.ProductImg ? "border-red-500" : ""
-              }`}
-            />
-          </div>
-
-          {/* Nhập giá mới  */}
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
-              htmlFor="ProductNewPrice"
-            >
-              Giá mới
-            </label>
-            <input
-              type="text"
-              id="ProductNewPrice"
-              placeholder="Nhập giá mới"
-              value={ProductNewPrice}
-              onChange={(e) => setProductNewPrice(e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${
-                errorMessages.ProductImg ? "border-red-500" : ""
-              }`}
-            />
-          </div>
+      
 
           <button
             type="submit"

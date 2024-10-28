@@ -7,6 +7,7 @@ const traffic = require("./traffic_router");
 const cartRouter = require("./cart_router");
 const orderRouter = require("./order_router");
 const authRouter = require("./auth");
+const promotionRouter = require("./KhuyenMai")
 
 module.exports = (app) => {
   app.use("/api/categories", categoryRouter);
@@ -17,4 +18,5 @@ module.exports = (app) => {
   app.use("/api/carts", cartRouter);
   app.use("/api/orders", orderRouter);
   app.use("/api/auth", authRouter);
+  app.use('/promotion', promotionRouter);
 };

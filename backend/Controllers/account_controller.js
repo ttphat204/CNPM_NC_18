@@ -8,28 +8,41 @@ module.exports = {
 
     // Validate đầu vào
     if (!username || username.length < 4) {
-      return res.status(400).json({ success: false, message: "Tên đăng nhập phải có ít nhất 4 ký tự." });
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Tên đăng nhập phải có ít nhất 4 ký tự.",
+        });
     }
 
     const emailRegex = /^[^\s@]+@gmail\.com$/;
     if (!email || !emailRegex.test(email)) {
-      return res.status(400).json({ success: false, message: "Chỉ chấp nhận email @gmail.com." });
+      return res
+        .status(400)
+        .json({ success: false, message: "Chỉ chấp nhận email @gmail.com." });
     }
 
     const phoneRegex = /^[0-9]{10}$/;
     if (!phone || !phoneRegex.test(phone)) {
-      return res.status(400).json({ success: false, message: "Số điện thoại phải có 10 chữ số." });
+      return res
+        .status(400)
+        .json({ success: false, message: "Số điện thoại phải có 10 chữ số." });
     }
 
     if (!password || password.length < 6) {
-      return res.status(400).json({ success: false, message: "Mật khẩu phải có ít nhất 6 ký tự." });
+      return res
+        .status(400)
+        .json({ success: false, message: "Mật khẩu phải có ít nhất 6 ký tự." });
     }
 
     try {
       // Kiểm tra xem Username đã tồn tại chưa
       const existingUser = await accountModel.findOne({ username });
       if (existingUser) {
-        return res.status(400).json({ success: false, message: "Username đã tồn tại." });
+        return res
+          .status(400)
+          .json({ success: false, message: "Username đã tồn tại." });
       }
 
       // Băm mật khẩu với 10 rounds
@@ -40,14 +53,16 @@ module.exports = {
         username,
         name,
         email,
-        password: hashedPassword,  // Lưu mật khẩu đã được mã hóa
-        phone
+        password: hashedPassword, // Lưu mật khẩu đã được mã hóa
+        phone,
       });
 
       return res.status(201).json({ success: true, account: newAccount });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ success: false, message: "Tạo tài khoản thất bại." });
+      return res
+        .status(500)
+        .json({ success: false, message: "Tạo tài khoản thất bại." });
     }
   },
 
@@ -57,7 +72,9 @@ module.exports = {
       return res.status(200).json({ success: true, accounts });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ success: false, message: "Lỗi khi lấy tài khoản." });
+      return res
+        .status(500)
+        .json({ success: false, message: "Lỗi khi lấy tài khoản." });
     }
   },
 
@@ -68,7 +85,13 @@ module.exports = {
       return res.status(200).json({ count }); // Trả về số lượng tài khoản
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ success: false, message: "Lấy số lượng tài khoản không thành công: ", error: error.message });
+      return res
+        .status(500)
+        .json({
+          success: false,
+          message: "Lấy số lượng tài khoản không thành công: ",
+          error: error.message,
+        });
     }
-  }
+  },
 };

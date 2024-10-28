@@ -1,10 +1,10 @@
-const Traffic = require('../models/traffic_model'); // Đường dẫn đến model Traffic
+const Traffic = require("../models/traffic_model"); // Đường dẫn đến model Traffic
 
 // Lấy dữ liệu lưu lượng truy cập
 const getTrafficData = async (req, res) => {
   try {
     // Lấy dữ liệu lưu lượng truy cập và liên kết với bảng Account
-    const trafficData = await Traffic.find().populate('accountId');
+    const trafficData = await Traffic.find().populate("accountId");
 
     // Trả về dữ liệu với mã trạng thái 200
     res.status(200).json({ traffic: trafficData });
@@ -20,7 +20,9 @@ const createTrafficData = async (req, res) => {
     await traffic.save();
     res.status(201).json(traffic); // Trả về dữ liệu traffic đã được tạo
   } catch (error) {
-    res.status(400).json({ message: "Lỗi khi tạo dữ liệu traffic", error: error.message });
+    res
+      .status(400)
+      .json({ message: "Lỗi khi tạo dữ liệu traffic", error: error.message });
   }
 };
 

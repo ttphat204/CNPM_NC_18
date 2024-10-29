@@ -57,6 +57,7 @@
 // E:\emart\client\src\components/CreatePromotion.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Sidebar from '../components/sidebar1';
 
 const CreatePromotion = () => {
   const [categories, setCategories] = useState([]);
@@ -86,10 +87,14 @@ const CreatePromotion = () => {
   };
 
   return (
+    
     <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="container flex flex-col mx-auto max-w-4xl bg-white p-8 rounded-lg shadow-md">
+    <div className='flex flex-row'>
+<Sidebar/>
+<div className="container flex flex-col mx-auto max-w-4xl bg-white p-8 rounded-lg shadow-md">
         <h1 className="text-3xl font-bold mb-6 text-center">Create Promotion</h1>
         <div className="space-y-4">
+         
           <input
             type="text"
             name="code"
@@ -149,6 +154,8 @@ const CreatePromotion = () => {
           </button>
         </div>
       </div>
+    </div>
+     
     </div>
   );
 };

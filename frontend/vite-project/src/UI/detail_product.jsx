@@ -4,6 +4,7 @@ import Footer from './footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faStar, faHeart } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import Header from './header';
 // import { useUser } from './UserContext';
 
 function DetailProduct() {
@@ -86,6 +87,7 @@ function DetailProduct() {
 
   return (
     <>
+  <Header/>
       <div className='bg-slate-100'>
         <div className='h-auto w-full bg-slate-100 mb-11'>
           <p className='text-xs text-gray-500 ml-32 mt-5 font-extr'>

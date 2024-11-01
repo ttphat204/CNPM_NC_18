@@ -1,9 +1,11 @@
-const mongoose = require("mongoose");
+// E:\emart\server/models/promotion.js
+const mongoose = require('mongoose');
 
-const discountSchema = mongoose.Schema({
-  name: {
+const promotionSchema = new mongoose.Schema({
+  code: {
     type: String,
     required: true,
+    unique: true,
   },
   discount: {
     type: Number,
@@ -11,7 +13,7 @@ const discountSchema = mongoose.Schema({
   },
   category: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "category",
+    ref: 'category',
     required: true,
   },
   startDate: {
@@ -24,4 +26,4 @@ const discountSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("discount", discountSchema);
+module.exports = mongoose.model("Promotion", promotionSchema);

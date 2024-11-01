@@ -1,9 +1,7 @@
-import { } from 'react'
+import {} from "react";
 
 function ListProduct() {
-    return (
-        <div>q</div>
-    )
+  return <div>q</div>;
 }
 
-export default ListProduct
+export default ListProduct;

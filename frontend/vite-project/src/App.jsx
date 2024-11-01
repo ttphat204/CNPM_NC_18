@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Register from "./Login/Register";
 import Login from "./Login/Login";
-import Home from "./Login/home";
+import Home from "./UI/home";
 import Dashboard from "./pages/Dashboard";
 import ListUser from './pages/ListUser';
 import AddProduct from "./pages/AddProduct";
@@ -14,6 +14,9 @@ import ViewOrder from './pages/ViewOrder';
 import ListOrder from './pages/ListOrder';
 import AddDiscount from './pages/AddDiscount';
 import ListDiscount from './pages/ListDiscount';
+import DetailProduct from "./UI/detail_product";
+import ShoppingCart from "./UI/cart";
+import CreatePromotion from "./pages/CreatePromotion";
 function App() {
   return (
     <Router>
@@ -36,7 +39,11 @@ function App() {
           <Route path='/ViewOrder' element={<ViewOrder />} />
           <Route path='/ListOrder' element={<ListOrder />} />
           <Route path='/AddDiscount' element={<AddDiscount />} />
+          <Route path='/KhuyenMai' element={<CreatePromotion />} />
           <Route path='/ListDiscount' element={<ListDiscount />} />
+          {/* Các route liên quan đến giao diện người dùng */}
+          <Route path="/product/:id" element={<DetailProduct />} />
+          <Route path="/Cart" element={<ShoppingCart />} />
         </Routes>
       </div>
     </Router>

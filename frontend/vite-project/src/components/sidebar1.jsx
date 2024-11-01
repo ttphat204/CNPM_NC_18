@@ -150,6 +150,7 @@ const Sidebar = () => {
                         </ul>
                     )}
                 </li>
+             
                 <li className="mb-2">
                     <button
                         onClick={() => setDiscount(!showDiscount)}
@@ -165,7 +166,7 @@ const Sidebar = () => {
                     {showDiscount && (
                         <ul className="ml-4 mt-2">
                             <li className="mb-1">
-                                <Link to="/AddDiscount" className="hover:text-gray-300">
+                                <Link to="/KhuyenMai" className="hover:text-gray-300">
                                     Thêm khuyến mãi
                                 </Link>
                             </li>

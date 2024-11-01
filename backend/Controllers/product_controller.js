@@ -9,24 +9,47 @@ module.exports = {
         price,
         img,
         des_product,
-        discount,
-        newPrice,
       } = req.body;
+  
+      if (!category || !product_name || !price || !img) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+  
       const newProduct = new productModel({
         category,
         product_name,
         price,
         img,
         des_product,
-        discount,
-        newPrice,
       });
+  
       const saveProduct = await newProduct.save();
       res.json(saveProduct);
+  
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      console.log("Error creating product:", err.message); // Kiểm tra chi tiết lỗi
+      res.status(500).json({ message: "Internal Server Error", error: err.message });
     }
   },
+  getProductById: async (req, res) => {
+    try {
+      const productId = req.params.id;
+      console.log("Fetching product with ID:", productId); // Log ID sản phẩm
+  
+      const product = await productModel.findById(productId);
+      console.log("Product found:", product); // Log sản phẩm đã tìm thấy
+  
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+  
+      res.status(200).json(product);
+    } catch (err) {
+      console.error("Error fetching product details:", err.message);
+      res.status(500).json({ message: "Internal Server Error", error: err.message });
+    }
+  },
+  
   getProducts: async (req, res) => {
     const category_id = req.query.category_id;
     const body_query = {};

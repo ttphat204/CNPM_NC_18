@@ -1,4 +1,4 @@
-// Sidebar.js
+
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import {
@@ -11,7 +11,7 @@ import {
     CollectionIcon,
     ChartBarIcon,
 } from "@heroicons/react/solid";
-import React from "react";
+import { } from "react";
 import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";

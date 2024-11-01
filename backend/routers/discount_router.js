@@ -4,6 +4,8 @@ const router = express.Router();
 const {
   createDiscount,
   getDiscounts,
+  updateDiscount,
+  deleteDiscount,
 } = require("../Controllers/discount_controller");
 const { getCategories } = require("../Controllers/category_controller");
 

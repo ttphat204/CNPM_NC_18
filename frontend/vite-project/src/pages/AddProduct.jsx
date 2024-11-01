@@ -7,8 +7,6 @@ const AddProduct = () => {
   const [ProductPrice, setProductPrice] = useState("");
   const [ProductImg, setProductImg] = useState("");
   const [ProductDes, setProductDes] = useState("");
-  const [ProductDis, setProductDis] = useState("");
-  const [ProductNewPrice, setProductNewPrice] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessages, setErrorMessages] = useState({});
   const [categories, setCategories] = useState([]);
@@ -30,6 +28,8 @@ const AddProduct = () => {
     }
     if (!ProductPrice.trim()) {
       newErrorMessages.ProductPrice = "Giá sản phẩm không được để trống.";
+    } else if (parseFloat(ProductPrice) <= 0) {
+      newErrorMessages.ProductPrice = "Giá sản phẩm phải là số dương.";
     }
     if (!ProductImg.trim()) {
       newErrorMessages.ProductImg = "Hình ảnh sản phẩm không được để trống.";
@@ -56,8 +56,6 @@ const AddProduct = () => {
           img: ProductImg,
           des_product: ProductDes,
           category: CategoryId,
-          discount: ProductDis,
-          newPrice: ProductNewPrice,
         }),
       });
 
@@ -67,8 +65,7 @@ const AddProduct = () => {
         setProductPrice("");
         setProductImg("");
         setProductDes("");
-        setProductDis("");
-        setProductNewPrice("");
+
         setErrorMessages({}); // Reset thông báo lỗi
       } else {
         setSuccessMessage("Có lỗi xảy ra, vui lòng thử lại.");
@@ -121,7 +118,7 @@ const AddProduct = () => {
               Giá sản phẩm
             </label>
             <input
-              type="text"
+              type="number"
               id="ProductPrice"
               placeholder="Nhập giá sản phẩm"
               value={ProductPrice}
@@ -209,44 +206,6 @@ const AddProduct = () => {
           </div>
 
           {/* Nhập discount  */}
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
-              htmlFor="ProductDis"
-            >
-              Giảm giá
-            </label>
-            <input
-              type="text"
-              id="ProductDis"
-              placeholder="Nhập giảm giá"
-              value={ProductDis}
-              onChange={(e) => setProductDis(e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${
-                errorMessages.ProductImg ? "border-red-500" : ""
-              }`}
-            />
-          </div>
-
-          {/* Nhập giá mới  */}
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
-              htmlFor="ProductNewPrice"
-            >
-              Giá mới
-            </label>
-            <input
-              type="text"
-              id="ProductNewPrice"
-              placeholder="Nhập giá mới"
-              value={ProductNewPrice}
-              onChange={(e) => setProductNewPrice(e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${
-                errorMessages.ProductImg ? "border-red-500" : ""
-              }`}
-            />
-          </div>
 
           <button
             type="submit"

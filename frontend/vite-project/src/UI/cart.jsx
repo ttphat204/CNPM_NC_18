@@ -6,54 +6,54 @@ import Footer from './footer';
 // import { useUser } from './UserContext';
 
 const ShoppingCart = () => {
-//   const [cartItems, setCartItems] = useState([]);
-//   const { userId } = useUser();
+  //   const [cartItems, setCartItems] = useState([]);
+  //   const { userId } = useUser();
 
-//   useEffect(() => {
-//     if (userId) {
-//       fetchCartItems();
-//     }
-//   }, [userId]);
+  //   useEffect(() => {
+  //     if (userId) {
+  //       fetchCartItems();
+  //     }
+  //   }, [userId]);
 
-//   const fetchCartItems = () => {
-//     axios.get(`http://localhost:3004/cart/${userId}`)
-//       .then(response => {
-//         setCartItems(response.data.cartItems);
-//       })
-//       .catch(error => {
-//         console.error('Error fetching cart items:', error);
-//       });
-//   };
+  //   const fetchCartItems = () => {
+  //     axios.get(`http://localhost:3004/cart/${userId}`)
+  //       .then(response => {
+  //         setCartItems(response.data.cartItems);
+  //       })
+  //       .catch(error => {
+  //         console.error('Error fetching cart items:', error);
+  //       });
+  //   };
 
-//   const updateQuantity = (productId, newQuantity) => {
-//     if (newQuantity < 0) return;
+  //   const updateQuantity = (productId, newQuantity) => {
+  //     if (newQuantity < 0) return;
 
-//     axios.post('http://localhost:3004/cart/update', { userId, productId, quantity: newQuantity })
-//       .then(response => {
-//         fetchCartItems(); // Gọi lại API để lấy dữ liệu mới
-//       })
-//       .catch(error => {
-//         console.error('Error updating quantity:', error);
-//       });
-//   };
+  //     axios.post('http://localhost:3004/cart/update', { userId, productId, quantity: newQuantity })
+  //       .then(response => {
+  //         fetchCartItems(); // Gọi lại API để lấy dữ liệu mới
+  //       })
+  //       .catch(error => {
+  //         console.error('Error updating quantity:', error);
+  //       });
+  //   };
 
-//   const removeItem = (productId) => {
-//     axios.post('http://localhost:3004/cart/xoa', { userId, productId })
-//       .then(response => {
-//         setCartItems(Array.isArray(response.data.cartItems) ? response.data.cartItems : []);
-//       })
-//       .catch(error => {
-//         console.error('Error removing item:', error);
-//       });
-//   };
+  //   const removeItem = (productId) => {
+  //     axios.post('http://localhost:3004/cart/xoa', { userId, productId })
+  //       .then(response => {
+  //         setCartItems(Array.isArray(response.data.cartItems) ? response.data.cartItems : []);
+  //       })
+  //       .catch(error => {
+  //         console.error('Error removing item:', error);
+  //       });
+  //   };
 
-//   const calculateTotal = () => {
-//     return cartItems.reduce((total, item) => total + item.productId.price * item.quantity, 0);
-//   };
+  //   const calculateTotal = () => {
+  //     return cartItems.reduce((total, item) => total + item.productId.price * item.quantity, 0);
+  //   };
 
   return (
     <>
-    
+
       <div className="mx-auto p-4 flex flex-col">
         <div className="bg-yellow-400 py-2 px-4 rounded-t-md flex items-center">
           <img src="cart-icon-1.png" className="h-10 w-10" alt="Cart Icon" />
@@ -114,9 +114,9 @@ const ShoppingCart = () => {
             </div>
           </div>
           {/* <Link to='/ship'> */}
-            <button className="w-full bg-yellow-400 text-white py-2 rounded-md">
-              Thanh Toán  
-            </button>
+          <button className="w-full bg-yellow-400 text-white py-2 rounded-md">
+            Thanh Toán
+          </button>
           {/* </Link> */}
         </div>
       </div>

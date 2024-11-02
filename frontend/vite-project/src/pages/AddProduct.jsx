@@ -6,12 +6,9 @@ const AddProduct = () => {
   const [ProductPrice, setProductPrice] = useState(""); // Lưu giá dưới dạng chuỗi
   const [ProductImg, setProductImg] = useState(""); // Lưu dưới dạng chuỗi (URL)
   const [ProductDes, setProductDes] = useState("");
-<<<<<<< HEAD
-=======
   const [ProductDis, setProductDis] = useState("");
   const [ProductNewPrice, setProductNewPrice] = useState("");
   const [charCount, setCharCount] = useState(0);
->>>>>>> a32b41a6d76c14131da5094b7b46bf80fe1fcc46
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessages, setErrorMessages] = useState({});
   const [categories, setCategories] = useState([]);
@@ -38,8 +35,6 @@ const AddProduct = () => {
     }
     if (!ProductPrice.trim()) {
       newErrorMessages.ProductPrice = "Giá sản phẩm không được để trống.";
-    } else if (parseFloat(ProductPrice) <= 0) {
-      newErrorMessages.ProductPrice = "Giá sản phẩm phải là số dương.";
     }
     if (!ProductImg.trim()) {
       newErrorMessages.ProductImg = "Hình ảnh sản phẩm không được để trống.";
@@ -92,21 +87,10 @@ const AddProduct = () => {
 
       const response = await fetch("http://localhost:5000/api/products", {
         method: "POST",
-<<<<<<< HEAD
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          product_name: ProductName,
-          price: ProductPrice,
-          img: ProductImg,
-          des_product: ProductDes,
-          category: CategoryId,
-        }),
-=======
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
->>>>>>> a32b41a6d76c14131da5094b7b46bf80fe1fcc46
       });
 
       if (response.ok) {
@@ -115,15 +99,10 @@ const AddProduct = () => {
         setProductPrice("");
         setProductImg("");
         setProductDes("");
-<<<<<<< HEAD
-
-        setErrorMessages({}); // Reset thông báo lỗi
-=======
         setProductDis("");
         setCharCount(0);
         setProductNewPrice("");
         setErrorMessages({});
->>>>>>> a32b41a6d76c14131da5094b7b46bf80fe1fcc46
       } else {
         setSuccessMessage("Có lỗi xảy ra, vui lòng thử lại.");
       }
@@ -138,17 +117,16 @@ const AddProduct = () => {
       <Sidebar />
       <main className="flex-1 p-6 bg-gray-100">
         <h1 className="text-3xl font-bold mb-6">Thêm sản phẩm</h1>
-<<<<<<< HEAD
-        <h1 className="text-3xl font-bold mb-6">Thêm sản phẩm</h1>
-=======
->>>>>>> a32b41a6d76c14131da5094b7b46bf80fe1fcc46
         <form
           className="bg-white p-6 rounded-lg shadow-md"
           onSubmit={handleSubmit}
         >
           {/* Tên sản phẩm */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-[17px] font-bold mb-2 text-left" htmlFor="ProductName">
+            <label
+              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
+              htmlFor="ProductName"
+            >
               Tên sản phẩm
             </label>
             <input
@@ -157,35 +135,31 @@ const AddProduct = () => {
               placeholder="Nhập tên sản phẩm"
               value={ProductName}
               onChange={(e) => setProductName(e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${errorMessages.ProductName ? "border-red-500" : ""}`}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${
+                errorMessages.ProductName ? "border-red-500" : ""
+              }`}
             />
             {errorMessages.ProductName && (
-<<<<<<< HEAD
               <p className="text-red-500 text-sm">
                 {errorMessages.ProductName}
               </p>
-=======
-              <p className="text-red-500 text-sm">{errorMessages.ProductName}</p>
->>>>>>> a32b41a6d76c14131da5094b7b46bf80fe1fcc46
             )}
           </div>
 
           {/* Giá sản phẩm */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-[17px] font-bold mb-2 text-left" htmlFor="ProductPrice">
+            <label
+              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
+              htmlFor="ProductPrice"
+            >
               Giá sản phẩm
             </label>
             <input
-<<<<<<< HEAD
-              type="number"
-=======
               type="text" // Để nhập giá dưới dạng văn bản
->>>>>>> a32b41a6d76c14131da5094b7b46bf80fe1fcc46
               id="ProductPrice"
               placeholder="Nhập giá sản phẩm"
               value={formatCurrency(ProductPrice)} // Hiển thị giá đã định dạng
               onChange={handleProductPriceChange}
-<<<<<<< HEAD
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${
                 errorMessages.ProductPrice ? "border-red-500" : ""
               }`}
@@ -194,25 +168,15 @@ const AddProduct = () => {
               <p className="text-red-500 text-sm">
                 {errorMessages.ProductPrice}
               </p>
-=======
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${errorMessages.ProductPrice ? "border-red-500" : ""}`}
-            />
-            {errorMessages.ProductPrice && (
-              <p className="text-red-500 text-sm">{errorMessages.ProductPrice}</p>
->>>>>>> a32b41a6d76c14131da5094b7b46bf80fe1fcc46
             )}
           </div>
 
           {/* Chọn danh mục sản phẩm */}
           <div className="mb-4">
-<<<<<<< HEAD
             <label
               htmlFor="CategoryId"
               className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
             >
-=======
-            <label htmlFor="CategoryId" className="block text-gray-700 text-[17px] font-bold mb-2 text-left">
->>>>>>> a32b41a6d76c14131da5094b7b46bf80fe1fcc46
               Danh mục sản phẩm
             </label>
             <select
@@ -231,13 +195,12 @@ const AddProduct = () => {
             )}
           </div>
 
-<<<<<<< HEAD
-          {/* Nhập discount  */}
-
-=======
           {/* Nhập URL hình ảnh */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-[17px] font-bold mb-2 text-left" htmlFor="ProductImg">
+            <label
+              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
+              htmlFor="ProductImg"
+            >
               URL hình ảnh sản phẩm
             </label>
             <input
@@ -246,7 +209,9 @@ const AddProduct = () => {
               placeholder="Nhập URL hình ảnh"
               value={ProductImg}
               onChange={handleImageChange}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${errorMessages.ProductImg ? "border-red-500" : ""}`}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${
+                errorMessages.ProductImg ? "border-red-500" : ""
+              }`}
             />
             {errorMessages.ProductImg && (
               <p className="text-red-500 text-sm">{errorMessages.ProductImg}</p>
@@ -255,7 +220,10 @@ const AddProduct = () => {
 
           {/* Mô tả sản phẩm */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-[17px] font-bold mb-2 text-left" htmlFor="ProductDes">
+            <label
+              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
+              htmlFor="ProductDes"
+            >
               Mô tả sản phẩm
             </label>
             <textarea
@@ -266,12 +234,9 @@ const AddProduct = () => {
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
               maxLength={1000}
             />
-            <p className="text-gray-500 text-sm">
-              {charCount}/1000 ký tự
-            </p>
+            <p className="text-gray-500 text-sm">{charCount}/1000 ký tự</p>
           </div>
 
->>>>>>> a32b41a6d76c14131da5094b7b46bf80fe1fcc46
           {/* Thông báo thành công hoặc lỗi */}
           {successMessage && (
             <div className="mb-4">

@@ -90,13 +90,16 @@ function ListProduct() {
   const handleDescriptionChange = (e) => {
     const text = e.target.value;
     if (text.length <= 1000) {
-      setEditForm(text);
+      setEditForm((prev) => ({ ...prev, des_product: text })); // Cập nhật đúng thuộc tính des_product
       setCharCount(text.length);
     }
   };
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
+
+    const { name, value } = e.target;
+    setEditForm((prev) => ({ ...prev, [name]: value }));
 
     try {
       const response = await fetch(
@@ -240,7 +243,7 @@ function ListProduct() {
                 <input
                   type="text"
                   id="ProductName"
-                  name="pruduct_name"
+                  name="product_name"
                   placeholder="Nhập tên sản phẩm"
                   value={editForm.product_name}
                   onChange={handleEditChange}

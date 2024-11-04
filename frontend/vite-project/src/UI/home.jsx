@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -6,9 +7,15 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import SwiperSection from './SwiperSection';
 import ProductBlock from './ProductBlock';
+=======
+import React from "react";
+>>>>>>> 48dfc43cf5dc42b17e2e407e3b01cee1b4b66e37
 
-import Footer from './footer';
+function home() {
+  return <div></div>;
+}
 
+<<<<<<< HEAD
 import Header from './header';
 
 const groupProducts = (products, itemsPerGroup) => {
@@ -115,3 +122,6 @@ const Home = () => {
 };
 
 export default Home;
+=======
+export default home;
+>>>>>>> 48dfc43cf5dc42b17e2e407e3b01cee1b4b66e37

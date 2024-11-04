@@ -123,7 +123,10 @@ const AddProduct = () => {
         >
           {/* Tên sản phẩm */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-[17px] font-bold mb-2 text-left" htmlFor="ProductName">
+            <label
+              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
+              htmlFor="ProductName"
+            >
               Tên sản phẩm
             </label>
             <input
@@ -132,16 +135,23 @@ const AddProduct = () => {
               placeholder="Nhập tên sản phẩm"
               value={ProductName}
               onChange={(e) => setProductName(e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${errorMessages.ProductName ? "border-red-500" : ""}`}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${
+                errorMessages.ProductName ? "border-red-500" : ""
+              }`}
             />
             {errorMessages.ProductName && (
-              <p className="text-red-500 text-sm">{errorMessages.ProductName}</p>
+              <p className="text-red-500 text-sm">
+                {errorMessages.ProductName}
+              </p>
             )}
           </div>
 
           {/* Giá sản phẩm */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-[17px] font-bold mb-2 text-left" htmlFor="ProductPrice">
+            <label
+              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
+              htmlFor="ProductPrice"
+            >
               Giá sản phẩm
             </label>
             <input
@@ -150,16 +160,23 @@ const AddProduct = () => {
               placeholder="Nhập giá sản phẩm"
               value={formatCurrency(ProductPrice)} // Hiển thị giá đã định dạng
               onChange={handleProductPriceChange}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${errorMessages.ProductPrice ? "border-red-500" : ""}`}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${
+                errorMessages.ProductPrice ? "border-red-500" : ""
+              }`}
             />
             {errorMessages.ProductPrice && (
-              <p className="text-red-500 text-sm">{errorMessages.ProductPrice}</p>
+              <p className="text-red-500 text-sm">
+                {errorMessages.ProductPrice}
+              </p>
             )}
           </div>
 
           {/* Chọn danh mục sản phẩm */}
           <div className="mb-4">
-            <label htmlFor="CategoryId" className="block text-gray-700 text-[17px] font-bold mb-2 text-left">
+            <label
+              htmlFor="CategoryId"
+              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
+            >
               Danh mục sản phẩm
             </label>
             <select
@@ -180,7 +197,10 @@ const AddProduct = () => {
 
           {/* Nhập URL hình ảnh */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-[17px] font-bold mb-2 text-left" htmlFor="ProductImg">
+            <label
+              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
+              htmlFor="ProductImg"
+            >
               URL hình ảnh sản phẩm
             </label>
             <input
@@ -189,7 +209,9 @@ const AddProduct = () => {
               placeholder="Nhập URL hình ảnh"
               value={ProductImg}
               onChange={handleImageChange}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${errorMessages.ProductImg ? "border-red-500" : ""}`}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${
+                errorMessages.ProductImg ? "border-red-500" : ""
+              }`}
             />
             {errorMessages.ProductImg && (
               <p className="text-red-500 text-sm">{errorMessages.ProductImg}</p>
@@ -198,7 +220,10 @@ const AddProduct = () => {
 
           {/* Mô tả sản phẩm */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-[17px] font-bold mb-2 text-left" htmlFor="ProductDes">
+            <label
+              className="block text-gray-700 text-[17px] font-bold mb-2 text-left"
+              htmlFor="ProductDes"
+            >
               Mô tả sản phẩm
             </label>
             <textarea
@@ -209,9 +234,7 @@ const AddProduct = () => {
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
               maxLength={1000}
             />
-            <p className="text-gray-500 text-sm">
-              {charCount}/1000 ký tự
-            </p>
+            <p className="text-gray-500 text-sm">{charCount}/1000 ký tự</p>
           </div>
 
           {/* Thông báo thành công hoặc lỗi */}

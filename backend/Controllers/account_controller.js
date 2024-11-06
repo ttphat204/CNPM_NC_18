@@ -8,12 +8,10 @@ module.exports = {
 
     // Validate đầu vào
     if (!username || username.length < 4) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Tên đăng nhập phải có ít nhất 4 ký tự.",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Tên đăng nhập phải có ít nhất 4 ký tự.",
+      });
     }
 
     if (!name || name.trim() === "") {
@@ -94,13 +92,11 @@ module.exports = {
       return res.status(200).json({ count }); // Trả về số lượng tài khoản
     } catch (error) {
       console.error(error);
-      return res
-        .status(500)
-        .json({
-          success: false,
-          message: "Lấy số lượng tài khoản không thành công: ",
-          error: error.message,
-        });
+      return res.status(500).json({
+        success: false,
+        message: "Lấy số lượng tài khoản không thành công: ",
+        error: error.message,
+      });
     }
   },
 };

@@ -182,7 +182,7 @@ function ListCategory() {
                   type="text"
                   id="CategoryName"
                   name="category_name"
-                  placeholder="Nhập tên nhà cung cấp"
+                  placeholder="Nhập tên danh mục"
                   value={editForm.category_name}
                   onChange={handleEditChange}
                   className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] `}

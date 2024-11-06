@@ -5,7 +5,7 @@ module.exports = {
   createOrder: async (req, res) => {
     const body = req.body;
     const order = await orderModel.create(body);
-    await cartModel.findByIdAndUpdate(body.cart_id, { is_order: true });
+    // await cartModel.findByIdAndUpdate(body.cart_id, { is_order: true });
 
     return res.status(201).json(order);
   },
@@ -45,7 +45,7 @@ module.exports = {
   },
   getOrderByAccount: async (req, res) => {
     const account_id = req.params.account_id;
-    const carts = await cartModel.find({ account_id, is_order: true });
+    const carts = await cartModel.find({ account_id });
 
     const orders = [];
     for (let cart of carts) {

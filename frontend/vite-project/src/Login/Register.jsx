@@ -16,6 +16,9 @@ const Signup = () => {
     // Hàm kiểm tra lỗi
     const validate = () => {
         const newErrors = {};
+        if (!name || name.trim() === "") {
+            newErrors.name = "Tên không được để trống.";
+        }
         if (!username || username.length < 4) {
             newErrors.username = "Tên đăng nhập phải có ít nhất 4 ký tự.";
         }
@@ -47,7 +50,6 @@ const Signup = () => {
         }, {
             withCredentials: true
         })
-
             .then(res => {
                 if (res.data.success) {
                     navigate('/');
@@ -78,6 +80,7 @@ const Signup = () => {
                             placeholder="Nhập tên"
                             onChange={(e) => setName(e.target.value)}
                         />
+                        {errors.name && <p className="text-red-500">{errors.name}</p>}
                     </div>
                     <div>
                         <label className="block text-gray-700 mb-2">Tên đăng nhập</label>

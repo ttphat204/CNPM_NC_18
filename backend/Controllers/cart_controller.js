@@ -5,7 +5,7 @@ module.exports = {
     const { account_id, product_id, quantity } = req.body;
     let cart = await cartModel.findOne({
       account_id: account_id,
-      is_order: false,
+      // is_order: false,
     });
 
     //nếu lần đầu thêm vào giỏ hàng
@@ -27,7 +27,7 @@ module.exports = {
         cart = await cartModel.findByIdAndUpdate(
           cart._id,
           { items2 },
-          { new: true }
+          // { new: true }
         );
       } else {
         items.push({ product: product_id, quantity: quantity || 1 });
@@ -35,7 +35,7 @@ module.exports = {
       cart = await cartModel.findByIdAndUpdate(
         cart._id,
         { items },
-        { new: true }
+        // { new: true }
       );
     }
 
@@ -45,7 +45,7 @@ module.exports = {
     const account_id = req.params.account_id;
     const cart = await cartModel
       .findOne({
-        is_order: false,
+        // is_order: false,
         account_id: account_id,
       })
       .populate("items.product");
@@ -56,7 +56,7 @@ module.exports = {
     const account_id = req.params.account_id;
     const item_id = req.params.item_id;
     let cart = await cartModel.findOne({
-      is_order: false,
+
       account_id: account_id,
     });
 
@@ -74,7 +74,7 @@ module.exports = {
     const item_id = req.params.item_id;
     const quantity = req.body.quantity;
     let cart = await cartModel.findOne({
-      is_order: false,
+
       account_id: account_id,
     });
 

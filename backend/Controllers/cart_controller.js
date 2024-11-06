@@ -16,22 +16,7 @@ module.exports = {
       });
     } else {
       const items = cart.items;
-      const isExists = items.find((v) => v.product == product_id);
-      if (isExists) {
-        const items2 = items.map((v) => {
-          if (v.product == product_id) {
-            v.quantity++;
-          }
-          return v;
-        });
-        cart = await cartModel.findByIdAndUpdate(
-          cart._id,
-          { items2 },
-          { new: true }
-        );
-      } else {
-        items.push({ product: product_id, quantity: quantity || 1 });
-      }
+      items.push({ food: food_id, quantity: quantity || 1 });
       cart = await cartModel.findByIdAndUpdate(
         cart._id,
         { items },

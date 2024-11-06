@@ -10,12 +10,13 @@ const orderSchema = mongoose.Schema({
     required: true,
   },
   phone: {
-    type: Number,
+    type: String,
     required: true,
   },
   total_money: {
     type: Number,
     required: true,
+    min: 0,
   },
   payment_method: {
     type: String,

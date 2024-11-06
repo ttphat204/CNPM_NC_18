@@ -65,8 +65,8 @@ function ListProduct() {
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
+      style: "decimal",
+      maximumFractionDigits: 0,
     }).format(value);
   };
 
@@ -90,13 +90,16 @@ function ListProduct() {
   const handleDescriptionChange = (e) => {
     const text = e.target.value;
     if (text.length <= 1000) {
-      setEditForm(text);
+      setEditForm((prev) => ({ ...prev, des_product: text })); // Cập nhật đúng thuộc tính des_product
       setCharCount(text.length);
     }
   };
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
+
+    const { name, value } = e.target;
+    setEditForm((prev) => ({ ...prev, [name]: value }));
 
     try {
       const response = await fetch(
@@ -199,7 +202,7 @@ function ListProduct() {
                     {product._id}
                   </td>{" "}
                   <td className="py-2 px-4 border-b text-right">
-                    {product.price}
+                    {formatCurrency(product.price) + " VND"}
                   </td>
                   <td className="py-2 px-4 border-b text-right">
                     <div className="flex justify-center space-x-2">
@@ -240,7 +243,7 @@ function ListProduct() {
                 <input
                   type="text"
                   id="ProductName"
-                  name="pruduct_name"
+                  name="product_name"
                   placeholder="Nhập tên sản phẩm"
                   value={editForm.product_name}
                   onChange={handleEditChange}

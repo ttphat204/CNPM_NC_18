@@ -20,10 +20,17 @@ const AddProduct = () => {
       .catch((err) => console.error("Lỗi khi lấy danh mục:", err));
   }, []);
 
+  // const formatCurrency = (value) => {
+  //   return new Intl.NumberFormat("vi-VN", {
+  //     style: "currency",
+  //     currency: "VND",
+  //   }).format(value);
+  // };
+
   const formatCurrency = (value) => {
     return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
+      style: "decimal",
+      maximumFractionDigits: 0,
     }).format(value);
   };
 
@@ -135,9 +142,8 @@ const AddProduct = () => {
               placeholder="Nhập tên sản phẩm"
               value={ProductName}
               onChange={(e) => setProductName(e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${
-                errorMessages.ProductName ? "border-red-500" : ""
-              }`}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${errorMessages.ProductName ? "border-red-500" : ""
+                }`}
             />
             {errorMessages.ProductName && (
               <p className="text-red-500 text-sm">
@@ -158,11 +164,10 @@ const AddProduct = () => {
               type="text" // Để nhập giá dưới dạng văn bản
               id="ProductPrice"
               placeholder="Nhập giá sản phẩm"
-              value={formatCurrency(ProductPrice)} // Hiển thị giá đã định dạng
+              value={formatCurrency(ProductPrice) + " VNĐ"} // Hiển thị giá đã định dạng
               onChange={handleProductPriceChange}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${
-                errorMessages.ProductPrice ? "border-red-500" : ""
-              }`}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${errorMessages.ProductPrice ? "border-red-500" : ""
+                }`}
             />
             {errorMessages.ProductPrice && (
               <p className="text-red-500 text-sm">
@@ -209,9 +214,8 @@ const AddProduct = () => {
               placeholder="Nhập URL hình ảnh"
               value={ProductImg}
               onChange={handleImageChange}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${
-                errorMessages.ProductImg ? "border-red-500" : ""
-              }`}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040] ${errorMessages.ProductImg ? "border-red-500" : ""
+                }`}
             />
             {errorMessages.ProductImg && (
               <p className="text-red-500 text-sm">{errorMessages.ProductImg}</p>

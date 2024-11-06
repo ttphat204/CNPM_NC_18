@@ -65,8 +65,8 @@ function ListProduct() {
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
+      style: "decimal",
+      maximumFractionDigits: 0,
     }).format(value);
   };
 
@@ -202,7 +202,7 @@ function ListProduct() {
                     {product._id}
                   </td>{" "}
                   <td className="py-2 px-4 border-b text-right">
-                    {product.price}
+                    {formatCurrency(product.price) + " VND"}
                   </td>
                   <td className="py-2 px-4 border-b text-right">
                     <div className="flex justify-center space-x-2">

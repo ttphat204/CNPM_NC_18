@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faChevronDown, faSearch, faCartShopping, faHeart, faUser, faEarthAmericas, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faChevronDown, faSearch, faCartShopping, faUser, faEarthAmericas, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-// import { useUser } from './UserContext';
 
 function Header({ username }) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState('Phan Van Tri');
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-    // const { updateUserId } = useUser(); // Lấy hàm updateUserId từ UserContext
-    const navigate = useNavigate(); // Điều hướng sau khi đăng xuất
+    const navigate = useNavigate();
 
     const handleDropdownToggle = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -38,41 +36,33 @@ function Header({ username }) {
 
     return (
         <header>
-            <div className="bg-amber-400 h-14 w-full flex flex-row ">
-                <Link to='/home'>
-                    <img src="emart.png" alt="Grab" className=' ml-32 w-36 h-8 mt-2' />
+            <div className="bg-amber-400 h-auto w-full flex flex-col sm:flex-row items-center p-4">
+                <Link to='/home' className="flex justify-center mb-2 sm:mb-0 sm:ml-28 sm:mr-28">
+                    <img src="/emart.png" alt="Emart" className='w-36 h-8' />
                 </Link>
-              
-                <div className="relative group">
-                    <div className='flex flex-row text-white mt-4 ml-4'>
-                        <p><FontAwesomeIcon icon={faBars} /> </p>
-                        <p className='text-lg ml-1'>Tất cả danh mục </p>
+
+                <div className="relative group flex-grow">
+                    <div className='flex flex-row text-white cursor-pointer items-center pr-2'>
+                        <FontAwesomeIcon icon={faBars} />
+                        <p className='text-lg ml-1'>Tất cả danh mục</p>
                     </div>
-                    <div className="hidden absolute bg-white shadow-lg rounded mt-2 w-80 -left-40 group-hover:block z-50">
+                    <div className="absolute bg-white shadow-lg rounded mt-2 w-80 z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div className="p-2 hover:bg-gray-100 relative group/edit1">
-                           
-                                <p className=' hover:text-orange-500 hover:cursor-pointer'>Khuyến mãi </p>
-                           
+                            <p className='hover:text-orange-500 cursor-pointer'>Khuyến mãi</p>
                         </div>
-                        <div className="p-2 hover:bg-gray-100 relative group/edit z-100">
-                         
-                                <p className=' hover:text-orange-500 hover:cursor-pointer'>Thực phẩm tươi sống</p>
-                            
+                        <div className="p-2 hover:bg-gray-100 relative group/edit">
+                            <p className='hover:text-orange-500 cursor-pointer'>Thực phẩm tươi sống</p>
                             <div className="hidden absolute -top-10 left-full bg-white shadow-lg rounded w-48 group-hover/edit:block z-50">
-                               
-                                    <div className="p-2 hover:bg-gray-100 z-50 hover:text-orange-500 hover:cursor-pointer">Rau</div>
-                             
-                                    <div className="p-2 hover:bg-gray-100 z-50 hover:text-orange-500 hover:cursor-pointer">Củ quả</div>
-                              
-                              
-                                    <div className="p-2 hover:bg-gray-100 z-50 hover:text-orange-500 hover:cursor-pointer">Trái cây</div>
-                              
+                                <div className="p-2 hover:bg-gray-100 hover:text-orange-500 cursor-pointer">Rau</div>
+                                <div className="p-2 hover:bg-gray-100 hover:text-orange-500 cursor-pointer">Củ quả</div>
+                                <div className="p-2 hover:bg-gray-100 hover:text-orange-500 cursor-pointer">Trái cây</div>
                             </div>
                         </div>
-                      
                     </div>
                 </div>
-                <img src="logo1.png" alt="Grab" className=' w-7 h-9 mt-2 ml-3 mr-2' />
+
+                <img src="/logo1.png" alt="Logo" className='w-7 h-11 ml-3 mr-2 pt-2' />
+
                 <div className='relative'>
                     <div
                         className='flex flex-row bg-white rounded-2xl h-8 w-24 mt-2 cursor-pointer'
@@ -81,7 +71,7 @@ function Header({ username }) {
                         <div className='flex flex-row text-center'>
                             <p className='text-xs mt-2 ml-1'>{selectedItem}</p>
                             <p className='text-xs mt-2 ml-1'>
-                                <FontAwesomeIcon icon={faChevronDown} className=' ml-1' />
+                                <FontAwesomeIcon icon={faChevronDown} className='ml-1' />
                             </p>
                         </div>
                     </div>
@@ -99,50 +89,52 @@ function Header({ username }) {
                         </div>
                     )}
                 </div>
-                <div className='relative -mt-3 flex flex-row items-center justify-center'>
+
+                <div className='relative -mt-2 flex flex-row items-center justify-center pt-2'>
                     <input
                         className='flex-1 bg-white w-96 h-8 ml-4 mt-2 rounded-2xl pl-10'
                         type='text'
                         placeholder='Tìm sản phẩm mong muốn ...'
                     />
-                    <FontAwesomeIcon    
+                    <FontAwesomeIcon
                         icon={faSearch}
-                        className='absolute right-6 mt-1 top-1/2 transform -translate-y-1/2 text-gray-500'
+                        className='absolute right-6 mt-1 top-1/2 transform -translate-y-1/2 text-gray-500 pt-2'
                     />
                 </div>
-                {/* {username ? ( */}
-                    <div className='relative ml-5 text-white text-sm mt-2 cursor-pointer'>
-                        <div onClick={handleUserDropdownToggle} className='flex flex-row mt-2'>
-                            <p className='ml-3 text-base'>Xin chào, {username}</p>
-                            <FontAwesomeIcon icon={faChevronDown} className='ml-1' />
-                        </div>
-                        {isUserDropdownOpen && (
-                            <div className='absolute bg-white shadow-lg rounded mt-2 w-32 z-50'>
-                                <div
-                                    className='cursor-pointer text-black text-xs border-b-2 px-2 py-1 hover:bg-slate-600 hover:text-white' 
-                                    onClick={handleLogout}
-                                >
-                                    <FontAwesomeIcon icon={faSignOutAlt} /> Đăng xuất
-                                </div>
+
+                <div className='relative ml-5 text-white text-sm mt-2 cursor-pointer'>
+                    <div onClick={handleUserDropdownToggle} className='flex flex-row mt-2'>
+                        <p className='ml-3 text-base'>Xin chào, {username}</p>
+                        <FontAwesomeIcon icon={faChevronDown} className='ml-1' />
+                    </div>
+                    {isUserDropdownOpen && (
+                        <div className='absolute bg-white shadow-lg rounded mt-2 w-32 z-50'>
+                            <div
+                                className='cursor-pointer text-black text-xs border-b-2 px-2 py-1 hover:bg-slate-600 hover:text-white'
+                                onClick={handleLogout}
+                            >
+                                <FontAwesomeIcon icon={faSignOutAlt} /> Đăng xuất
                             </div>
-                        )}
-                    </div>
-                {/* ) : ( */}
-                    <div className='flex flex-col text-white ml-5 text-sm mt-2 cursor-pointer'>
-                        <Link to='/'>
-                            <p className='ml-6 text-base'><FontAwesomeIcon icon={faUser} /> </p>
-                            <p>Đăng Nhập</p>
-                        </Link>
-                    </div>
-                {/* )} */}
+                        </div>
+                    )}
+                </div>
+
                 <div className='flex flex-col text-white ml-5 text-sm mt-2 cursor-pointer'>
-                    <Link to='/cart'>
-                        <p className='ml-3 text-base'><FontAwesomeIcon icon={faCartShopping} /> </p>
+                    <Link to='/' className="flex flex-col items-center">
+                        <p className='ml-0 text-base'><FontAwesomeIcon icon={faUser} /></p>
+                        <p>Đăng Nhập</p>
+                    </Link>
+                </div>
+
+                <div className='flex flex-col text-white ml-5 text-sm mt-2 cursor-pointer'>
+                    <Link to='/cart' className="flex flex-col items-center">
+                        <p className='ml-0 text-base'><FontAwesomeIcon icon={faCartShopping} /></p>
                         <p>Giỏ Hàng</p>
                     </Link>
                 </div>
+
                 <div className='flex flex-col text-white ml-5 text-sm mt-2 cursor-pointer'>
-                    <p className='ml-3 text-base'><FontAwesomeIcon icon={faEarthAmericas} /> </p>
+                    <p className='ml-3 text-base'><FontAwesomeIcon icon={faEarthAmericas} /></p>
                     <p>English</p>
                 </div>
             </div>

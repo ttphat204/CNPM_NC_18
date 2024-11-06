@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const accountModel = require("../models/account_model");
-const Traffic = require("../models/traffic_model"); // Gọi model traffic
+const Traffic = require("../models/traffic_model");
 
 module.exports = {
   createAccount: async (req, res) => {
@@ -12,6 +12,15 @@ module.exports = {
         success: false,
         message: "Tên đăng nhập phải có ít nhất 4 ký tự.",
       });
+    }
+
+    if (!name || name.trim() === "") {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Tên không được để trống.",
+        });
     }
 
     const emailRegex = /^[^\s@]+@gmail\.com$/;

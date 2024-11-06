@@ -10,7 +10,7 @@ import Header from './header';
 function DetailProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
-//   const { userId } = useUser(); // Lấy userId từ UserContext
+  //   const { userId } = useUser(); // Lấy userId từ UserContext
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
@@ -18,9 +18,9 @@ function DetailProduct() {
 
   useEffect(() => {
     if (!id) {
-        console.error('Product ID is missing');
-        return;
-      }
+      console.error('Product ID is missing');
+      return;
+    }
     axios.get(`http://localhost:5000/api/products/${id}`)
       .then(response => {
         setProduct(response.data);
@@ -42,26 +42,26 @@ function DetailProduct() {
     }
   };
 
-//   const addToCart = () => {
-//     if (userId) {
-//       axios.post('http://localhost:3004/cart/add', { userId, productId: product._id, quantity })
-//         .then(response => {
-//           if (response.data.success) {
-//             navigate('/cart'); // Điều hướng đến trang giỏ hàng
-//           } else {
-//             console.error('Error adding to cart:', response.data.message);
-//           }
-//         })
-//         .catch(error => {
-//           console.error('Error adding to cart:', error);
-//         });
-//     } else {
-     
-//       console.log('Please log in to add items to the cart.');
-//       navigate('/login'); // Điều hướng đến trang đăng nhập
-//     }
-//   };
-// Phần này ní viết thêm vào giỏ r đổi api r sử dụng lại 
+  const addToCart = () => {
+    if (userId) {
+      axios.post('http://localhost:5000/api/carts', { userId, productId: product._id, quantity })
+        .then(response => {
+          if (response.data.success) {
+            navigate('/cart'); // Điều hướng đến trang giỏ hàng
+          } else {
+            console.error('Error adding to cart:', response.data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error adding to cart:', error);
+        });
+    } else {
+
+      console.log('Please log in to add items to the cart.');
+      navigate('/login'); // Điều hướng đến trang đăng nhập
+    }
+  };
+  // Phần này ní viết thêm vào giỏ r đổi api r sử dụng lại 
   const renderTabContent = () => {
     switch (activeTab) {
       case 'description':
@@ -87,7 +87,7 @@ function DetailProduct() {
 
   return (
     <>
-  <Header/>
+      <Header />
       <div className='bg-slate-100'>
         <div className='h-auto w-full bg-slate-100 mb-11'>
           <p className='text-xs text-gray-500 ml-32 mt-5 font-extr'>
@@ -127,12 +127,12 @@ function DetailProduct() {
                   </div>
                 )}
                 <div className='pl-2'>
-                  <button  className='h-8 px-4 py-1 bg-yellow-500 text-white rounded ml-2'>Thêm vào giỏ</button>
+                  <button className='h-8 px-4 py-1 bg-yellow-500 text-white rounded ml-2'>Thêm vào giỏ</button>
 
                   {/* onClick={addToCart} */}
                   <button className='h-8 px-4 py-1 bg-yellow-600 text-white rounded ml-2'>Mua ngay</button>
-                  <button 
-                 
+                  <button
+
                     className='h-8 px-2 py-1 bg-gray-200 rounded ml-5 hover:text-orange-400'
                   >
                     <FontAwesomeIcon icon={faHeart} />

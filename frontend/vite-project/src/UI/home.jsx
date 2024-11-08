@@ -103,7 +103,7 @@ const Home = () => {
         {/* Second product section with image */}
         <div className="h-auto bg-white mt-9 mx-4 sm:mx-8 lg:mx-32 mb-24">
           <div className="pt-5 pl-6 pb-4 font-bold text-xl border-b-4">
-            SẢN PHẨM BÁN CHẠY
+            SẢN PHẨM MỚI
           </div>
           <div className="flex flex-col md:flex-row">
             <div className="flex-shrink-0">

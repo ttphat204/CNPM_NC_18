@@ -36,8 +36,9 @@ function Header({ username }) {
 
     return (
         <header>
-            <div className="bg-amber-400 h-auto w-full flex flex-col sm:flex-row items-center p-4">
-                <Link to='/home' className="flex justify-center mb-2 sm:mb-0 sm:ml-28 sm:mr-28">
+            {/* Header for screens 768px and larger */}
+            <div className="bg-amber-400 h-auto w-full hidden md:flex flex-col md:flex-row items-center p-4">
+                <Link to='/home' className="flex justify-center mb-2 md:mb-0 md:ml-28 md:mr-28">
                     <img src="/emart.png" alt="Emart" className='w-36 h-8' />
                 </Link>
 
@@ -68,13 +69,16 @@ function Header({ username }) {
                         className='flex flex-row bg-white rounded-2xl h-8 w-24 mt-2 cursor-pointer'
                         onClick={handleDropdownToggle}
                     >
-                        <div className='flex flex-row text-center'>
+                        <div className='flex flex-row text-center flex-grow'>
                             <p className='text-xs mt-2 ml-1'>{selectedItem}</p>
-                            <p className='text-xs mt-2 ml-1'>
-                                <FontAwesomeIcon icon={faChevronDown} className='ml-1' />
-                            </p>
+                        </div>
+                        {/* Icon nằm cố định ở bên phải */}
+                        <div className='absolute right-2 top-1/2 transform -translate-y-1/2 '>
+                            <FontAwesomeIcon icon={faChevronDown} className='text-gray-500 mt-3' />
                         </div>
                     </div>
+
+                    {/* Dropdown danh sách lựa chọn */}
                     {isDropdownOpen && (
                         <div className='absolute bg-white shadow-lg rounded mt-2 w-24 z-50'>
                             {items.map((item, index) => (
@@ -89,6 +93,7 @@ function Header({ username }) {
                         </div>
                     )}
                 </div>
+
 
                 <div className='relative -mt-2 flex flex-row items-center justify-center pt-2'>
                     <input
@@ -136,6 +141,67 @@ function Header({ username }) {
                 <div className='flex flex-col text-white ml-5 text-sm mt-2 cursor-pointer'>
                     <p className='ml-3 text-base'><FontAwesomeIcon icon={faEarthAmericas} /></p>
                     <p>English</p>
+                </div>
+            </div>
+
+            {/* Header for screens smaller than 640px */}
+            <div className="bg-amber-400 h-auto w-full flex flex-col items-center p-4 sm:hidden">
+                {/* Emart logo centered */}
+                <Link to='/home' className="flex justify-center mb-2">
+                    <img src="/emart.png" alt="Emart" className='w-36 h-8' />
+                </Link>
+
+                {/* Bottom row with icons and dropdowns */}
+                <div className="flex flex-row items-center justify-around w-full">
+                    <img src="/logo1.png" alt="Logo" className='w-7 h-11 pt-2' />
+
+                    <div className='relative'>
+                        <div
+                            className='flex flex-row bg-white rounded-2xl h-8 w-24 mt-2 cursor-pointer'
+                            onClick={handleDropdownToggle}
+                        >
+                            <div className='flex flex-row text-center flex-grow'>
+                                <p className='text-xs mt-2 ml-1'>{selectedItem}</p>
+                            </div>
+                            {/* Icon nằm cố định ở bên phải */}
+                            <div className='absolute right-2 top-1/2 transform -translate-y-1/2'>
+                                <FontAwesomeIcon icon={faChevronDown} className='text-gray-500 mt-3' />
+                            </div>
+                        </div>
+
+                        {/* Dropdown danh sách lựa chọn */}
+                        {isDropdownOpen && (
+                            <div className='absolute bg-white shadow-lg rounded mt-2 w-24 z-50'>
+                                {items.map((item, index) => (
+                                    <div
+                                        key={index}
+                                        className='cursor-pointer text-xs border-b-2 px-2 py-1 rounded-2xl hover:bg-gray-200'
+                                        onClick={() => handleItemClick(item)}
+                                    >
+                                        {item}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+
+                    <div className='relative flex-grow mt-2 ml-2'>
+                        <input
+                            className='bg-white rounded-2xl h-8 w-full pl-10'
+                            type='text'
+                            placeholder='Tìm kiếm...'
+                        />
+                        <FontAwesomeIcon
+                            icon={faSearch}
+                            className='absolute left-3 top-2 text-gray-500'
+                        />
+                    </div>
+
+                    <Link to='/cart' className="flex flex-col items-center text-white ml-3">
+                        <FontAwesomeIcon icon={faCartShopping} className='text-base mt-2' />
+                        <p className='text-xs'>Giỏ Hàng</p>
+                    </Link>
                 </div>
             </div>
         </header>

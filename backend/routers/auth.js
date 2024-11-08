@@ -65,14 +65,14 @@ const logout = (req, res) => {
 const verifyUser = (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
-    return res.json({ message: "User không hợp lệ" });
+    return res.json({ message: 'User không hợp lệ' });
   } else {
     jwt.verify(token, process.env.User_Key, (err, decoded) => {
       if (err) {
-        return res.json({ message: "Token không hợp lệ" });
+        return res.json({ message: 'Token không hợp lệ' });
       } else {
         req.username = decoded.username;
-        req.role = decoded.role || "user";
+        req.role = decoded.role || 'user';
         req.userId = decoded.userId;
         next();
       }
@@ -80,13 +80,8 @@ const verifyUser = (req, res, next) => {
   }
 };
 
-router.get("/verify", verifyUser, (req, res) => {
-  return res.json({
-    login: true,
-    role: req.role,
-    username: req.username,
-    userId: req.userId,
-  });
+router.get('/verify', verifyUser, (req, res) => {
+  return res.json({ login: true, role: req.role, username: req.username, userId: req.userId });
 });
 
 router.post("/login", login);

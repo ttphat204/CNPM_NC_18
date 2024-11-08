@@ -4,7 +4,7 @@ import { faBars, faChevronDown, faSearch, faCartShopping, faUser, faEarthAmerica
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function Header({ username }) {
+function header({ username }) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState('Phan Van Tri');
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
@@ -34,26 +34,32 @@ function Header({ username }) {
 
     const items = ['Phan Van Tri', 'Sala', 'Phan Huy Ich'];
 
+
+
     return (
         <header>
             {/* Header for screens 768px and larger */}
             <div className="bg-amber-400 h-auto w-full hidden md:flex flex-col md:flex-row items-center p-4">
-                <Link to='/home' className="flex justify-center mb-2 md:mb-0 md:ml-28 md:mr-28">
+                <Link to='/home' className="flex justify-left   mb-2 md:mb-0 md:ml-28   md:mr-6  ">
                     <img src="/emart.png" alt="Emart" className='w-36 h-8' />
                 </Link>
 
-                <div className="relative group flex-grow">
-                    <div className='flex flex-row text-white cursor-pointer items-center pr-2'>
-                        <FontAwesomeIcon icon={faBars} />
-                        <p className='text-lg ml-1'>Tất cả danh mục</p>
+                <div className="relative group">
+                    <div className='flex items-center text-white cursor-pointer pr-4 pl-2 py-1 rounded-md hover:bg-amber-500'>
+                        <FontAwesomeIcon icon={faBars} className="text-lg" />
+                        <p className='ml-2 text-base'>Tất cả danh mục</p>
                     </div>
-                    <div className="absolute bg-white shadow-lg rounded mt-2 w-80 z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="p-2 hover:bg-gray-100 relative group/edit1">
+
+                    {/* Dropdown Menu */}
+                    <div className="absolute bg-white shadow-lg rounded mt-2 w-56 z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="p-3 hover:bg-gray-100">
                             <p className='hover:text-orange-500 cursor-pointer'>Khuyến mãi</p>
                         </div>
-                        <div className="p-2 hover:bg-gray-100 relative group/edit">
+                        <div className="p-3 hover:bg-gray-100 relative group">
                             <p className='hover:text-orange-500 cursor-pointer'>Thực phẩm tươi sống</p>
-                            <div className="hidden absolute -top-10 left-full bg-white shadow-lg rounded w-48 group-hover/edit:block z-50">
+
+                            {/* Submenu */}
+                            <div className="hidden absolute top-0 left-full bg-white shadow-lg rounded w-40 group-hover:block z-50">
                                 <div className="p-2 hover:bg-gray-100 hover:text-orange-500 cursor-pointer">Rau</div>
                                 <div className="p-2 hover:bg-gray-100 hover:text-orange-500 cursor-pointer">Củ quả</div>
                                 <div className="p-2 hover:bg-gray-100 hover:text-orange-500 cursor-pointer">Trái cây</div>
@@ -62,29 +68,25 @@ function Header({ username }) {
                     </div>
                 </div>
 
-                <img src="/logo1.png" alt="Logo" className='w-7 h-11 ml-3 mr-2 pt-2' />
 
-                <div className='relative'>
+                <img src="/logo1.png" alt="Logo" className='w-7 h-11 ml-3 mr-3 pt-2' />
+
+                <div className='relative mr-4'>
                     <div
-                        className='flex flex-row bg-white rounded-2xl h-8 w-24 mt-2 cursor-pointer'
+                        className='flex items-center bg-white rounded-xl h-8 px-3 cursor-pointer justify-between'
                         onClick={handleDropdownToggle}
                     >
-                        <div className='flex flex-row text-center flex-grow'>
-                            <p className='text-xs mt-2 ml-1'>{selectedItem}</p>
-                        </div>
-                        {/* Icon nằm cố định ở bên phải */}
-                        <div className='absolute right-2 top-1/2 transform -translate-y-1/2 '>
-                            <FontAwesomeIcon icon={faChevronDown} className='text-gray-500 mt-3' />
-                        </div>
+                        <p className='text-xs mx-1'>{selectedItem}</p>
+                        <FontAwesomeIcon icon={faChevronDown} className='text-gray-500 ml-1' />
                     </div>
 
                     {/* Dropdown danh sách lựa chọn */}
                     {isDropdownOpen && (
-                        <div className='absolute bg-white shadow-lg rounded mt-2 w-24 z-50'>
+                        <div className='absolute bg-white shadow-lg rounded-lg mt-1 w-28 z-50'>
                             {items.map((item, index) => (
                                 <div
                                     key={index}
-                                    className='cursor-pointer text-xs border-b-2 px-2 py-1 rounded-2xl hover:bg-gray-200'
+                                    className='cursor-pointer text-xs px-3 py-1 hover:bg-gray-200 rounded-lg'
                                     onClick={() => handleItemClick(item)}
                                 >
                                     {item}
@@ -93,27 +95,25 @@ function Header({ username }) {
                         </div>
                     )}
                 </div>
-
-
-                <div className='relative -mt-2 flex flex-row items-center justify-center pt-2'>
+                <div className='relative  flex  items-center justify-center'>
                     <input
-                        className='flex-1 bg-white w-96 h-8 ml-4 mt-2 rounded-2xl pl-10'
+                        className='flex-1 bg-white w-96 h-8  rounded-2xl pl-10'
                         type='text'
                         placeholder='Tìm sản phẩm mong muốn ...'
                     />
                     <FontAwesomeIcon
                         icon={faSearch}
-                        className='absolute right-6 mt-1 top-1/2 transform -translate-y-1/2 text-gray-500 pt-2'
+                        className='absolute right-5 top-1/2 transform -translate-y-1/2 text-gray-500 pr-2'
                     />
                 </div>
 
-                <div className='relative ml-5 text-white text-sm mt-2 cursor-pointer'>
-                    <div onClick={handleUserDropdownToggle} className='flex flex-row mt-2'>
+                <div className='relative ml-5 text-white text-sm  cursor-pointer '>
+                    <div onClick={handleUserDropdownToggle} className='flex flex-row justify-center items-center mr-10'>
                         <p className='ml-3 text-base'>Xin chào, {username}</p>
                         <FontAwesomeIcon icon={faChevronDown} className='ml-1' />
                     </div>
                     {isUserDropdownOpen && (
-                        <div className='absolute bg-white shadow-lg rounded mt-2 w-32 z-50'>
+                        <div className='absolute bg-white shadow-lg rounded w-32 z-50'>
                             <div
                                 className='cursor-pointer text-black text-xs border-b-2 px-2 py-1 hover:bg-slate-600 hover:text-white'
                                 onClick={handleLogout}
@@ -124,12 +124,6 @@ function Header({ username }) {
                     )}
                 </div>
 
-                <div className='flex flex-col text-white ml-5 text-sm mt-2 cursor-pointer'>
-                    <Link to='/' className="flex flex-col items-center">
-                        <p className='ml-0 text-base'><FontAwesomeIcon icon={faUser} /></p>
-                        <p>Đăng Nhập</p>
-                    </Link>
-                </div>
 
                 <div className='flex flex-col text-white ml-5 text-sm mt-2 cursor-pointer'>
                     <Link to='/cart' className="flex flex-col items-center">
@@ -208,4 +202,4 @@ function Header({ username }) {
     );
 }
 
-export default Header;
+export default header;

@@ -6,8 +6,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import SwiperSection from './SwiperSection';
 import ProductBlock from './ProductBlock';
-import Footer from './Footer';
-import Header from './Header';
+import Footer from './footer';
+import Header from './header';
 
 const groupProducts = (products, itemsPerGroup) => {
   let grouped = [];
@@ -42,7 +42,7 @@ const Home = () => {
         <SwiperSection images={swiperImages} />
 
         {/* Image cards at the top */}
-        <div className="mx-4 sm:mx-8 lg:mx-32 mt-24">
+        <div className="mx-4 sm:mx-8 sm:mt-24 lg:mx-32 mt-[-220px]">
           <div className="flex flex-col sm:flex-row justify-between gap-4 mb-10">
             {["sale1.jpg", "sale2.jpg", "sale3.jpg"].map((imgSrc, idx) => (
               <div key={idx} className="relative flex-1 h-52 overflow-hidden rounded-lg border border-gray-300">
@@ -56,7 +56,7 @@ const Home = () => {
         </div>
 
         {/* First product slider */}
-        <div className="h-auto bg-white">
+        <div className="h-auto bg-white mt-9 mx-4 sm:mx-8 lg:mx-32 mb-24">
           <div className="mb-10 pt-5 pl-6 pb-4 font-bold text-xl border-b-4">
             SẢN PHẨM BÁN CHẠY
           </div>
@@ -82,7 +82,7 @@ const Home = () => {
         </div>
 
         {/* Second product section with image */}
-        <div className="h-auto bg-white mt-9 mx-4 sm:mx-8 lg:mx-32 mb-24">
+        <div className="h-auto bg-white mt-9 mx-4 sm:mx-8 lg:mx-32 mb-24 mt-[-50px]">
           <div className="pt-5 pl-6 pb-4 font-bold text-xl border-b-4">
             SẢN PHẨM MỚI
           </div>
@@ -91,7 +91,7 @@ const Home = () => {
               <img
                 src="sale4.jpg"
                 className="w-full h-auto object-cover border border-gray-300"
-                style={{ maxWidth: '280px' }}
+                style={{ maxWidth: '450px' }}
               />
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 flex-1 mt-4 md:mt-0">

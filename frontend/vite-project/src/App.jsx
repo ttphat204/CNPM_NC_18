@@ -18,6 +18,7 @@ import ListDiscount from "./pages/ListDiscount";
 // import ShoppingCart from "./UI/cart";
 import CreatePromotion from "./pages/CreatePromotion";
 import Kho from "./pages/Kho";
+import Order_inf from "./UI/order_inf";
 function App() {
   return (
     <Router>
@@ -46,6 +47,7 @@ function App() {
           {/* Các route liên quan đến giao diện người dùng */}
           {/* <Route path="/product/:id" element={<DetailProduct />} /> */}
           {/* <Route path="/Cart" element={<ShoppingCart />} /> */}
+          <Route path="/Order_inf" element={<Order_inf />} />
         </Routes>
       </div>
     </Router>

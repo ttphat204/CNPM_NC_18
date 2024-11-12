@@ -48,7 +48,7 @@ const Home = () => {
         <SwiperSection images={swiperImages} />
 
         {/* Image cards at the top */}
-        <div className="mx-4 sm:mx-8 lg:mx-32 mt-24">
+        <div className="mx-4 sm:mx-8 sm:mt-24 lg:mx-32 mt-[-220px]">
           <div className="flex flex-col sm:flex-row justify-between gap-4 mb-10">
             {["sale1.jpg", "sale2.jpg", "sale3.jpg"].map((imgSrc, idx) => (
               <div
@@ -101,7 +101,7 @@ const Home = () => {
         </div>
 
         {/* Second product section with image */}
-        <div className="h-auto bg-white mt-9 mx-4 sm:mx-8 lg:mx-32 mb-24">
+        <div className="h-auto bg-white mt-9 mx-4 sm:mx-8 lg:mx-32 mb-24 mt-[-50px]">
           <div className="pt-5 pl-6 pb-4 font-bold text-xl border-b-4">
             SẢN PHẨM MỚI
           </div>

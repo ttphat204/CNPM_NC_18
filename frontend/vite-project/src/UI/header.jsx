@@ -244,4 +244,4 @@ function Header({ username }) {
   );
 }
 
-export default Header;
+export default header;

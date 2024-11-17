@@ -1,58 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-
-// const CreatePromotion = () => {
-//     const [categories, setCategories] = useState([]);
-//     const [promotion, setPromotion] = useState({ code: '', discount: 0, categoryId: '' });
-
-//     useEffect(() => {
-//         axios.get('http://localhost:3004/categories/xem')
-//             .then(res => setCategories(res.data))
-//             .catch(err => console.error('Error fetching categories:', err));
-//     }, []);
-
-//     const handleChange = (e) => {
-//         const { name, value } = e.target;
-//         setPromotion(prevState => ({ ...prevState, [name]: value }));
-//     };
-
-//     const createPromotion = () => {
-//         axios.post('http://localhost:3004/promotion/add', promotion)
-//             .then(res => console.log('Promotion created:', res.data))
-//             .catch(err => console.error('Error creating promotion:', err));
-//     };
-
-//     return (
-//         <div>
-//             <h1>Create Promotion</h1>
-//             <input
-//                 type="text"
-//                 name="code"
-//                 value={promotion.code}
-//                 onChange={handleChange}
-//                 placeholder="Promotion Code"
-//             />
-//             <input
-//                 type="number"
-//                 name="discount"
-//                 value={promotion.discount}
-//                 onChange={handleChange}
-//                 placeholder="Discount"
-//             />
-//             <select name="categoryId" value={promotion.categoryId} onChange={handleChange}>
-//                 <option value="">Select Category</option>
-//                 {categories.map(category => (
-//                     <option key={category._id} value={category._id}>{category.name}</option>
-//                 ))}
-//             </select>
-//             <button onClick={createPromotion}>Create Promotion</button>
-//         </div>
-//     );
-// };
-
-// export default CreatePromotion;
-
-// E:\emart\client\src\components/CreatePromotion.jsx
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "../components/sidebar1";
@@ -66,12 +11,16 @@ const CreatePromotion = () => {
     startDate: "",
     endDate: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
+  // Lấy danh mục từ API
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/categories")
       .then((res) => setCategories(res.data))
-      .catch((err) => console.error("Error fetching categories:", err));
+      .catch((err) => console.error("Lỗi khi lấy danh mục:", err));
   }, []);
 
   const handleChange = (e) => {
@@ -79,11 +28,48 @@ const CreatePromotion = () => {
     setPromotion((prevState) => ({ ...prevState, [name]: value }));
   };
 
+  const validateInputs = () => {
+    const { code, discount, categoryId, startDate, endDate } = promotion;
+    if (!code || !discount || !categoryId || !startDate || !endDate) {
+      setError("Vui lòng điền đầy đủ thông tin.");
+      return false;
+    }
+    if (discount <= 0 || discount > 100) {
+      setError("Giảm giá phải nằm trong khoảng 1-100%.");
+      return false;
+    }
+    if (new Date(startDate) >= new Date(endDate)) {
+      setError("Ngày kết thúc phải sau ngày bắt đầu.");
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
   const createPromotion = () => {
+    if (!validateInputs()) return;
+
+    setLoading(true);
+    setSuccess(false);
+
     axios
       .post("http://localhost:5000/promotion/add", promotion)
-      .then((res) => console.log("Promotion created:", res.data))
-      .catch((err) => console.error("Error creating promotion:", err));
+      .then((res) => {
+        setLoading(false);
+        setSuccess(true);
+        setPromotion({
+          code: "",
+          discount: 0,
+          categoryId: "",
+          startDate: "",
+          endDate: "",
+        });
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.error("Lỗi khi tạo khuyến mãi:", err);
+        setError("Không thể tạo khuyến mãi. Vui lòng thử lại sau.");
+      });
   };
 
   return (
@@ -92,15 +78,25 @@ const CreatePromotion = () => {
         <Sidebar />
         <div className="container flex flex-col mx-auto max-w-4xl bg-white p-8 rounded-lg shadow-md">
           <h1 className="text-3xl font-bold mb-6 text-center">
-            Create Promotion
+            Tạo Khuyến Mãi
           </h1>
+
+          {error && (
+            <div className="mb-4 text-red-600 text-center">{error}</div>
+          )}
+          {success && (
+            <div className="mb-4 text-green-600 text-center">
+              Khuyến mãi đã được tạo thành công!
+            </div>
+          )}
+
           <div className="space-y-4">
             <input
               type="text"
               name="code"
               value={promotion.code}
               onChange={handleChange}
-              placeholder="Promotion Code"
+              placeholder="Tên khuyến mãi"
               className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <input
@@ -116,7 +112,6 @@ const CreatePromotion = () => {
               name="startDate"
               value={promotion.startDate}
               onChange={handleChange}
-              placeholder="Start Date"
               className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <input
@@ -124,15 +119,14 @@ const CreatePromotion = () => {
               name="endDate"
               value={promotion.endDate}
               onChange={handleChange}
-              placeholder="End Date"
               className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <select
               id="categoryId"
               name="categoryId"
+              value={promotion.categoryId}
               required
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#ffd040]"
-              placeholder="Chọn danh mục"
               onChange={handleChange}
             >
               <option value="">Chọn danh mục</option>
@@ -146,11 +140,16 @@ const CreatePromotion = () => {
                 </option>
               ))}
             </select>
+
             <button
               onClick={createPromotion}
-              className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+              disabled={loading}
+              className={`w-full px-4 py-2 rounded-md text-white transition ${loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600"
+                }`}
             >
-              Create Promotion
+              {loading ? "Đang xử lý..." : "Tạo khuyến mãi"}
             </button>
           </div>
         </div>
@@ -158,4 +157,5 @@ const CreatePromotion = () => {
     </div>
   );
 };
+
 export default CreatePromotion;

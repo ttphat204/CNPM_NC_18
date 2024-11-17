@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLock, faPhone, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faPhone, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
@@ -22,7 +22,14 @@ const Login = () => {
             .then(res => {
                 if (res.data.login) {
                     console.log("User ID in Login:", res.data.userId);
+                    // Lưu thông tin người dùng và token vào localStorage
+                    localStorage.setItem('username', res.data.username); // Lưu tên người dùng
+                    localStorage.setItem('userId', res.data.userId); // Lưu ID người dùng
+                    localStorage.setItem('role', res.data.role); // Lưu vai trò (nếu có)
+                    localStorage.setItem('token', res.data.token); // Lưu token (nếu có)
+
                     setErrorMessage(""); // Xóa lỗi nếu đăng nhập thành công
+
                     switch (res.data.role) {
                         case 'adminPage1':
                             navigate('/dashboard');

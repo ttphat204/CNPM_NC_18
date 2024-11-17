@@ -1,19 +1,15 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import Footer from ".UI/footer";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faStar,
-  faHeart,
-} from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
-import Header from ".UI/header";
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import Footer from '<div className="UI"></div>/footer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faStar, faHeart } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
+import Header from './header';
 // import { useUser } from './UserContext';
 
 function DetailProduct() {
   const { id } = useParams();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   //   const { userId } = useUser(); // Lấy userId từ UserContext
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -47,30 +43,26 @@ function DetailProduct() {
     }
   };
 
-  // const addToCart = () => {
-  //   if (userId) {
-  //     axios
-  //       .post("http://localhost:5000/api/carts", {
-  //         userId,
-  //         productId: product._id,
-  //         quantity,
-  //       })
-  //       .then((response) => {
-  //         if (response.data.success) {
-  //           navigate("/cart"); // Điều hướng đến trang giỏ hàng
-  //         } else {
-  //           console.error("Error adding to cart:", response.data.message);
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error adding to cart:", error);
-  //       });
-  //   } else {
-  //     console.log("Please log in to add items to the cart.");
-  //     navigate("/login"); // Điều hướng đến trang đăng nhập
-  //   }
-  // };
-  // Phần này ní viết thêm vào giỏ r đổi api r sử dụng lại
+  const addToCart = () => {
+    if (userId) {
+      axios.post('http://localhost:5000/api/carts', { userId, productId: product._id, quantity })
+        .then(response => {
+          if (response.data.success) {
+            navigate('/cart'); // Điều hướng đến trang giỏ hàng
+          } else {
+            console.error('Error adding to cart:', response.data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error adding to cart:', error);
+        });
+    } else {
+
+      console.log('Please log in to add items to the cart.');
+      navigate('/login'); // Điều hướng đến trang đăng nhập
+    }
+  };
+  // Phần này ní viết thêm vào giỏ r đổi api r sử dụng lại 
   const renderTabContent = () => {
     switch (activeTab) {
       case "description":
@@ -176,9 +168,8 @@ function DetailProduct() {
             <nav className="border-b border-gray-200">
               <ul className="flex">
                 <li
-                  className={`mr-1 ${
-                    activeTab === "description" ? "border-black border-b-2" : ""
-                  }`}
+                  className={`mr-1 ${activeTab === "description" ? "border-black border-b-2" : ""
+                    }`}
                 >
                   <button
                     className="bg-white inline-block py-2 px-4 text-black font-semibold"
@@ -188,9 +179,8 @@ function DetailProduct() {
                   </button>
                 </li>
                 <li
-                  className={`mr-1 ${
-                    activeTab === "reviews" ? "border-black border-b-2" : ""
-                  }`}
+                  className={`mr-1 ${activeTab === "reviews" ? "border-black border-b-2" : ""
+                    }`}
                 >
                   <button
                     className="bg-white inline-block py-2 px-4 text-black font-semibold"
@@ -200,9 +190,8 @@ function DetailProduct() {
                   </button>
                 </li>
                 <li
-                  className={`mr-1 ${
-                    activeTab === "qa" ? "border-black border-b-2" : ""
-                  }`}
+                  className={`mr-1 ${activeTab === "qa" ? "border-black border-b-2" : ""
+                    }`}
                 >
                   <button
                     className="bg-white inline-block py-2 px-4 text-black font-semibold"

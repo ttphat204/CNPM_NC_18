@@ -58,18 +58,18 @@ const Home = () => {
                 <img
                   src={imgSrc}
                   className="w-full h-full object-cover transition-transform transform hover:scale-110 hover:opacity-50"
+                  alt="Sale"
                 />
                 <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-center p-2">
                   {idx === 0
                     ? "NO BRAND"
                     : idx === 1
-                    ? "NÔNG SẢN SẠCH"
-                    : "CHỈ CÓ TRÊN EMART"}
+                      ? "NÔNG SẢN SẠCH"
+                      : "CHỈ CÓ TRÊN EMART"}
                 </div>
               </div>
             ))}
           </div>
-
           {/* First product slider */}
           <div className="h-auto bg-white">
             <div className="mb-10 pt-5 pl-6 pb-4 font-bold text-xl border-b-4">
@@ -110,7 +110,8 @@ const Home = () => {
               <img
                 src="sale4.jpg"
                 className="w-full h-auto object-cover border border-gray-300"
-                style={{ maxWidth: "280px" }}
+                style={{ maxWidth: "450px" }} // Unified width
+                alt="New Product Sale"
               />
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 flex-1 mt-4 md:mt-0">
@@ -128,3 +129,4 @@ const Home = () => {
 };
 
 export default Home;
+

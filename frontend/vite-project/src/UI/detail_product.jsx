@@ -15,7 +15,7 @@ function DetailProduct() {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
   const maxQuantity = 24;
-
+  const account_id = localStorage.getItem('userId');
   useEffect(() => {
     if (!id) {
       console.error("Product ID is missing");
@@ -44,8 +44,8 @@ function DetailProduct() {
   };
 
   const addToCart = () => {
-    if (userId) {
-      axios.post('http://localhost:5000/api/carts', { userId, productId: product._id, quantity })
+    if (account_id) {
+      axios.post('http://localhost:5000/api/carts/', { account_id, product_id: product._id, quantity })
         .then(response => {
           if (response.data.success) {
             navigate('/cart'); // Điều hướng đến trang giỏ hàng
@@ -94,16 +94,16 @@ function DetailProduct() {
           <p className="text-xs text-gray-500 ml-32 mt-5 font-extr">
             <span className="mr-2">TRANG CHỦ</span>
             <FontAwesomeIcon icon={faChevronLeft} />
-            <span className="text-black ml-3">{product.name}</span>
+            <span className="text-black ml-3">{product.product_name}</span>
           </p>
           <div className="w-4/5 h-auto bg-white ml-32 mt-5 flex flex-row mb-8">
             <img
               className="flex-2 w-1/3"
               src={product.img}
-              alt={product.name}
+              alt={product.product_name}
             />
             <div className="pl-12 left-1 w-2/5 mt-5">
-              <h1 className="font-bold">{product.name}</h1>
+              <h1 className="font-bold">{product.product_name}</h1>
               <h2 className="text-red-600 text-2xl mt-2 border-b-2 border-gray-200 pb-4">
                 {product.newPrice || product.price}₫
               </h2>
@@ -152,8 +152,8 @@ function DetailProduct() {
                     Thêm vào giỏ
                   </button>
 
-                  {/* onClick={addToCart} */}
-                  <button className="h-8 px-4 py-1 bg-yellow-600 text-white rounded ml-2">
+                
+                  <button   onClick={addToCart} className="h-8 px-4 py-1 bg-yellow-600 text-white rounded ml-2">
                     Mua ngay
                   </button>
                   <button className="h-8 px-2 py-1 bg-gray-200 rounded ml-5 hover:text-orange-400">

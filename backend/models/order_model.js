@@ -13,11 +13,6 @@ const orderSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  total_money: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
   payment_method: {
     type: String,
     enum: ["COD", "Momo", "Cart Credit"],

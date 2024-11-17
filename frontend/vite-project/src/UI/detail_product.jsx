@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Footer from '<div className="UI"></div>/footer';
+import Footer from "./Footer";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faStar, faHeart } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
@@ -205,7 +205,7 @@ function DetailProduct() {
             <div className="p-4">{renderTabContent()}</div>
           </div>
         </div>
-        <Footer />
+<Footer/>
       </div>
     </>
   );

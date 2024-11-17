@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
   faChevronDown,
+  faChevronRight,
   faSearch,
   faCartShopping,
   faUser,
@@ -16,10 +17,43 @@ function Header({ username }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState("Phan Van Tri");
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch categories from the API
+    axios
+      .get("http://localhost:5000/api/categories")
+      .then((res) => {
+        setCategories(res.data);
+      })
+      .catch((err) => console.log("Lỗi khi lấy danh mục:", err));
+  }, []);
+
+  const handleLocationDropdownToggle = () => {
+    setIsLocationDropdownOpen(!isLocationDropdownOpen);
+  };
+
+  const handleCategoryDropdownToggle = () => {
+    setIsCategoryDropdownOpen(!isCategoryDropdownOpen);
+  };
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+    setIsCategoryDropdownOpen(false);
+    navigate(`/category/${category}`);
+  };
+
+  const handleLocationClick = (location) => {
+    setSelectedItem(location);
+    setIsLocationDropdownOpen(false);
   };
 
   const handleItemClick = (item) => {
@@ -55,31 +89,36 @@ function Header({ username }) {
         </Link>
 
         <div className="relative group flex-grow">
-          <div className="flex flex-row text-white cursor-pointer items-center pr-2">
+          <div
+            className="flex flex-row text-white cursor-pointer items-center pr-2"
+            onClick={handleCategoryDropdownToggle}
+          >
             <FontAwesomeIcon icon={faBars} />
             <p className="text-lg ml-1">Tất cả danh mục</p>
           </div>
-          <div className="absolute bg-white shadow-lg rounded mt-2 w-80 z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="p-2 hover:bg-gray-100 relative group/edit1">
-              <p className="hover:text-orange-500 cursor-pointer">Khuyến mãi</p>
+
+          {isCategoryDropdownOpen && (
+            <div className="absolute bg-gray-100 shadow-md rounded-lg mt-2 w-80 z-50">
+              {categories.map((category, index) => (
+                <div
+                  key={index}
+                  className="p-3 hover:bg-yellow-200 hover:scale-105 cursor-pointer rounded-md transition-all"
+                  onClick={() => handleCategoryClick(category.category_name)}
+                >
+                  {/* Tùy chọn: Thêm biểu tượng cho mỗi danh mục */}
+                  <div className="flex items-center">
+                    <FontAwesomeIcon
+                      icon={faChevronRight}
+                      className="mr-2 text-gray-600"
+                    />
+                    <p className="text-lg font-medium text-gray-800">
+                      {category.category_name}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="p-2 hover:bg-gray-100 relative group/edit">
-              <p className="hover:text-orange-500 cursor-pointer">
-                Thực phẩm tươi sống
-              </p>
-              <div className="hidden absolute -top-10 left-full bg-white shadow-lg rounded w-48 group-hover/edit:block z-50">
-                <div className="p-2 hover:bg-gray-100 hover:text-orange-500 cursor-pointer">
-                  Rau
-                </div>
-                <div className="p-2 hover:bg-gray-100 hover:text-orange-500 cursor-pointer">
-                  Củ quả
-                </div>
-                <div className="p-2 hover:bg-gray-100 hover:text-orange-500 cursor-pointer">
-                  Trái cây
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
 
         <img src="/logo1.png" alt="Logo" className="w-7 h-11 ml-3 mr-2 pt-2" />
@@ -87,7 +126,7 @@ function Header({ username }) {
         <div className="relative">
           <div
             className="flex flex-row bg-white rounded-2xl h-8 w-24 mt-2 cursor-pointer"
-            onClick={handleDropdownToggle}
+            onClick={handleLocationDropdownToggle}
           >
             <div className="flex flex-row text-center flex-grow">
               <p className="text-xs mt-2 ml-1">{selectedItem}</p>
@@ -102,13 +141,13 @@ function Header({ username }) {
           </div>
 
           {/* Dropdown danh sách lựa chọn */}
-          {isDropdownOpen && (
+          {isLocationDropdownOpen && (
             <div className="absolute bg-white shadow-lg rounded mt-2 w-24 z-50">
               {items.map((item, index) => (
                 <div
                   key={index}
                   className="cursor-pointer text-xs border-b-2 px-2 py-1 rounded-2xl hover:bg-gray-200"
-                  onClick={() => handleItemClick(item)}
+                  onClick={() => handleLocationClick(item)}
                 >
                   {item}
                 </div>
@@ -119,7 +158,7 @@ function Header({ username }) {
 
         <div className="relative -mt-2 flex flex-row items-center justify-center pt-2">
           <input
-            className="flex-1 bg-white w-96 h-8 ml-4 mt-2 rounded-2xl pl-10"
+            className="flex-1 bg-white w-96 h-8 ml-4 mt-2 rounded-2xl pl-10 focus:border-[#ffd040] focus:outline-none transition-all"
             type="text"
             placeholder="Tìm sản phẩm mong muốn ..."
           />
@@ -244,4 +283,4 @@ function Header({ username }) {
   );
 }
 
-export default header;
+export default Header;

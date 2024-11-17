@@ -39,10 +39,6 @@ function ListKho() {
     }
   };
 
-  const formatQuantity = (value) => {
-    return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  };
-
   const handleAddClick = (productId) => {
     setAddingProduct(productId);
     setQuantityToAdd("");
@@ -51,22 +47,22 @@ function ListKho() {
   const handleQuantityChange = (e) => {
     const value = parseInt(e.target.value.replace(/\./g, ""), 10);
     if (value > 1000000) {
-      setQuantityToAdd("1.000.000");
+      setQuantityToAdd("1000000");
     } else if (value < 1) {
       setQuantityToAdd("1");
     } else {
-      setQuantityToAdd(formatQuantity(e.target.value));
+      setQuantityToAdd(value.toString()); // Remove formatting
     }
   };
 
   const handleNewProductQuantityChange = (e) => {
     const value = parseInt(e.target.value.replace(/\./g, ""), 10);
     if (value > 1000000) {
-      setNewProductQuantity("1.000.000");
+      setNewProductQuantity("1000000");
     } else if (value < 1) {
       setNewProductQuantity("1");
     } else {
-      setNewProductQuantity(formatQuantity(e.target.value));
+      setNewProductQuantity(value.toString()); // Remove formatting
     }
   };
 

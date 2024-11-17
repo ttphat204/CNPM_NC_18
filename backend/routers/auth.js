@@ -3,11 +3,22 @@ const AdminModel = require("../models/Admin");
 const account = require("../models/account_model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const session = require("express-session"); // Cài đặt session
 
 const router = express.Router();
 
 const dotenv = require("dotenv");
 dotenv.config();
+
+// Cấu hình session
+router.use(
+  session({
+    secret: "your-session-secret", // Thay bằng một secret phức tạp
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Đảm bảo khi chạy trên https, set secure: true
+  })
+);
 
 const login = async (req, res) => {
   try {
@@ -19,11 +30,14 @@ const login = async (req, res) => {
       if (!validPassword) {
         return res.status(401).json({ message: "Sai mật khẩu" });
       }
-      const token = jwt.sign(
-        { username: admin.username, role: admin.role, userId: admin._id },
-        process.env.ADMIN_KEY
-      );
-      res.cookie("token", token, { httpOnly: true, secure: false });
+
+      // Lưu thông tin vào session thay vì cookie
+      req.session.user = {
+        username: admin.username,
+        role: admin.role,
+        userId: admin._id,
+      };
+
       return res.json({
         login: true,
         role: admin.role,
@@ -38,11 +52,14 @@ const login = async (req, res) => {
       if (!validPassword) {
         return res.status(401).json({ message: "Sai mật khẩu" });
       }
-      const token = jwt.sign(
-        { username: user.username, role: "user", userId: user._id },
-        process.env.USER_KEY
-      );
-      res.cookie("token", token, { httpOnly: true, secure: false });
+
+      // Lưu thông tin vào session thay vì cookie
+      req.session.user = {
+        username: user.username,
+        role: "user",
+        userId: user._id,
+      };
+
       return res.json({
         login: true,
         role: "user",
@@ -59,24 +76,23 @@ const login = async (req, res) => {
 
 // Đăng xuất
 const logout = (req, res) => {
-  res.clearCookie("token");
-  return res.json({ logout: true });
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ message: "Không thể đăng xuất" });
+    }
+    return res.json({ logout: true });
+  });
 };
+
+// Middleware kiểm tra xác thực người dùng qua session
 const verifyUser = (req, res, next) => {
-  const token = req.cookies.token;
-  if (!token) {
+  if (!req.session.user) {
     return res.json({ message: "User không hợp lệ" });
   } else {
-    jwt.verify(token, process.env.User_Key, (err, decoded) => {
-      if (err) {
-        return res.json({ message: "Token không hợp lệ" });
-      } else {
-        req.username = decoded.username;
-        req.role = decoded.role || "user";
-        req.userId = decoded.userId;
-        next();
-      }
-    });
+    req.username = req.session.user.username;
+    req.role = req.session.user.role || "user";
+    req.userId = req.session.user.userId;
+    next();
   }
 };
 

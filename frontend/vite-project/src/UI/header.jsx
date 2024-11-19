@@ -45,10 +45,10 @@ function Header({ username }) {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategory(categoryId);
     setIsCategoryDropdownOpen(false);
-    navigate(`/category/${category}`);
+    navigate(`/category/${categoryId}`); // Điều hướng với categoryId
   };
 
   const handleLocationClick = (location) => {
@@ -103,7 +103,7 @@ function Header({ username }) {
                 <div
                   key={index}
                   className="p-3 hover:bg-yellow-200 hover:scale-105 cursor-pointer rounded-md transition-all"
-                  onClick={() => handleCategoryClick(category.category_name)}
+                  onClick={() => handleCategoryClick(category._id)}
                 >
                   {/* Tùy chọn: Thêm biểu tượng cho mỗi danh mục */}
                   <div className="flex items-center">

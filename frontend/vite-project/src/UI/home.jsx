@@ -7,7 +7,7 @@ import "swiper/css/navigation";
 import SwiperSection from "./SwiperSection";
 import ProductBlock from "./ProductBlock";
 import Footer from "./Footer";
-import Header from "./header";
+import Header from "./Header";
 
 const groupProducts = (products, itemsPerGroup) => {
   let grouped = [];

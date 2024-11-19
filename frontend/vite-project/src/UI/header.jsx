@@ -20,6 +20,9 @@ function Header() {
   const [searchQuery, setSearchQuery] = useState(""); // Từ khóa tìm kiếm
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false); // Kiểm tra xem dropdown tìm kiếm có mở không
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false); // Điều khiển mở dropdown người dùng
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const categoryDropdownRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -95,9 +98,12 @@ function Header() {
       searchInputRef.current &&
       !searchInputRef.current.contains(event.target) &&
       searchDropdownRef.current &&
-      !searchDropdownRef.current.contains(event.target)
+      !searchDropdownRef.current.contains(event.target) &&
+      categoryDropdownRef.current && // Kiểm tra dropdown danh mục
+      !categoryDropdownRef.current.contains(event.target)
     ) {
-      setIsSearchDropdownOpen(false); // Đóng dropdown khi bấm ngoài
+      setIsSearchDropdownOpen(false);
+      setIsCategoryDropdownOpen(false); // Đóng dropdown danh mục
     }
   };
 
@@ -121,13 +127,19 @@ function Header() {
 
         {/* Dropdown menu for categories */}
         <div className="relative group">
-          <div className="flex items-center text-white cursor-pointer pr-4 pl-2 py-1 rounded-md hover:bg-amber-500">
+          <div
+            className="flex items-center text-white cursor-pointer pr-4 pl-2 py-1 rounded-md hover:bg-amber-500"
+            onClick={() => setIsCategoryDropdownOpen((prev) => !prev)} // Toggle trạng thái dropdown
+          >
             <FontAwesomeIcon icon={faBars} className="text-lg" />
             <p className="ml-2 text-base">Tất cả danh mục</p>
           </div>
 
           {isCategoryDropdownOpen && (
-            <div className="absolute bg-gray-100 shadow-md rounded-lg mt-2 w-80 z-50">
+            <div
+              ref={categoryDropdownRef}
+              className="absolute bg-gray-100 shadow-md rounded-lg mt-2 w-80 z-50"
+            >
               {categories.map((category, index) => (
                 <div
                   key={index}

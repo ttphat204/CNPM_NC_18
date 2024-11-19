@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faChevronLeft,
+  faChevronRight,
   faStar,
   faHeart,
 } from "@fortawesome/free-solid-svg-icons";
@@ -20,6 +20,7 @@ function DetailProduct() {
   const [activeTab, setActiveTab] = useState("description");
   const maxQuantity = 24;
   const account_id = localStorage.getItem("userId");
+
   useEffect(() => {
     if (!id) {
       console.error("Product ID is missing");
@@ -36,21 +37,19 @@ function DetailProduct() {
   }, [id]);
 
   const decrementQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
+    setQuantity((prevQuantity) => Math.max(1, prevQuantity - 1));
   };
 
   const incrementQuantity = () => {
-    if (quantity < (product ? product.quantity : maxQuantity)) {
-      setQuantity(quantity + 1);
-    }
+    setQuantity((prevQuantity) =>
+      Math.min(prevQuantity + 1, product?.quantity || maxQuantity)
+    );
   };
 
   const addToCart = () => {
     if (account_id) {
       axios
-        .post("http://localhost:5000/api/carts/", {
+        .post("http://localhost:5000/api/carts", {
           account_id,
           product_id: product._id,
           quantity,
@@ -101,7 +100,7 @@ function DetailProduct() {
         <div className="h-auto w-full bg-slate-100 mb-11">
           <p className="text-xs text-gray-500 ml-32 mt-5 font-extr">
             <span className="mr-2">TRANG CHỦ</span>
-            <FontAwesomeIcon icon={faChevronLeft} />
+            <FontAwesomeIcon icon={faChevronRight} />
             <span className="text-black ml-3">{product.product_name}</span>
           </p>
           <div className="w-4/5 h-auto bg-white ml-32 mt-5 flex flex-row mb-8">
@@ -155,8 +154,17 @@ function DetailProduct() {
                     trong ngày là 24
                   </div>
                 )}
+                {quantity === product.quantity && (
+                  <div className="mt-4 p-3 bg-red-100 text-red-700 rounded">
+                    <i className="fas fa-info-circle"></i> Số lượng tối đa bạn
+                    có thể mua là {product.quantity}
+                  </div>
+                )}
                 <div className="pl-2">
-                  <button className="h-8 px-4 py-1 bg-yellow-500 text-white rounded ml-2">
+                  <button
+                    onClick={addToCart}
+                    className="h-8 px-4 py-1 bg-yellow-500 text-white rounded ml-2"
+                  >
                     Thêm vào giỏ
                   </button>
 

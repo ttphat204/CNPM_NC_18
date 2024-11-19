@@ -45,4 +45,18 @@ module.exports = {
       res.status(500).json({ message: "Lỗi khi lấy thông tin kho" });
     }
   },
+
+  getProductWithQuantity: async (req, res) => {
+    try {
+      const product = await Product.findById(req.params.id);
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      const kho = await Kho.findOne({ product: product._id });
+      const quantity = kho ? kho.quantity : 0;
+      res.json({ ...product.toObject(), quantity });
+    } catch (err) {
+      res.status(500).json({ message: "Server error", error: err });
+    }
+  },
 };

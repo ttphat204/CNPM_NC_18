@@ -1,7 +1,7 @@
 // SwiperSection.jsx
-import React from 'react';
+import { } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Mousewheel, Keyboard } from 'swiper/modules';
+import { Navigation, Pagination, Mousewheel, Keyboard, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -15,7 +15,12 @@ const SwiperSection = ({ images }) => {
         pagination={{ clickable: true }}
         mousewheel={true}
         keyboard={true}
-        modules={[Navigation, Pagination, Mousewheel, Keyboard]}
+        autoplay={{
+          delay: 3000, // Tự động chuyển slide mỗi 3 giây
+          disableOnInteraction: false, // Không dừng autoplay khi người dùng tương tác
+        }}
+        loop={true} // Lặp lại vòng tròn khi đến cuối slider
+        modules={[Navigation, Pagination, Mousewheel, Keyboard, Autoplay]} // Thêm Autoplay vào các module
         className="mySwiper w-full h-98 group"
       >
         {images.map((img, index) => (

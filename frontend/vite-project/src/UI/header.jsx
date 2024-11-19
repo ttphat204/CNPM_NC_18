@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faChevronRight, faSearch, faCartShopping, faSignOutAlt, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faChevronRight, faSearch, faCartShopping, faSignOutAlt, faChevronDown, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
@@ -13,6 +13,8 @@ function Header() {
   const [searchQuery, setSearchQuery] = useState(""); // Từ khóa tìm kiếm
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false); // Kiểm tra xem dropdown tìm kiếm có mở không
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false); // Điều khiển mở dropdown người dùng
+  const [favorites, setFavorites] = useState([]); // Danh sách yêu thích
+  const [isFavoritesDropdownOpen, setIsFavoritesDropdownOpen] = useState(false); // Điều khiển dropdown yêu thích
 
   const navigate = useNavigate();
 
@@ -43,6 +45,10 @@ function Header() {
     if (savedUsername) {
       setUsername(savedUsername); // Lưu tên người dùng vào state
     }
+
+    // Lấy danh sách sản phẩm yêu thích từ API hoặc localStorage
+    const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    setFavorites(savedFavorites);
   }, []);
 
   const handleLogout = () => {
@@ -103,8 +109,8 @@ function Header() {
 
   return (
     <header>
-      <div className="bg-amber-400 h-auto w-full hidden md:flex flex-col md:flex-row items-center p-4">
-        <Link to="/home" className="flex justify-left md:ml-28 md:mr-6">
+      <div className="bg-amber-400 h-auto w-full hidden md:flex flex-col md:flex-row items-center px-20 py-4">
+        <Link to="/home" className="flex">
           <img src="/emart.png" alt="Emart" className="w-36 h-8" />
         </Link>
 
@@ -133,9 +139,7 @@ function Header() {
 
         {/* Location dropdown (hover version) */}
         <div className="relative group ml-4">
-          <div
-            className="flex items-center bg-white rounded-xl h-8 px-3 cursor-pointer justify-between w-32"
-          >
+          <div className="flex items-center bg-white rounded-xl h-8 px-3 cursor-pointer justify-between w-32">
             <p className="text-xs mx-1">{selectedLocation}</p>
             <FontAwesomeIcon icon={faChevronDown} className="text-gray-500" />
           </div>
@@ -177,9 +181,13 @@ function Header() {
             >
               {filteredProducts.length > 0 ? (
                 filteredProducts.map((product, index) => (
-                  <div key={index} className="px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                  <Link
+                    key={index}
+                    to={`/product/${product._id}`}  // Redirect to product detail page
+                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                  >
                     {product.product_name}
-                  </div>
+                  </Link>
                 ))
               ) : (
                 <div className="px-4 py-2 text-gray-500">Không tìm thấy sản phẩm.</div>
@@ -198,23 +206,55 @@ function Header() {
             <FontAwesomeIcon icon={faChevronDown} />
           </div>
           {isUserDropdownOpen && (
-            <div className="absolute bg-white shadow-lg rounded w-32 z-50">
+            <div className="absolute bg-white shadow-lg rounded mt-2 w-56 z-50 max-h-64 overflow-y-auto">
               <div
-                className="cursor-pointer text-black text-xs px-2 py-1 hover:bg-gray-200"
                 onClick={handleLogout}
+                className="p-3 text-gray-700 hover:bg-gray-100 cursor-pointer"
               >
-                <FontAwesomeIcon icon={faSignOutAlt} /> Đăng xuất
+                <FontAwesomeIcon icon={faSignOutAlt} className="mr-3" />
+                Đăng xuất
               </div>
             </div>
           )}
         </div>
 
-        {/* Cart */}
-        <div className="flex flex-col text-white ml-5 text-sm cursor-pointer">
-          <Link to="/cart" className="flex flex-col items-center">
-            <FontAwesomeIcon icon={faCartShopping} />
-            <p>Giỏ Hàng</p>
-          </Link>
+        {/* Favorite and Cart Icons */}
+        <div className="flex items-center ml-auto">
+          {/* Favorite icon */}
+          <div className="relative mr-4">
+            <FontAwesomeIcon
+              icon={faHeart}
+              className="text-2xl text-white cursor-pointer"
+              onClick={() => setIsFavoritesDropdownOpen(!isFavoritesDropdownOpen)}
+            />
+            {/* Favorite Products Dropdown */}
+            {isFavoritesDropdownOpen && (
+              <div className="absolute bg-white shadow-lg rounded mt-1 w-64 z-50 max-h-[300px] overflow-y-auto">
+                {favorites.length > 0 ? (
+                  favorites.map((product, index) => (
+                    <Link
+                      key={index}
+                      to={`/product/${product._id}`} // Redirect to product detail page
+                      className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                    >
+                      {product.product_name}
+                    </Link>
+                  ))
+                ) : (
+                  <div className="px-4 py-2 text-gray-500">Chưa có sản phẩm yêu thích.</div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Cart icon */}
+          <div>
+            <FontAwesomeIcon
+              icon={faCartShopping}
+              className="text-2xl text-white cursor-pointer"
+              onClick={() => navigate("/cart")}
+            />
+          </div>
         </div>
       </div>
     </header>

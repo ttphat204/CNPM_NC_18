@@ -1,12 +1,12 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import axios from "axios";
+import SwiperSection from "./SwiperSection";
 import "swiper/css";
 import "swiper/css/navigation";
-import SwiperSection from "./SwiperSection";
+import "swiper/css/pagination";
+import "swiper/css/effect-fade";
 import ProductBlock from "./ProductBlock";
-import Footer from "./Footer";
+import Footer from "./footer";
 import Header from "./header";
 
 const groupProducts = (products, itemsPerGroup) => {
@@ -45,6 +45,7 @@ const Home = () => {
     <>
       <Header />
       <div className="bg-slate-100">
+        {/* Top Swiper Slider with larger images */}
         <SwiperSection images={swiperImages} />
 
         {/* Image cards at the top */}
@@ -70,38 +71,31 @@ const Home = () => {
               </div>
             ))}
           </div>
-          {/* First product slider */}
+
+          {/* First product section without Swiper */}
           <div className="h-auto bg-white">
             <div className="mb-10 pt-5 pl-6 pb-4 font-bold text-xl border-b-4">
               SẢN PHẨM BÁN CHẠY
             </div>
-            <Swiper
-              navigation={true}
-              modules={[Navigation]}
-              className="mySwiper"
-              breakpoints={{
-                640: { slidesPerView: 1 },
-                768: { slidesPerView: 2 },
-                1024: { slidesPerView: 3 },
-                1280: { slidesPerView: 4 },
-              }}
-            >
+            <div className="flex flex-wrap gap-6">
               {groupedProducts.map((productGroup, index) => (
-                <SwiperSlide
+                <div
                   key={index}
                   className="flex flex-row items-center bg-white text-black text-lg"
                 >
                   {productGroup.map((product) => (
-                    <ProductBlock key={product._id} product={product} />
+                    <div key={product._id} className="flex-1 p-2">
+                      <ProductBlock product={product} />
+                    </div>
                   ))}
-                </SwiperSlide>
+                </div>
               ))}
-            </Swiper>
+            </div>
           </div>
         </div>
 
         {/* Second product section with image */}
-        <div className="h-auto bg-white mt-9 mx-4 sm:mx-8 lg:mx-32 mb-24 mt-[-50px]">
+        <div className="h-auto bg-white mt-9 mx-4 sm:mx-8 lg:mx-32 mb-24 mt-[50px]">
           <div className="pt-5 pl-6 pb-4 font-bold text-xl border-b-4">
             SẢN PHẨM MỚI
           </div>
@@ -109,12 +103,12 @@ const Home = () => {
             <div className="flex-shrink-0">
               <img
                 src="sale4.jpg"
-                className="w-full h-auto object-cover border border-gray-300"
-                style={{ maxWidth: "450px" }} // Unified width
+                className="w-full h-auto object-cover border border-gray-300 transition-shadow duration-300 hover:shadow-2xl"
+                style={{ maxWidth: "450px" }}
                 alt="New Product Sale"
               />
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 flex-1 mt-4 md:mt-0">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 flex-1 mt-4 md:mt-0">
               {products.slice(0, 4).map((product) => (
                 <ProductBlock key={product._id} product={product} />
               ))}
@@ -129,4 +123,3 @@ const Home = () => {
 };
 
 export default Home;
-

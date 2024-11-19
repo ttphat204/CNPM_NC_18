@@ -205,7 +205,7 @@ function DetailProduct() {
             <div className="p-4">{renderTabContent()}</div>
           </div>
         </div>
-<Footer/>
+        <Footer />
       </div>
     </>
   );

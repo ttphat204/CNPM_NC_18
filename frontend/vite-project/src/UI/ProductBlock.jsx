@@ -101,10 +101,11 @@ ProductBlock.propTypes = {
     _id: PropTypes.string.isRequired, // ID sản phẩm
     product_name: PropTypes.string.isRequired, // Tên sản phẩm
     price: PropTypes.number.isRequired, // Giá gốc
-    newPrice: PropTypes.number,
+    newPrice: PropTypes.number, // Giá kh
     img: PropTypes.string.isRequired,
     discount: PropTypes.number,
   }).isRequired,
 };
-
 export default ProductBlock;// Giá kh
+
+

@@ -2,10 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
   faChevronRight,
-  faSearch,
-  faCartShopping,
-  faSignOutAlt,
   faChevronDown,
+  faCartShopping,
   faHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -15,7 +13,7 @@ import { useState, useEffect, useRef } from "react";
 function Header() {
   const [state, setState] = useState({
     username: "",
-    selectedLocation: "Phan Van Tri",
+    selectedLocation: "Phan Văn Tri",  // Địa chỉ mặc định
     categories: [],
     products: [],
     filteredProducts: [],
@@ -26,13 +24,15 @@ function Header() {
       user: false,
       category: false,
       favorites: false,
+      location: false,
     },
   });
 
   const navigate = useNavigate();
-  const searchInputRef = useRef(null);
-  const dropdownRefs = useRef({}); // Dùng để quản lý nhiều dropdown
-  const locations = ["Phan Van Tri", "Sala", "Phan Huy Ich"];
+  const dropdownRefs = useRef({});
+
+  // Các địa chỉ cố định
+  const locations = ["Phan Văn Tri", "Sala", "Phan Huy Ich"];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,11 +57,13 @@ function Header() {
 
     const savedUsername = localStorage.getItem("username");
     const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    const savedLocation = localStorage.getItem("selectedLocation") || "Phan Văn Tri"; // Đảm bảo giá trị mặc định là "Phan Văn Tri"
 
     setState((prev) => ({
       ...prev,
       username: savedUsername || "",
       favorites: savedFavorites,
+      selectedLocation: savedLocation, // Cập nhật giá trị selectedLocation từ localStorage hoặc mặc định
     }));
   }, []);
 
@@ -87,6 +89,15 @@ function Header() {
       filteredProducts: filtered,
       isDropdownOpen: { ...prev.isDropdownOpen, search: query.length > 0 },
     }));
+  };
+
+  const handleLocationChange = (location) => {
+    setState((prev) => ({
+      ...prev,
+      selectedLocation: location,
+      isDropdownOpen: { ...prev.isDropdownOpen, location: false },
+    }));
+    localStorage.setItem("selectedLocation", location); // Lưu địa chỉ vào localStorage
   };
 
   const handleLogout = async () => {
@@ -116,14 +127,15 @@ function Header() {
           user: false,
           category: false,
           favorites: false,
+          location: false, // Đóng dropdown location khi click ra ngoài
         },
       }));
     }
   };
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
   return (
@@ -134,33 +146,29 @@ function Header() {
           <img src="/emart.png" alt="Emart" className="w-36 h-8" />
         </Link>
 
-        {/* Dropdown danh mục */}
-        <div className="relative">
-          <div
-            className="flex items-center text-white cursor-pointer pr-4 pl-2 py-1 rounded-md hover:bg-amber-500"
-            onClick={() => toggleDropdown("category")}
-          >
+        {/* Dropdown danh mục khi hover */}
+        <div
+          className="relative"
+          onMouseEnter={() => setState((prev) => ({ ...prev, isDropdownOpen: { ...prev.isDropdownOpen, category: true } }))}
+          onMouseLeave={() => setState((prev) => ({ ...prev, isDropdownOpen: { ...prev.isDropdownOpen, category: false } }))}
+        >
+          <div className="flex items-center text-white cursor-pointer pr-4 pl-2 py-1 rounded-md hover:bg-amber-500">
             <FontAwesomeIcon icon={faBars} className="text-lg" />
             <p className="ml-2 text-base">Tất cả danh mục</p>
           </div>
           {state.isDropdownOpen.category && (
             <div
-              ref={(ref) => (dropdownRefs.current.category = ref)}
-              className="absolute bg-gray-100 shadow-md rounded-lg mt-2 w-80 z-50"
+              className="absolute bg-gray-100 shadow-md rounded-lg mt-2 w-80 z-50 transition-all duration-300 ease-in-out"
+              style={{ top: "90%" }} // Kéo dropdown lên gần hơn
             >
-              {state.categories.map((category, index) => (
+              {state.categories.map((category) => (
                 <div
-                  key={index}
+                  key={category._id}
                   className="p-3 hover:bg-yellow-200 cursor-pointer rounded-md transition-all"
                   onClick={() => navigate(`/category/${category._id}`)}
                 >
-                  <FontAwesomeIcon
-                    icon={faChevronRight}
-                    className="mr-2 text-gray-600"
-                  />
-                  <p className="text-lg font-medium text-gray-800">
-                    {category.category_name}
-                  </p>
+                  <FontAwesomeIcon icon={faChevronRight} className="mr-2 text-gray-600" />
+                  <p className="text-lg font-medium text-gray-800">{category.category_name}</p>
                 </div>
               ))}
             </div>
@@ -179,17 +187,48 @@ function Header() {
           />
           {state.isDropdownOpen.search && (
             <div
-              className="absolute bg-white shadow-lg rounded mt-1 w-96 z-50 max-h-[300px] overflow-y-auto"
+              className="absolute bg-white shadow-lg rounded mt-1 w-96 z-50 max-h-[300px] overflow-y-auto transition-all duration-300 ease-in-out"
               style={{ top: "100%" }}
             >
-              {state.filteredProducts.map((product, index) => (
-                <Link
-                  key={index}
-                  to={`/product/${product._id}`}
-                  className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+              {state.filteredProducts.length > 0 ? (
+                state.filteredProducts.map((product) => (
+                  <div
+                    key={product._id}
+                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                    onClick={() => navigate(`/product/${product._id}`)}
+                  >
+                    {product.product_name}
+                  </div>
+                ))
+              ) : (
+                <div className="px-4 py-2 text-gray-500">Không tìm thấy sản phẩm</div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Location dropdown để chọn địa chỉ */}
+        <div className="relative ml-4">
+          <div
+            className="flex items-center text-white cursor-pointer"
+            onClick={() => toggleDropdown("location")}
+          >
+            <FontAwesomeIcon icon={faChevronDown} className="mr-2" />
+            {state.selectedLocation}
+          </div>
+          {state.isDropdownOpen.location && (
+            <div
+              ref={(ref) => (dropdownRefs.current.location = ref)}
+              className="absolute bg-white shadow-md rounded mt-2 w-56 z-50 transition-all duration-300 ease-in-out"
+            >
+              {locations.map((location) => (
+                <div
+                  key={location}
+                  className="p-3 hover:bg-gray-200 cursor-pointer"
+                  onClick={() => handleLocationChange(location)}
                 >
-                  {product.product_name}
-                </Link>
+                  {location}
+                </div>
               ))}
             </div>
           )}
@@ -205,13 +244,12 @@ function Header() {
             {state.isDropdownOpen.user && (
               <div
                 ref={(ref) => (dropdownRefs.current.user = ref)}
-                className="absolute bg-white shadow-lg rounded mt-2 w-56"
+                className="absolute bg-white shadow-lg rounded mt-2 w-56 transition-all duration-300 ease-in-out z-50"
               >
                 <div
                   onClick={handleLogout}
-                  className="p-3 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                  className="p-3 text-gray-700 hover:bg-gray-100 cursor-pointer z-50"
                 >
-                  <FontAwesomeIcon icon={faSignOutAlt} className="mr-3" />
                   Đăng xuất
                 </div>
               </div>

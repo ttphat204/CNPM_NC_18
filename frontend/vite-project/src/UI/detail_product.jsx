@@ -6,6 +6,7 @@ import {
   faChevronRight,
   faStar,
   faHeart,
+  faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Header from "./Header";
@@ -149,17 +150,29 @@ function DetailProduct() {
                   </button>
                 </div>
                 {quantity === maxQuantity && (
-                  <div className="mt-4 p-3 bg-blue-100 text-blue-700 rounded">
-                    <i className="fas fa-info-circle"></i> Số lượng tối đa mua
-                    trong ngày là 24
+                  <div className="mt-2 text-sm text-yellow-800 bg-yellow-200 p-2 rounded flex items-center">
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="mr-1 text-base"
+                    />
+                    <span className="font-semibold">
+                      Giới hạn 24 sản phẩm/ngày, vui lòng quay lại ngày mai.
+                    </span>
                   </div>
                 )}
+
                 {quantity === product.quantity && (
-                  <div className="mt-4 p-3 bg-red-100 text-red-700 rounded">
-                    <i className="fas fa-info-circle"></i> Số lượng tối đa bạn
-                    có thể mua là {product.quantity}
+                  <div className="mt-2 text-sm text-red-800 bg-red-200 p-2 rounded flex items-center">
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="mr-1 text-base"
+                    />
+                    <span className="font-semibold">
+                      Giới hạn mua tối đa là {product.quantity}.
+                    </span>
                   </div>
                 )}
+
                 <div className="pl-2">
                   <button
                     onClick={addToCart}

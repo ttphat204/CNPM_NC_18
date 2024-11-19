@@ -1,3 +1,4 @@
+// Home.js
 import { useEffect, useState } from "react";
 import axios from "axios";
 import SwiperSection from "./SwiperSection";
@@ -74,7 +75,7 @@ const Home = () => {
 
           {/* First product section without Swiper */}
           <div className="h-auto bg-white">
-            <div className="mb-10 pt-5 pl-6 pb-4 font-bold text-xl border-b-4">
+            <div className=" pt-5 pl-6 pb-4 font-bold text-xl border-b-4">
               SẢN PHẨM BÁN CHẠY
             </div>
             <div className="flex flex-wrap gap-6">

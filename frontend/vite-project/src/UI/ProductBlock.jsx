@@ -1,66 +1,96 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import PropTypes from 'prop-types';  // Import PropTypes
+import PropTypes from "prop-types";
+import axios from "axios";
 
 const ProductBlock = ({ product }) => {
   const { _id, product_name, price, newPrice, img } = product;
 
-  // Tính toán phần trăm khuyến mãi
+  // Calculate discount percentage
   const discountPercentage = price && newPrice ? Math.round(((price - newPrice) / price) * 100) : 0;
 
+  // Add to cart function
+  const handleAddToCart = () => {
+    const account_id = localStorage.getItem("userId");
+    if (!account_id) {
+      alert("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.");
+      return;
+    }
+
+    // Send request to add product to cart
+    axios
+      .post("http://localhost:5000/api/carts", {
+        accountId: account_id,
+        productId: _id,
+        quantity: 1, // Default quantity is 1
+      })
+      .then((response) => {
+        console.log("Sản phẩm đã được thêm vào giỏ hàng:", response.data);
+        alert("Sản phẩm đã được thêm vào giỏ hàng!");
+      })
+      .catch((error) => {
+        console.error("Có lỗi xảy ra khi thêm vào giỏ hàng:", error);
+        alert("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.");
+      });
+  };
 
   return (
-    <Link to={`/product/${_id}`}>
-      <div className="relative flex flex-col items-start bg-white p-4 rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-100 hover:scale-95 transition-all duration-300 h-full space-y-4">
-        {/* Phần khuyến mãi */}
+    <div className="relative flex flex-col items-center bg-white p-4 rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-100 hover:scale-95 transition-all duration-300 h-full space-y-4">
+      {/* Product Image with Discount Badge */}
+      <Link to={`/product/${_id}`} className="w-full h-48 flex items-center justify-center overflow-hidden rounded-md mb-4 relative">
+        {/* Discount Badge positioned over the image */}
         {discountPercentage > 0 && (
-          <div className="absolute top-2 right-2 w-12 h-12 bg-red-500 text-white flex items-center justify-center text-xs font-bold rounded-full">
-            {discountPercentage}% {/* Tạo hình tròn với số phần trăm bên trong */}
+          <div className="absolute top-2 left-2 z-10 w-12 h-12 bg-red-500 text-white flex items-center justify-center text-xs font-bold rounded-full">
+            {discountPercentage}%
           </div>
         )}
+        <img
+          src={img}
+          alt={product_name}
+          className="object-cover w-full h-full cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105"
+        />
+      </Link>
 
-        {/* Hình ảnh sản phẩm */}
-        <div className="w-full h-40 flex items-center justify-center overflow-hidden rounded-md mb-4">
-          <img
-            src={img}
-            alt={product_name}
-            className="object-cover w-full h-full"  // Đảm bảo hình ảnh phủ đầy container mà không bị méo
-          />
-        </div>
-
-        {/* Tên sản phẩm */}
-        <div className="text-sm font-medium text-center line-clamp-2 mb-2">
-          {product_name}
-        </div>
-
-        {/* Giá cả và Yêu thích */}
-        <div className="flex items-center justify-between w-full mt-auto">
-          {/* Giá tiền */}
-          <div className="flex items-center">
-            {newPrice ? (
-              <>
-                <span className="text-gray-500 text-xs line-through mr-2">
-                  {price.toLocaleString()} VNĐ
-                </span>
-                <span className="text-red-500 font-bold text-sm">
-                  {newPrice.toLocaleString()} VNĐ
-                </span>
-              </>
-            ) : (
-              <span className="text-gray-700 font-bold text-sm">
-                {price.toLocaleString()} VNĐ
-              </span>
-            )}
-          </div>
-
-          {/* Yêu thích */}
-          <button className="h-8 px-2 py-1 bg-gray-200 rouded ml-5 hover:text-orange-400 rounded-lg">
-            <FontAwesomeIcon icon={faHeart} />
-          </button>
-        </div>
+      {/* Product Name */}
+      <div className="text-sm font-medium text-center mb-2 line-clamp-2">
+        {product_name}
       </div>
-    </Link>
+
+      {/* Price */}
+      <div className="flex items-center justify-center mb-4">
+        {newPrice ? (
+          <>
+            <span className="text-gray-500 text-xs line-through mr-2">
+              {price.toLocaleString()} VNĐ
+            </span>
+            <span className="text-red-500 font-bold text-sm">
+              {newPrice.toLocaleString()} VNĐ
+            </span>
+          </>
+        ) : (
+          <span className="text-gray-700 font-bold text-sm">
+            {price.toLocaleString()} VNĐ
+          </span>
+        )}
+      </div>
+
+      {/* Favorite & Add to Cart Buttons */}
+      <div className="flex items-center justify-between w-full space-x-4">
+        {/* Add to Cart Button */}
+        <button
+          onClick={handleAddToCart}
+          className="w-32 bg-yellow-400 text-white py-1 rounded-md hover:bg-red-500 transition duration-200"
+        >
+          Thêm Giỏ Hàng
+        </button>
+
+        {/* Favorite Button */}
+        <button className="h-8 px-2 py-1 bg-gray-200 rounded hover:text-orange-400 rounded-lg">
+          <FontAwesomeIcon icon={faHeart} />
+        </button>
+      </div>
+    </div>
   );
 };
 
@@ -72,8 +102,8 @@ ProductBlock.propTypes = {
     price: PropTypes.number.isRequired,
     newPrice: PropTypes.number,
     img: PropTypes.string.isRequired,
-    discount: PropTypes.number
-  }).isRequired
+    discount: PropTypes.number,
+  }).isRequired,
 };
 
 export default ProductBlock;

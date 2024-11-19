@@ -15,11 +15,13 @@ import ListOrder from "./pages/ListOrder";
 import AddDiscount from "./pages/AddDiscount";
 import ListDiscount from "./pages/ListDiscount";
 import DetailProduct from "./UI/detail_product";
-// import ShoppingCart from "./UI/cart";
+import ShoppingCart from "./UI/cart";
 import CreatePromotion from "./pages/CreatePromotion";
 import Kho from "./pages/Kho";
 import Order_inf from "./UI/order_inf";
 import CategoryPage from "./UI/Category_page";
+import ResetPassword from "./Login/ResetPassword";
+import ForgotPassword from "./Login/ForgotPassword";
 function App() {
   return (
     <Router>
@@ -45,9 +47,11 @@ function App() {
           <Route path="/KhuyenMai" element={<CreatePromotion />} />
           <Route path="/ListDiscount" element={<ListDiscount />} />
           <Route path="/Kho" element={<Kho />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           {/* Các route liên quan đến giao diện người dùng */}
           <Route path="/product/:id" element={<DetailProduct />} />
-          {/* <Route path="/Cart" element={<ShoppingCart />} /> */}
+          <Route path="/Cart" element={<ShoppingCart />} />
           <Route path="/Order_inf" element={<Order_inf />} />
           <Route path="/category/:categoryName" element={<CategoryPage />} />
         </Routes>

@@ -16,7 +16,7 @@ module.exports = {
       });
     } else {
       const items = cart.items;
-      items.push({ food: food_id, quantity: quantity || 1 });
+      items.push({ product: product_id, quantity: quantity || 1 });
 
       const isExists = items.find((v) => v.product == product_id);
       if (isExists) {

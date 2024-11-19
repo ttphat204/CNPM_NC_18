@@ -14,8 +14,8 @@ import ViewOrder from "./pages/ViewOrder";
 import ListOrder from "./pages/ListOrder";
 import AddDiscount from "./pages/AddDiscount";
 import ListDiscount from "./pages/ListDiscount";
-// import DetailProduct from "./UI/detail_product";
-// import ShoppingCart from "./UI/cart";
+import DetailProduct from "./UI/detail_product";
+import ShoppingCart from "./UI/cart";
 import CreatePromotion from "./pages/CreatePromotion";
 import Kho from "./pages/Kho";
 import Order_inf from "./UI/order_inf";
@@ -46,8 +46,8 @@ function App() {
           <Route path="/ListDiscount" element={<ListDiscount />} />
           <Route path="/Kho" element={<Kho />} />
           {/* Các route liên quan đến giao diện người dùng */}
-          {/* <Route path="/product/:id" element={<DetailProduct />} /> */}
-          {/* <Route path="/Cart" element={<ShoppingCart />} /> */}
+          <Route path="/product/:id" element={<DetailProduct />} />
+          <Route path="/Cart" element={<ShoppingCart />} />
           <Route path="/Order_inf" element={<Order_inf />} />
           <Route path="/category/:categoryId" element={<CategoryPage />} />
         </Routes>

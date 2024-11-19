@@ -1,5 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faChevronRight, faSearch, faCartShopping, faSignOutAlt, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faChevronRight,
+  faSearch,
+  faCartShopping,
+  faSignOutAlt,
+  faChevronDown,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
@@ -13,6 +20,9 @@ function Header() {
   const [searchQuery, setSearchQuery] = useState(""); // Từ khóa tìm kiếm
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false); // Kiểm tra xem dropdown tìm kiếm có mở không
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false); // Điều khiển mở dropdown người dùng
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const categoryDropdownRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -57,8 +67,10 @@ function Header() {
       .catch((err) => console.error("Lỗi đăng xuất:", err));
   };
 
-  const handleCategoryClick = (category) => {
-    navigate(`/category/${category}`);
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategory(categoryId);
+    setIsCategoryDropdownOpen(false);
+    navigate(`/category/${categoryId}`); // Điều hướng với categoryId
   };
 
   const handleLocationChange = (location) => {
@@ -83,10 +95,15 @@ function Header() {
   // Xử lý bấm ra ngoài để đóng dropdown tìm kiếm
   const handleClickOutside = (event) => {
     if (
-      searchInputRef.current && !searchInputRef.current.contains(event.target) &&
-      searchDropdownRef.current && !searchDropdownRef.current.contains(event.target)
+      searchInputRef.current &&
+      !searchInputRef.current.contains(event.target) &&
+      searchDropdownRef.current &&
+      !searchDropdownRef.current.contains(event.target) &&
+      categoryDropdownRef.current && // Kiểm tra dropdown danh mục
+      !categoryDropdownRef.current.contains(event.target)
     ) {
-      setIsSearchDropdownOpen(false); // Đóng dropdown khi bấm ngoài
+      setIsSearchDropdownOpen(false);
+      setIsCategoryDropdownOpen(false); // Đóng dropdown danh mục
     }
   };
 
@@ -110,32 +127,46 @@ function Header() {
 
         {/* Dropdown menu for categories */}
         <div className="relative group">
-          <div className="flex items-center text-white cursor-pointer pr-4 pl-2 py-1 rounded-md hover:bg-amber-500">
+          <div
+            className="flex items-center text-white cursor-pointer pr-4 pl-2 py-1 rounded-md hover:bg-amber-500"
+            onClick={() => setIsCategoryDropdownOpen((prev) => !prev)} // Toggle trạng thái dropdown
+          >
             <FontAwesomeIcon icon={faBars} className="text-lg" />
             <p className="ml-2 text-base">Tất cả danh mục</p>
           </div>
 
-          <div className="absolute bg-white shadow-lg rounded mt-2 w-56 z-50 opacity-0 group-hover:opacity-100 max-h-0 group-hover:max-h-[500px] transition-all duration-300 ease-out">
-            {categories.map((category, index) => (
-              <div
-                key={index}
-                className="p-3 hover:bg-gray-100 cursor-pointer"
-                onClick={() => handleCategoryClick(category.category_name)}
-              >
-                <FontAwesomeIcon icon={faChevronRight} className="mr-2 text-gray-600" />
-                {category.category_name}
-              </div>
-            ))}
-          </div>
+          {isCategoryDropdownOpen && (
+            <div
+              ref={categoryDropdownRef}
+              className="absolute bg-gray-100 shadow-md rounded-lg mt-2 w-80 z-50"
+            >
+              {categories.map((category, index) => (
+                <div
+                  key={index}
+                  className="p-3 hover:bg-yellow-200 hover:scale-105 cursor-pointer rounded-md transition-all"
+                  onClick={() => handleCategoryClick(category._id)}
+                >
+                  {/* Tùy chọn: Thêm biểu tượng cho mỗi danh mục */}
+                  <div className="flex items-center">
+                    <FontAwesomeIcon
+                      icon={faChevronRight}
+                      className="mr-2 text-gray-600"
+                    />
+                    <p className="text-lg font-medium text-gray-800">
+                      {category.category_name}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <img src="/logo1.png" alt="Logo" className="w-7 h-11 ml-3 mr-3 pt-2" />
 
         {/* Location dropdown (hover version) */}
         <div className="relative group ml-4">
-          <div
-            className="flex items-center bg-white rounded-xl h-8 px-3 cursor-pointer justify-between w-32"
-          >
+          <div className="flex items-center bg-white rounded-xl h-8 px-3 cursor-pointer justify-between w-32">
             <p className="text-xs mx-1">{selectedLocation}</p>
             <FontAwesomeIcon icon={faChevronDown} className="text-gray-500" />
           </div>
@@ -173,16 +204,21 @@ function Header() {
             <div
               ref={searchDropdownRef}
               className="absolute bg-white shadow-lg rounded mt-1 w-96 z-50 max-h-[300px] overflow-y-auto"
-              style={{ top: '100%' }}
+              style={{ top: "100%" }}
             >
               {filteredProducts.length > 0 ? (
                 filteredProducts.map((product, index) => (
-                  <div key={index} className="px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                  <div
+                    key={index}
+                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                  >
                     {product.product_name}
                   </div>
                 ))
               ) : (
-                <div className="px-4 py-2 text-gray-500">Không tìm thấy sản phẩm.</div>
+                <div className="px-4 py-2 text-gray-500">
+                  Không tìm thấy sản phẩm.
+                </div>
               )}
             </div>
           )}

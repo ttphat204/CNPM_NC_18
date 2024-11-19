@@ -1,3 +1,4 @@
+const category_model = require("../models/category_model");
 const productModel = require("../models/product_model");
 
 module.exports = {
@@ -57,37 +58,13 @@ module.exports = {
     return res.status(200).json(products);
   },
 
-  getProductByCategory: async (req, res) => {
+  getProductsByCategory: async (req, res) => {
     try {
-      // Lấy category từ query parameters
-      const { category } = req.query;
-
-      // Kiểm tra xem có category hay không
-      if (!category) {
-        return res
-          .status(400)
-          .json({ error: "Danh mục sản phẩm không được cung cấp." });
-      }
-
-      // Log để kiểm tra giá trị của category
-      console.log("Fetching products for category:", category);
-
-      // Truy vấn cơ sở dữ liệu để lấy sản phẩm theo category
-      const products = await productModel.find({ category_name: category });
-
-      // Kiểm tra nếu không có sản phẩm nào
-      if (products.length === 0) {
-        return res
-          .status(404)
-          .json({ message: "Không tìm thấy sản phẩm trong danh mục này." });
-      }
-
-      // Trả về sản phẩm theo danh mục
-      res.status(200).json(products);
-    } catch (error) {
-      // Log chi tiết lỗi để dễ dàng khắc phục
-      console.error("Lỗi khi lấy sản phẩm theo danh mục:", error.message);
-      res.status(500).json({ error: "Lỗi khi lấy sản phẩm theo danh mục." });
+      const { categoryId } = req.params;
+      const products = await productModel.find({ category: categoryId });
+      res.json(products);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
     }
   },
 

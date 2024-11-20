@@ -92,7 +92,7 @@ module.exports = {
       }
 
       // Xóa sản phẩm khỏi giỏ hàng
-      cart.items = cart.items.filter(
+      cart.items = cartModel.filter(
         (item) => item._id.toString() !== req.params.item_id
       );
 

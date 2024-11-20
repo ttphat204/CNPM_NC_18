@@ -18,7 +18,7 @@ import DetailProduct from "./UI/detail_product";
 import ShoppingCart from "./UI/cart";
 import CreatePromotion from "./pages/CreatePromotion";
 import Kho from "./pages/Kho";
-import Order_inf from "./UI/order_inf";
+import Order_inf from "./UI/Order_inf";
 import CategoryPage from "./UI/Category_page";
 import ResetPassword from "./Login/ResetPassword";
 import ForgotPassword from "./Login/ForgotPassword";

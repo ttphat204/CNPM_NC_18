@@ -22,6 +22,7 @@ import Order_inf from "./UI/order_inf";
 import CategoryPage from "./UI/Category_page";
 import ResetPassword from "./Login/ResetPassword";
 import ForgotPassword from "./Login/ForgotPassword";
+import Order_suc from "./UI/Order_suc";
 function App() {
   return (
     <Router>
@@ -42,6 +43,7 @@ function App() {
           <Route path="/AddNCC" element={<AddNCC />} />
           <Route path="/ListNCC" element={<ListNCC />} />
           <Route path="/ViewOrder" element={<ViewOrder />} />
+          <Route path="/orders/:orderId" element={<ViewOrder />} />
           <Route path="/ListOrder" element={<ListOrder />} />
           <Route path="/AddDiscount" element={<AddDiscount />} />
           <Route path="/KhuyenMai" element={<CreatePromotion />} />
@@ -54,6 +56,7 @@ function App() {
           <Route path="/Cart" element={<ShoppingCart />} />
           <Route path="/Order_inf" element={<Order_inf />} />
           <Route path="/category/:categoryId" element={<CategoryPage />} />
+          <Route path="/Order_suc" element={<Order_suc />} />
         </Routes>
       </div>
     </Router>

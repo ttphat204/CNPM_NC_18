@@ -106,5 +106,5 @@ ProductBlock.propTypes = {
     discount: PropTypes.number,
   }).isRequired,
 };
+export default ProductBlock;// Giá kh
 
-export default ProductBlock;

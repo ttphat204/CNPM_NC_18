@@ -15,17 +15,36 @@ const orderSchema = mongoose.Schema({
   },
   payment_method: {
     type: String,
-    enum: ["COD", "Momo", "Cart Credit"],
+    enum: ["COD", "ZaloPay"],
     default: "COD",
   },
   is_payment: {
     type: Boolean,
     default: false,
   },
-  cart_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "cart",  
+
+  date: {
+    type: Date,
+    required: true,
   },
+  time: {
+    type: String,
+    required: true,
+
+  },
+  items: [
+    {
+      product_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "product",
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
 });
 
 module.exports = mongoose.model("order", orderSchema);

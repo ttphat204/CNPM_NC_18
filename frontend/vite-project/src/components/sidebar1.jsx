@@ -124,7 +124,7 @@ const Sidebar = () => {
               </li>
               <li className="mb-1">
                 <Link to="/ViewOrder" className="hover:text-gray-300">
-                  Theo dõi đơn hàng
+                  Tra cứu đơn hàng
                 </Link>
               </li>
             </ul>

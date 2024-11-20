@@ -3,10 +3,12 @@ import Footer from "./Footer";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Header from "./Header";
+import { useNavigate } from "react-router-dom";
 
 const ShoppingCart = () => {
   const [cartItems, setCartItems] = useState([]);
   const account_id = localStorage.getItem("userId");
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (account_id) {
@@ -67,6 +69,21 @@ const ShoppingCart = () => {
     return cartItems.reduce((total, item) => {
       return total + item.product.price * item.quantity;
     }, 0);
+  };
+
+  const handleCheckout = () => {
+    const totalAmount = calculateTotal();
+
+    if (cartItems.length === 0) {
+      alert("Giỏ hàng của bạn đang trống. Bạn sẽ được chuyển về trang chủ.");
+      navigate("/home"); // Điều hướng đến trang home khi giỏ hàng trống
+    } else if (totalAmount < 100000) {
+      alert(
+        "Đơn hàng của bạn phải có tổng cộng trên 100.000đ để tiến hành thanh toán."
+      );
+    } else {
+      navigate("/Order_inf"); // Điều hướng đến trang thanh toán nếu giỏ hàng không trống
+    }
   };
 
   return (
@@ -150,11 +167,12 @@ const ShoppingCart = () => {
             <h4 className="font-bold text-lg">Tổng cộng</h4>
             <p className="text-xl text-red-500">{calculateTotal()}₫</p>
           </div>
-          <Link to="/Order_inf">
-            <button className="bg-yellow-400 hover:bg-yellow-500 text-white py-2 px-4 rounded-md">
-              Thanh Toán
-            </button>
-          </Link>
+          <button
+            onClick={handleCheckout}
+            className="bg-yellow-400 hover:bg-yellow-500 text-white py-2 px-4 rounded-md"
+          >
+            Thanh Toán
+          </button>
         </div>
       </div>
 

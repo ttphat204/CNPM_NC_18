@@ -2,255 +2,269 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
   faChevronRight,
-  faSearch,
-  faCartShopping,
-  faSignOutAlt,
   faChevronDown,
+  faCartShopping,
+  faHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 
 function Header() {
-  const [username, setUsername] = useState(""); // State lưu tên người dùng
-  const [selectedLocation, setSelectedLocation] = useState("Phan Van Tri");
-  const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([]); // Sản phẩm lấy từ API
-  const [filteredProducts, setFilteredProducts] = useState([]); // Sản phẩm đã lọc theo tìm kiếm
-  const [searchQuery, setSearchQuery] = useState(""); // Từ khóa tìm kiếm
-  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false); // Kiểm tra xem dropdown tìm kiếm có mở không
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false); // Điều khiển mở dropdown người dùng
-  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const categoryDropdownRef = useRef(null);
+  const [state, setState] = useState({
+    username: "",
+    selectedLocation: "Phan Văn Tri",  // Địa chỉ mặc định
+    categories: [],
+    products: [],
+    filteredProducts: [],
+    searchQuery: "",
+    favorites: [],
+    isDropdownOpen: {
+      search: false,
+      user: false,
+      category: false,
+      favorites: false,
+      location: false,
+    },
+  });
 
   const navigate = useNavigate();
+  const dropdownRefs = useRef({});
 
-  const locations = ["Phan Van Tri", "Sala", "Phan Huy Ich"];
-
-  // Các refs để tham chiếu đến input và dropdown kết quả tìm kiếm
-  const searchInputRef = useRef(null);
-  const searchDropdownRef = useRef(null);
+  // Các địa chỉ cố định
+  const locations = ["Phan Văn Tri", "Sala", "Phan Huy Ich"];
 
   useEffect(() => {
-    // Lấy danh mục từ API
-    axios
-      .get("http://localhost:5000/api/categories")
-      .then((res) => setCategories(res.data))
-      .catch((err) => console.error("Lỗi khi lấy danh mục:", err));
+    const fetchData = async () => {
+      try {
+        const [categoriesRes, productsRes] = await Promise.all([
+          axios.get("http://localhost:5000/api/categories"),
+          axios.get("http://localhost:5000/api/products"),
+        ]);
 
-    // Lấy sản phẩm từ API
-    axios
-      .get("http://localhost:5000/api/products") // URL API lấy sản phẩm
-      .then((res) => {
-        setProducts(res.data);
-        setFilteredProducts(res.data); // Mặc định hiển thị tất cả sản phẩm
-      })
-      .catch((err) => console.error("Lỗi khi lấy sản phẩm:", err));
+        setState((prev) => ({
+          ...prev,
+          categories: categoriesRes.data,
+          products: productsRes.data,
+          filteredProducts: productsRes.data,
+        }));
+      } catch (err) {
+        console.error("Lỗi khi lấy dữ liệu:", err);
+      }
+    };
 
-    // Lấy tên người dùng từ localStorage
+    fetchData();
+
     const savedUsername = localStorage.getItem("username");
-    if (savedUsername) {
-      setUsername(savedUsername); // Lưu tên người dùng vào state
-    }
+    const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    const savedLocation = localStorage.getItem("selectedLocation") || "Phan Văn Tri"; // Đảm bảo giá trị mặc định là "Phan Văn Tri"
+
+    setState((prev) => ({
+      ...prev,
+      username: savedUsername || "",
+      favorites: savedFavorites,
+      selectedLocation: savedLocation, // Cập nhật giá trị selectedLocation từ localStorage hoặc mặc định
+    }));
   }, []);
 
-  const handleLogout = () => {
-    axios
-      .get("http://localhost:5000/api/auth/logout", { withCredentials: true })
-      .then(() => {
-        // Sau khi logout, xóa tên người dùng khỏi localStorage
-        localStorage.removeItem("username");
-        setUsername(""); // Đặt lại tên người dùng trong state
-        navigate("/"); // Chuyển hướng về trang chủ
-      })
-      .catch((err) => console.error("Lỗi đăng xuất:", err));
+  const toggleDropdown = (key) => {
+    setState((prev) => ({
+      ...prev,
+      isDropdownOpen: {
+        ...prev.isDropdownOpen,
+        [key]: !prev.isDropdownOpen[key],
+      },
+    }));
   };
 
-  const handleCategoryClick = (categoryId) => {
-    setSelectedCategory(categoryId);
-    setIsCategoryDropdownOpen(false);
-    navigate(`/category/${categoryId}`); // Điều hướng với categoryId
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    const filtered = state.products.filter((product) =>
+      product.product_name.toLowerCase().includes(query.toLowerCase())
+    );
+
+    setState((prev) => ({
+      ...prev,
+      searchQuery: query,
+      filteredProducts: filtered,
+      isDropdownOpen: { ...prev.isDropdownOpen, search: query.length > 0 },
+    }));
   };
 
   const handleLocationChange = (location) => {
-    setSelectedLocation(location);
+    setState((prev) => ({
+      ...prev,
+      selectedLocation: location,
+      isDropdownOpen: { ...prev.isDropdownOpen, location: false },
+    }));
+    localStorage.setItem("selectedLocation", location); // Lưu địa chỉ vào localStorage
   };
 
-  // Xử lý thay đổi từ khóa tìm kiếm
-  const handleSearchChange = (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
+  const handleLogout = async () => {
+    try {
+      await axios.get("http://localhost:5000/api/auth/logout", {
+        withCredentials: true,
+      });
 
-    // Lọc sản phẩm theo từ khóa tìm kiếm
-    const filtered = products.filter((product) =>
-      product.product_name.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredProducts(filtered);
-
-    // Mở hoặc đóng dropdown tìm kiếm khi có dữ liệu
-    setIsSearchDropdownOpen(query.length > 0);
-  };
-
-  // Xử lý bấm ra ngoài để đóng dropdown tìm kiếm
-  const handleClickOutside = (event) => {
-    if (
-      searchInputRef.current &&
-      !searchInputRef.current.contains(event.target) &&
-      searchDropdownRef.current &&
-      !searchDropdownRef.current.contains(event.target) &&
-      categoryDropdownRef.current && // Kiểm tra dropdown danh mục
-      !categoryDropdownRef.current.contains(event.target)
-    ) {
-      setIsSearchDropdownOpen(false);
-      setIsCategoryDropdownOpen(false); // Đóng dropdown danh mục
+      localStorage.removeItem("username");
+      setState((prev) => ({ ...prev, username: "" }));
+      navigate("/");
+    } catch (err) {
+      console.error("Lỗi đăng xuất:", err);
     }
   };
 
-  // Thêm sự kiện click khi component mount
-  useEffect(() => {
-    // Lắng nghe sự kiện mousedown để phát hiện click ra ngoài
-    document.addEventListener("mousedown", handleClickOutside);
+  const handleClickOutside = (e) => {
+    if (
+      Object.values(dropdownRefs.current).every(
+        (ref) => ref && !ref.contains(e.target)
+      )
+    ) {
+      setState((prev) => ({
+        ...prev,
+        isDropdownOpen: {
+          search: false,
+          user: false,
+          category: false,
+          favorites: false,
+          location: false, // Đóng dropdown location khi click ra ngoài
+        },
+      }));
+    }
+  };
 
-    // Cleanup khi component unmount
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
   return (
     <header>
-      <div className="bg-amber-400 h-auto w-full hidden md:flex flex-col md:flex-row items-center p-4">
-        <Link to="/home" className="flex justify-left md:ml-28 md:mr-6">
+      <div className="bg-amber-400 h-auto w-full hidden md:flex flex-col md:flex-row items-center px-20 py-4">
+        {/* Logo */}
+        <Link to="/home" className="flex">
           <img src="/emart.png" alt="Emart" className="w-36 h-8" />
         </Link>
 
-        {/* Dropdown menu for categories */}
-        <div className="relative group">
-          <div
-            className="flex items-center text-white cursor-pointer pr-4 pl-2 py-1 rounded-md hover:bg-amber-500"
-            onClick={() => setIsCategoryDropdownOpen((prev) => !prev)} // Toggle trạng thái dropdown
-          >
+        {/* Dropdown danh mục khi hover */}
+        <div
+          className="relative"
+          onMouseEnter={() => setState((prev) => ({ ...prev, isDropdownOpen: { ...prev.isDropdownOpen, category: true } }))}
+          onMouseLeave={() => setState((prev) => ({ ...prev, isDropdownOpen: { ...prev.isDropdownOpen, category: false } }))}
+        >
+          <div className="flex items-center text-white cursor-pointer pr-4 pl-2 py-1 rounded-md hover:bg-amber-500">
             <FontAwesomeIcon icon={faBars} className="text-lg" />
             <p className="ml-2 text-base">Tất cả danh mục</p>
           </div>
-
-          {isCategoryDropdownOpen && (
+          {state.isDropdownOpen.category && (
             <div
-              ref={categoryDropdownRef}
-              className="absolute bg-gray-100 shadow-md rounded-lg mt-2 w-80 z-50"
+              className="absolute bg-gray-100 shadow-md rounded-lg mt-2 w-80 z-50 transition-all duration-300 ease-in-out"
+              style={{ top: "90%" }} // Kéo dropdown lên gần hơn
             >
-              {categories.map((category, index) => (
+              {state.categories.map((category) => (
                 <div
-                  key={index}
-                  className="p-3 hover:bg-yellow-200 hover:scale-105 cursor-pointer rounded-md transition-all"
-                  onClick={() => handleCategoryClick(category._id)}
+                  key={category._id}
+                  className="p-3 hover:bg-yellow-200 cursor-pointer rounded-md transition-all"
+                  onClick={() => navigate(`/category/${category._id}`)}
                 >
-                  {/* Tùy chọn: Thêm biểu tượng cho mỗi danh mục */}
-                  <div className="flex items-center">
-                    <FontAwesomeIcon
-                      icon={faChevronRight}
-                      className="mr-2 text-gray-600"
-                    />
-                    <p className="text-lg font-medium text-gray-800">
-                      {category.category_name}
-                    </p>
-                  </div>
+                  <FontAwesomeIcon icon={faChevronRight} className="mr-2 text-gray-600" />
+                  <p className="text-lg font-medium text-gray-800">{category.category_name}</p>
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        <img src="/logo1.png" alt="Logo" className="w-7 h-11 ml-3 mr-3 pt-2" />
-
-        {/* Location dropdown (hover version) */}
-        <div className="relative group ml-4">
-          <div className="flex items-center bg-white rounded-xl h-8 px-3 cursor-pointer justify-between w-32">
-            <p className="text-xs mx-1">{selectedLocation}</p>
-            <FontAwesomeIcon icon={faChevronDown} className="text-gray-500" />
-          </div>
-
-          {/* Dropdown for location */}
-          <div className="absolute bg-white shadow-lg rounded mt-1 w-32 z-50 opacity-0 group-hover:opacity-100 max-h-0 group-hover:max-h-[200px] transition-all duration-300 ease-out">
-            {locations.map((location, index) => (
-              <div
-                key={index}
-                className="cursor-pointer text-xs px-3 py-1 hover:bg-gray-200 rounded-lg"
-                onClick={() => handleLocationChange(location)}
-              >
-                {location}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Search input */}
+        {/* Thanh tìm kiếm */}
         <div className="relative flex items-center justify-center ml-4">
           <input
-            ref={searchInputRef}
+            ref={(ref) => (dropdownRefs.current.search = ref)}
             className="bg-white w-96 h-8 rounded-2xl pl-10"
             type="text"
-            value={searchQuery}
+            value={state.searchQuery}
             onChange={handleSearchChange}
             placeholder="Tìm sản phẩm mong muốn ..."
           />
-          <FontAwesomeIcon
-            icon={faSearch}
-            className="absolute right-5 top-1/2 transform -translate-y-1/2 text-gray-500"
-          />
-          {/* Dropdown kết quả tìm kiếm */}
-          {isSearchDropdownOpen && (
+          {state.isDropdownOpen.search && (
             <div
-              ref={searchDropdownRef}
-              className="absolute bg-white shadow-lg rounded mt-1 w-96 z-50 max-h-[300px] overflow-y-auto"
+              className="absolute bg-white shadow-lg rounded mt-1 w-96 z-50 max-h-[300px] overflow-y-auto transition-all duration-300 ease-in-out"
               style={{ top: "100%" }}
             >
-              {filteredProducts.length > 0 ? (
-                filteredProducts.map((product, index) => (
+              {state.filteredProducts.length > 0 ? (
+                state.filteredProducts.map((product) => (
                   <div
-                    key={index}
+                    key={product._id}
                     className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                    onClick={() => navigate(`/product/${product._id}`)}
                   >
                     {product.product_name}
                   </div>
                 ))
               ) : (
-                <div className="px-4 py-2 text-gray-500">
-                  Không tìm thấy sản phẩm.
-                </div>
+                <div className="px-4 py-2 text-gray-500">Không tìm thấy sản phẩm</div>
               )}
             </div>
           )}
         </div>
 
-        {/* User dropdown */}
-        <div className="relative ml-5 text-white text-sm cursor-pointer">
+        {/* Location dropdown để chọn địa chỉ */}
+        <div className="relative ml-4">
           <div
-            onClick={() => setIsUserDropdownOpen((prev) => !prev)}
-            className="flex flex-row items-center"
+            className="flex items-center text-white cursor-pointer"
+            onClick={() => toggleDropdown("location")}
           >
-            <p className="ml-3 text-base">Xin chào, {username || "Khách"}</p>
-            <FontAwesomeIcon icon={faChevronDown} />
+            <FontAwesomeIcon icon={faChevronDown} className="mr-2" />
+            {state.selectedLocation}
           </div>
-          {isUserDropdownOpen && (
-            <div className="absolute bg-white shadow-lg rounded w-32 z-50">
-              <div
-                className="cursor-pointer text-black text-xs px-2 py-1 hover:bg-gray-200"
-                onClick={handleLogout}
-              >
-                <FontAwesomeIcon icon={faSignOutAlt} /> Đăng xuất
-              </div>
+          {state.isDropdownOpen.location && (
+            <div
+              ref={(ref) => (dropdownRefs.current.location = ref)}
+              className="absolute bg-white shadow-md rounded mt-2 w-56 z-50 transition-all duration-300 ease-in-out"
+            >
+              {locations.map((location) => (
+                <div
+                  key={location}
+                  className="p-3 hover:bg-gray-200 cursor-pointer"
+                  onClick={() => handleLocationChange(location)}
+                >
+                  {location}
+                </div>
+              ))}
             </div>
           )}
         </div>
 
-        {/* Cart */}
-        <div className="flex flex-col text-white ml-5 text-sm cursor-pointer">
-          <Link to="/cart" className="flex flex-col items-center">
-            <FontAwesomeIcon icon={faCartShopping} />
-            <p>Giỏ Hàng</p>
-          </Link>
+        {/* Tài khoản và icon */}
+        <div className="ml-auto flex items-center">
+          <div
+            onClick={() => toggleDropdown("user")}
+            className="relative text-white text-sm cursor-pointer"
+          >
+            Xin chào, {state.username || "Khách"}
+            {state.isDropdownOpen.user && (
+              <div
+                ref={(ref) => (dropdownRefs.current.user = ref)}
+                className="absolute bg-white shadow-lg rounded mt-2 w-56 transition-all duration-300 ease-in-out z-50"
+              >
+                <div
+                  onClick={handleLogout}
+                  className="p-3 text-gray-700 hover:bg-gray-100 cursor-pointer z-50"
+                >
+                  Đăng xuất
+                </div>
+              </div>
+            )}
+          </div>
+          <FontAwesomeIcon
+            icon={faHeart}
+            className="ml-4 text-2xl text-white cursor-pointer"
+            onClick={() => toggleDropdown("favorites")}
+          />
+          <FontAwesomeIcon
+            icon={faCartShopping}
+            className="ml-4 text-2xl text-white cursor-pointer"
+            onClick={() => navigate("/cart")}
+          />
         </div>
       </div>
     </header>

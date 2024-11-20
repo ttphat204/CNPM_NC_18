@@ -22,6 +22,7 @@ const orderSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+
   date: {
     type: Date,
     required: true,
@@ -29,6 +30,7 @@ const orderSchema = mongoose.Schema({
   time: {
     type: String,
     required: true,
+
   },
   items: [
     {

@@ -34,7 +34,7 @@ const CategoryPage = () => {
         const response = await axios.get(
           `http://localhost:5000/api/categories/${categoryId}`
         );
-        setCategoryName(response.data.name);
+        setCategoryName(response.data.category_name);
       } catch (error) {
         console.error("Error fetching category name:", error);
       }

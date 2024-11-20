@@ -30,11 +30,11 @@ module.exports = {
   },
   getCategoryById: async (req, res) => {
     try {
-      const category = await Category.findById(req.params.id);
+      const category = await categoryModel.findById(req.params.id);
       if (!category) {
         return res.status(404).json({ message: "Danh mục không tồn tại" });
       }
-      res.json(category);
+      res.json({ category_name: category.category_name });
     } catch (error) {
       res.status(500).json({ message: "Lỗi server khi lấy danh mục", error });
     }

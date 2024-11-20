@@ -24,7 +24,7 @@ const orderSchema = mongoose.Schema({
   },
   cart_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "cart",
+    ref: "cart",  
   },
 });
 

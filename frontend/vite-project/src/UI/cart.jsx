@@ -156,7 +156,7 @@ const ShoppingCart = () => {
             <p className="text-xl text-red-500">{calculateTotal().toLocaleString()}₫</p>
           </div>
 
-          <Link to="/checkout">
+          <Link to="/Order_inf">
             <button className="bg-yellow-400 hover:bg-yellow-500 text-white py-2 px-4 rounded-md">
               Thanh Toán
             </button>

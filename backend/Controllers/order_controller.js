@@ -210,8 +210,6 @@ module.exports = {
         .json({ message: "Error fetching order summary", error });
     }
   },
-};
-
   updatePaymentStatus: async (req, res) => {
     const { orderId, status, accountId } = req.body;  
     console.log("Received accountId:", accountId);
@@ -275,5 +273,8 @@ module.exports = {
     }
   },
   
+
+
 };
 
+  

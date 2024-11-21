@@ -593,7 +593,7 @@ module.exports = {
     }
 
     try {
-      const user = await User.findById(id);
+      const user = await accountModel.findById(id);
       if (!user) {
         return res.status(404).json({ message: "Người dùng không tồn tại" });
       }
@@ -606,24 +606,22 @@ module.exports = {
 
   // Phương thức cập nhật thông tin người dùng
   updateUserInfo: async (req, res) => {
-    const { name, phone } = req.body;
+    const { username, phone, email } = req.body;  // Use username instead of name
     try {
       const user = await accountModel.findByIdAndUpdate(
-        req.userId,
-        { name, phone },
+   
+        { username, phone, email }, // Update username, phone, and email
         { new: true }
       );
       if (!user) {
-        return res
-          .status(404)
-          .json({ success: false, message: "User not found." });
+        return res.status(404).json({ success: false, message: "User not found." });
       }
       return res.status(200).json({ success: true, user });
     } catch (error) {
       console.error(error);
-      return res
-        .status(500)
-        .json({ success: false, message: "Error updating user info." });
+      return res.status(500).json({ success: false, message: "Error updating user info." });
     }
-  },
+  }
+  
+  
 };

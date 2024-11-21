@@ -36,6 +36,7 @@ const Sidebar = () => {
   const [showNCCMenu, setShowNCCMenu] = useState(false);
   const [showDiscount, setDiscount] = useState(false);
   const [showCategory, setCategory] = useState(false);
+  const [showChat, SetChat] = useState(false);
   const [showKho, setKho] = useState(false);
 
   return (
@@ -157,16 +158,7 @@ const Sidebar = () => {
               </li>
             </ul>
           )}
-           {showNCCMenu && (
-            <ul className="ml-4 mt-2">
-              
-              <li className="mb-1">
-                <Link to="/admin" className="hover:text-gray-300">
-                Chat real time
-                </Link>
-              </li>
-            </ul>
-          )}
+          
         </li>
 
         <li className="mb-2">
@@ -194,6 +186,30 @@ const Sidebar = () => {
                   Danh sách khuyến mãi
                 </Link>
               </li>
+            </ul>
+          )}
+        </li>
+        <li className="mb-2">
+          <button
+            onClick={() => SetChat(!showChat)}
+            className="flex items-center hover:text-gray-300 w-full text-left"
+          >
+            <CollectionIcon className="w-5 h-5 mr-2" />
+         Chăm sóc khách hàng 
+            <ChevronDownIcon
+              className={`w-5 h-5 ml-auto transition-transform ${
+                showChat ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+          {showChat && (
+            <ul className="ml-4 mt-2">
+              <li className="mb-1">
+              <Link to="/admin" className="hover:text-gray-300">
+                Chat real time
+                </Link>
+              </li>
+             
             </ul>
           )}
         </li>

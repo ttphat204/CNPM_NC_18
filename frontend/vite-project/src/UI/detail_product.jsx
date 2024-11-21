@@ -1,3 +1,6 @@
+
+
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
@@ -10,13 +13,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Header from "./Header";
-// import { useUser } from './UserContext';
 
 function DetailProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
-  //   const { userId } = useUser(); // Lấy userId từ UserContext
   const [product, setProduct] = useState(null);
+  const [inventory, setInventory] = useState(null); // State mới để lưu trữ thông tin kho
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
   const maxQuantity = 24;
@@ -27,6 +29,7 @@ function DetailProduct() {
       console.error("Product ID is missing");
       return;
     }
+    // Fetch thông tin sản phẩm từ API
     axios
       .get(`http://localhost:5000/api/products/${id}`)
       .then((response) => {
@@ -34,6 +37,15 @@ function DetailProduct() {
       })
       .catch((error) => {
         console.error("Error fetching product:", error);
+      });
+
+    axios
+      .get(`http://localhost:5000/api/kho/quantity/${id}`) 
+      .then((response) => {
+        setInventory(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching inventory:", error);
       });
   }, [id]);
 
@@ -43,7 +55,7 @@ function DetailProduct() {
 
   const incrementQuantity = () => {
     setQuantity((prevQuantity) =>
-      Math.min(prevQuantity + 1, product?.quantity || maxQuantity)
+      Math.min(prevQuantity + 1, inventory?.quantity || maxQuantity)
     );
   };
 
@@ -57,7 +69,7 @@ function DetailProduct() {
         })
         .then((response) => {
           if (response.data.success) {
-            navigate("/cart"); // Điều hướng đến trang giỏ hàng
+            navigate("/cart");
           } else {
             console.error("Error adding to cart:", response.data.message);
           }
@@ -67,10 +79,10 @@ function DetailProduct() {
         });
     } else {
       console.log("Please log in to add items to the cart.");
-      navigate("/login"); // Điều hướng đến trang đăng nhập
+      navigate("/login");
     }
   };
-  // Phần này ní viết thêm vào giỏ r đổi api r sử dụng lại
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "description":
@@ -92,7 +104,7 @@ function DetailProduct() {
     }
   };
 
-  if (!product) return <p>Loading...</p>;
+  if (!product || !inventory) return <p>Loading...</p>;
 
   return (
     <>
@@ -161,14 +173,14 @@ function DetailProduct() {
                   </div>
                 )}
 
-                {quantity === product.quantity && (
+                {quantity === inventory.quantity && (
                   <div className="mt-2 text-sm text-red-800 bg-red-200 p-2 rounded flex items-center">
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="mr-1 text-base"
                     />
                     <span className="font-semibold">
-                      Giới hạn mua tối đa là {product.quantity}.
+                      Giới hạn mua tối đa là {inventory.quantity}.
                     </span>
                   </div>
                 )}
@@ -246,3 +258,4 @@ function DetailProduct() {
 }
 
 export default DetailProduct;
+

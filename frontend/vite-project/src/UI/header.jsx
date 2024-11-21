@@ -264,6 +264,12 @@ function Header() {
                 >
                   Đăng xuất
                 </div>
+                <div
+                   onClick={() => navigate("/messages")}
+                  className="p-3 text-gray-700 hover:bg-gray-100 cursor-pointer z-50"
+                >
+                  Nhắn tin với Admin
+                </div>
               </div>
             )}
           </div>

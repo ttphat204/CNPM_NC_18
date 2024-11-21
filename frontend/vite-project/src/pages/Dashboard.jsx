@@ -1,7 +1,7 @@
 // Dashboard.js
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
-import Sidebar from '../components/sidebar1'; // Import Sidebar component
+import Sidebar from "../components/sidebar1"; // Import Sidebar component
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -73,9 +73,13 @@ const Dashboard = () => {
         <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
           <div className="bg-white p-4 rounded shadow flex flex-col justify-center items-center">
-            <h2 className="text-lg font-semibold mb-2 text-blue-400">Số lượng người dùng</h2>
+            <h2 className="text-lg font-semibold mb-2 text-blue-400">
+              Số lượng người dùng
+            </h2>
             <p className="text-2xl text-red-500">{userCount}</p>
-            <h2 className="text-lg font-semibold mb-2 text-blue-400">Hiện đã tạo tài khoản sử dụng</h2>
+            <h2 className="text-lg font-semibold mb-2 text-blue-400">
+              Hiện đã tạo tài khoản sử dụng
+            </h2>
           </div>
           <div className="bg-white p-4 rounded shadow">
             <h2 className="text-lg font-semibold mb-2">Doanh số</h2>

@@ -580,39 +580,27 @@ module.exports = {
   },
   // Phương thức lấy thông tin người dùng
   getUserInfo: async (req, res) => {
-    const accountId = req.params.account_id;
+    const { id } = req.params; // Lấy id từ req.params
 
-    // Kiểm tra xem accountId có hợp lệ không
-    if (!mongoose.Types.ObjectId.isValid(accountId)) {
-      return res.status(400).send("Invalid accountId");
+    // Kiểm tra nếu id không tồn tại
+    if (!id) {
+      return res.status(400).json({ message: "ID không được cung cấp" });
+    }
+
+    // Kiểm tra tính hợp lệ của ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "ID không hợp lệ" });
     }
 
     try {
-      const objectId = new mongoose.Types.ObjectId(accountId);
-
-      // Tìm kiếm thông tin người dùng
-      const user = await accountModel.findById(objectId);
+      const user = await User.findById(id);
       if (!user) {
-        return res
-          .status(404)
-          .json({ success: false, message: "User not found" });
+        return res.status(404).json({ message: "Người dùng không tồn tại" });
       }
-
-      // Tìm kiếm lịch sử đơn hàng dựa trên accountId
-      const orders = await orderModel.find({ accountId: objectId });
-
-      // Trả về thông tin người dùng cùng lịch sử đơn hàng
-      res.status(200).json({
-        success: true,
-        user,
-        orders,
-      });
+      res.status(200).json({ user });
     } catch (error) {
-      console.error(error.message || error); // In lỗi chi tiết
-      res.status(500).json({
-        success: false,
-        message: "Server error: " + (error.message || error),
-      });
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+      res.status(500).json({ message: "Lỗi máy chủ nội bộ" });
     }
   },
 

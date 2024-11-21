@@ -259,6 +259,12 @@ function Header() {
                 className="absolute bg-white shadow-lg rounded mt-2 w-56 transition-all duration-300 ease-in-out z-50"
               >
                 <div
+                  onClick={() => navigate("/UserPage")}
+                  className="p-3 text-gray-700 hover:bg-gray-100 cursor-pointer z-50"
+                >
+                  Thông tin cá nhân
+                </div>
+                <div
                   onClick={handleLogout}
                   className="p-3 text-gray-700 hover:bg-gray-100 cursor-pointer z-50"
                 >
@@ -276,7 +282,7 @@ function Header() {
           <FontAwesomeIcon
             icon={faHeart}
             className="ml-4 text-2xl text-white cursor-pointer"
-            onClick={() => toggleDropdown("favorites")}
+            onClick={() => navigate("/LikeList")}
           />
           <FontAwesomeIcon
             icon={faCartShopping}

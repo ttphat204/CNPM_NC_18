@@ -23,8 +23,13 @@ import CategoryPage from "./UI/Category_page";
 import ResetPassword from "./Login/ResetPassword";
 import ForgotPassword from "./Login/ForgotPassword";
 import Order_suc from "./UI/Order_suc";
+
 import AdminPanel from "./UI/AdminPanel";
 import UserPanel from "./UI/UserPanel";
+import LikeList from "./UI/LikeList";
+import UserPage from "./UI/UserPage";
+
+
 function App() {
   return (
     <Router>
@@ -61,6 +66,8 @@ function App() {
           <Route path="/Order_inf" element={<Order_inf />} />
           <Route path="/category/:categoryId" element={<CategoryPage />} />
           <Route path="/Order_suc" element={<Order_suc />} />
+          <Route path="/LikeList" element={<LikeList />} />
+          <Route path="/UserPage" element={<UserPage />} />
         </Routes>
       </div>
     </Router>

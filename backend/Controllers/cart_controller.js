@@ -3,25 +3,38 @@ const cartModel = require("../models/cart_model");
 module.exports = {
   AddToCart: async (req, res) => {
     const { account_id, product_id, quantity } = req.body;
+    console.log("Adding to cart", account_id, product_id, quantity); // In ra để kiểm tra dữ liệu
 
-    let cart = await cartModel.findOne({ account_id });
-    if (!cart) {
-      cart = await cartModel.create({
-        account_id,
-        items: [{ product: product_id, quantity: quantity || 1 }],
-      });
-    } else {
-      const itemIndex = cart.items.findIndex(
-        (item) => item.product == product_id
-      );
-      if (itemIndex > -1) {
-        cart.items[itemIndex].quantity += quantity || 1;
+    try {
+      let cart = await cartModel.findOne({ account_id });
+
+      if (!cart) {
+        // Nếu chưa có giỏ hàng, tạo mới
+        cart = await cartModel.create({
+          account_id,
+          items: [{ product: product_id, quantity: quantity || 1 }],
+        });
       } else {
-        cart.items.push({ product: product_id, quantity: quantity || 1 });
+        // Nếu giỏ hàng đã có, kiểm tra xem sản phẩm đã có trong giỏ chưa
+        const itemIndex = cart.items.findIndex(
+          (item) => item.product.toString() === product_id
+        );
+
+        if (itemIndex > -1) {
+          // Nếu sản phẩm đã có, cập nhật số lượng
+          cart.items[itemIndex].quantity += quantity || 1;
+        } else {
+          // Nếu chưa có, thêm sản phẩm mới vào giỏ
+          cart.items.push({ product: product_id, quantity: quantity || 1 });
+        }
+        await cart.save();
       }
-      await cart.save();
+
+      return res.status(201).json(cart);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      return res.status(500).json({ message: "Internal server error" });
     }
-    return res.status(201).json(cart);
   },
 
   GetCart: async (req, res) => {

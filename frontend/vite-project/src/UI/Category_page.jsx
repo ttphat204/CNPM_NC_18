@@ -34,7 +34,7 @@ const CategoryPage = () => {
         const response = await axios.get(
           `http://localhost:5000/api/categories/${categoryId}`
         );
-        setCategoryName(response.data.name);
+        setCategoryName(response.data.category_name);
       } catch (error) {
         console.error("Error fetching category name:", error);
       }
@@ -76,7 +76,7 @@ const CategoryPage = () => {
             <p className="text-gray-600">
               Khám phá những sản phẩm chất lượng từ danh mục này
             </p>
-            <div className="w-20 h-1 bg-blue-500 mx-auto mt-4"></div>
+            <div className="w-20 h-1 bg-[#ffd040] mx-auto mt-4"></div>
           </div>
 
           {/* Dropdown sắp xếp */}

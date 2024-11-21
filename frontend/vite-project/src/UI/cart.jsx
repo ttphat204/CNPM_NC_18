@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Footer from "./Footer";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -23,7 +23,9 @@ const ShoppingCart = () => {
     axios
       .get(`http://localhost:5000/api/carts/account/${account_id}`)
       .then((response) => {
-        const items = (response.data.items || []).filter((item) => item.product); // Lọc các sản phẩm hợp lệ
+        const items = (response.data.items || []).filter(
+          (item) => item.product
+        ); // Lọc các sản phẩm hợp lệ
         setCartItems(items);
       })
       .catch((error) => {
@@ -78,7 +80,9 @@ const ShoppingCart = () => {
   // Hàm tính tổng tiền của giỏ hàng
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => {
-      return total + (item.product.newPrice || item.product.price) * item.quantity;
+      return (
+        total + (item.product.newPrice || item.product.price) * item.quantity
+      );
     }, 0);
   };
 
@@ -129,7 +133,10 @@ const ShoppingCart = () => {
                       {item.product.product_name}
                     </Link>
                     <p className="text-gray-500">
-                      {(item.product.newPrice || item.product.price).toLocaleString()}₫
+                      {(
+                        item.product.newPrice || item.product.price
+                      ).toLocaleString()}
+                      ₫
                     </p>
                   </div>
 
@@ -156,7 +163,11 @@ const ShoppingCart = () => {
 
                   {/* Giá tiền */}
                   <div className="font-semibold text-lg">
-                    {(item.quantity * (item.product.newPrice || item.product.price)).toLocaleString()}₫
+                    {(
+                      item.quantity *
+                      (item.product.newPrice || item.product.price)
+                    ).toLocaleString()}
+                    ₫
                   </div>
 
                   {/* Nút xóa sản phẩm */}
@@ -180,9 +191,10 @@ const ShoppingCart = () => {
         <div className="flex justify-between items-center bg-white shadow-md rounded-md p-4 mt-4">
           <div>
             <h4 className="font-bold text-lg">Tổng cộng</h4>
-            <p className="text-xl text-red-500">{calculateTotal().toLocaleString()}₫</p>
+            <p className="text-xl text-red-500">
+              {calculateTotal().toLocaleString()}₫
+            </p>
           </div>
-
 
           <button
             onClick={handleCheckout}
@@ -190,7 +202,6 @@ const ShoppingCart = () => {
           >
             Thanh Toán
           </button>
-
         </div>
       </div>
 

@@ -101,31 +101,16 @@ module.exports = {
   },
 
   getOrderByAccount: async (req, res) => {
-    const account_id = req.params.account_id;
-    const carts = await cartModel.find({ account_id });
-
-    const orders = [];
-    for (let cart of carts) {
-      const order = await orderModel
-        .findOne({
-          cart_id: cart._id,
-        })
-        .populate({
-          path: "cart_id",
-          populate: [
-            {
-              path: "account_id",
-            },
-            {
-              path: "items.product",
-            },
-          ],
-        });
-      orders.push(order);
+    const accountId = req.params.account_id;
+    try {
+      const orders = await orderModel.find({ customer: accountId });
+      return res.status(200).json(orders);
+    } catch (error) {
+      console.error("Error fetching orders", error);
+      return res.status(500).json({ message: "Error fetching orders", error });
     }
-
-    return res.status(200).json(orders);
   },
+
   getOrderDetails: async (req, res) => {
     const { orderId } = req.params;
 

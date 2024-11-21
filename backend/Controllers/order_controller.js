@@ -133,6 +133,85 @@ module.exports = {
         .json({ message: "Error fetching order details", error });
     }
   },
+
+
+  getOrderSummary: async (req, res) => {
+    try {
+      const totalOrders = await orderModel.countDocuments();
+
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+
+      // Tính thời gian tháng trước
+      const previousMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+      const previousMonthYear =
+        currentMonth === 0 ? currentYear - 1 : currentYear;
+
+      // Lấy doanh thu tháng trước
+      const previousMonthOrders = await orderModel
+        .find({
+          date: {
+            $gte: new Date(previousMonthYear, previousMonth, 1),
+            $lt: new Date(previousMonthYear, previousMonth + 1, 1),
+          },
+        })
+        .populate({
+          path: "items.product_id",
+          select: "price",
+        });
+
+      let totalRevenue = 0;
+      let currentMonthRevenue = 0;
+      let previousMonthRevenue = 0;
+
+      // Tính doanh thu
+      const allOrders = await orderModel.find().populate("items.product_id");
+      allOrders.forEach((order) => {
+        order.items.forEach((item) => {
+          const revenue = item.product_id.price * item.quantity;
+          totalRevenue += revenue;
+        });
+      });
+
+      // Tính doanh thu tháng hiện tại
+      const currentMonthOrders = await orderModel
+        .find({
+          date: {
+            $gte: new Date(currentYear, currentMonth, 1),
+            $lt: new Date(currentYear, currentMonth + 1, 1),
+          },
+        })
+        .populate("items.product_id");
+
+      currentMonthOrders.forEach((order) => {
+        order.items.forEach((item) => {
+          currentMonthRevenue += item.product_id.price * item.quantity;
+        });
+      });
+
+      // Tính doanh thu tháng trước
+      previousMonthOrders.forEach((order) => {
+        order.items.forEach((item) => {
+          previousMonthRevenue += item.product_id.price * item.quantity;
+        });
+      });
+
+      return res.status(200).json({
+        totalOrders,
+        totalRevenue,
+        currentMonthRevenue,
+        previousMonthRevenue,
+      });
+    } catch (error) {
+      console.error("Error fetching order summary:", error);
+      return res
+        .status(500)
+        .json({ message: "Error fetching order summary", error });
+    }
+  },
+};
+
   updatePaymentStatus: async (req, res) => {
     const { orderId, status, accountId } = req.body;  
     console.log("Received accountId:", accountId);
@@ -197,3 +276,4 @@ module.exports = {
   },
   
 };
+

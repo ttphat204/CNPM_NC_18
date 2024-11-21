@@ -30,7 +30,7 @@ const {
 } = require("../Controllers/account_controller");
 
 // Route để lấy thông tin người dùng
-router.route("/info/:account_id").get(getUserInfo); // GET request để lấy thông tin người dùng
+router.route("/info/:id").get(getUserInfo); // GET request để lấy thông tin người dùng
 
 // Route để cập nhật thông tin người dùng
 router.route("/info").put(updateUserInfo); // PUT request để cập nhật thông tin người dùng

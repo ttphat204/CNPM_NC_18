@@ -270,7 +270,7 @@ function Header() {
           <FontAwesomeIcon
             icon={faHeart}
             className="ml-4 text-2xl text-white cursor-pointer"
-            onClick={() => toggleDropdown("favorites")}
+            onClick={() => navigate("/LikeList")}
           />
           <FontAwesomeIcon
             icon={faCartShopping}

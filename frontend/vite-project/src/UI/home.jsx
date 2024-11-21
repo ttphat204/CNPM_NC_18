@@ -52,7 +52,9 @@ const Home = () => {
       </div>
 
       {/* Top Image Cards */}
-      <div className="sm:mx-8 lg:mx-32 mt-20"> {/* Adjusted margin-top */}
+      <div className="sm:mx-8 lg:mx-32 mt-20 pt-7">
+        {" "}
+        {/* Adjusted margin-top */}
         <div className="flex flex-col sm:flex-row justify-between gap-4 mb-10">
           {["sale1.jpg", "sale2.jpg", "sale3.jpg"].map((imgSrc, idx) => (
             <div
@@ -68,8 +70,8 @@ const Home = () => {
                 {idx === 0
                   ? "NO BRAND"
                   : idx === 1
-                    ? "NÔNG SẢN SẠCH"
-                    : "CHỈ CÓ TRÊN EMART"}
+                  ? "NÔNG SẢN SẠCH"
+                  : "CHỈ CÓ TRÊN EMART"}
               </div>
             </div>
           ))}
@@ -81,7 +83,7 @@ const Home = () => {
         <div className="pt-5 pl-6 pb-4 font-bold text-xl border-b-4">
           SẢN PHẨM BÁN CHẠY
         </div>
-        <div className="flex flex-wrap gap-6">
+        <div className="flex flex-wrap gap-5 ">
           {groupedProducts.map((group, idx) => (
             <div key={idx} className="flex flex-row items-center">
               {group.map((product) => (
@@ -95,7 +97,7 @@ const Home = () => {
       </div>
 
       {/* New Products Section */}
-      <div className="h-auto bg-white mx-4 sm:mx-8 lg:mx-32 my-24">
+      <div className="h-auto bg-white mx-4 sm:mx-8 lg:mx-32 my-24 ">
         <div className="pt-5 pl-6 pb-4 font-bold text-xl border-b-4">
           SẢN PHẨM MỚI
         </div>

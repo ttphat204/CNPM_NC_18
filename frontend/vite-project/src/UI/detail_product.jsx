@@ -94,6 +94,32 @@ function DetailProduct() {
 
   if (!product) return <p>Loading...</p>;
 
+  const handleAddToFavorite = () => {
+    if (!account_id) {
+      alert("Vui lòng đăng nhập để thêm sản phẩm vào danh sách yêu thích.");
+      navigate("/login"); // Chuyển hướng đến trang đăng nhập
+      return;
+    }
+
+    axios
+      .post("http://localhost:5000/api/likelist/add", {
+        accountId: account_id,
+        productId: product._id,
+      })
+      .then((response) => {
+        if (response.data.success) {
+          alert("Sản phẩm đã được thêm vào danh sách yêu thích!");
+        } else {
+          console.error("Lỗi:", response.data.message);
+          alert("Không thể thêm sản phẩm vào danh sách yêu thích.");
+        }
+      })
+      .catch((error) => {
+        console.error("Có lỗi xảy ra:", error);
+        alert("Đã xảy ra lỗi khi thêm sản phẩm vào danh sách yêu thích.");
+      });
+  };
+
   return (
     <>
       <Header />
@@ -187,7 +213,10 @@ function DetailProduct() {
                   >
                     Mua ngay
                   </button>
-                  <button className="h-8 px-2 py-1 bg-gray-200 rounded ml-5 hover:text-orange-400">
+                  <button
+                    onClick={handleAddToFavorite}
+                    className="h-8 px-2 py-1 bg-gray-200 rounded ml-5 hover:text-orange-400"
+                  >
                     <FontAwesomeIcon icon={faHeart} />
                   </button>
                 </div>

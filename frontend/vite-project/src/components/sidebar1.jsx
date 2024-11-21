@@ -157,6 +157,16 @@ const Sidebar = () => {
               </li>
             </ul>
           )}
+           {showNCCMenu && (
+            <ul className="ml-4 mt-2">
+              
+              <li className="mb-1">
+                <Link to="/admin" className="hover:text-gray-300">
+                Chat real time
+                </Link>
+              </li>
+            </ul>
+          )}
         </li>
 
         <li className="mb-2">
@@ -215,6 +225,7 @@ const Sidebar = () => {
             </ul>
           )}
         </li>
+        
 
         <li className="mb-2">
           <button
@@ -237,6 +248,7 @@ const Sidebar = () => {
                 </Link>
               </li>
             </ul>
+            
           )}
 
           <div className="mt-12 flex justify-center">

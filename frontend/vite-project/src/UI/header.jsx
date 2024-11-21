@@ -270,6 +270,12 @@ function Header() {
                 >
                   Đăng xuất
                 </div>
+                <div
+                   onClick={() => navigate("/messages")}
+                  className="p-3 text-gray-700 hover:bg-gray-100 cursor-pointer z-50"
+                >
+                  Nhắn tin với Admin
+                </div>
               </div>
             )}
           </div>
@@ -282,6 +288,11 @@ function Header() {
             icon={faCartShopping}
             className="ml-4 text-2xl text-white cursor-pointer"
             onClick={() => navigate("/cart")}
+          />
+              <FontAwesomeIcon
+            icon={faCartShopping}
+            className="ml-4 text-2xl text-white cursor-pointer"
+            onClick={() => navigate("/user")}
           />
         </div>
       </div>

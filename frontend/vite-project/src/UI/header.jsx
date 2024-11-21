@@ -283,6 +283,11 @@ function Header() {
             className="ml-4 text-2xl text-white cursor-pointer"
             onClick={() => navigate("/cart")}
           />
+              <FontAwesomeIcon
+            icon={faCartShopping}
+            className="ml-4 text-2xl text-white cursor-pointer"
+            onClick={() => navigate("/user")}
+          />
         </div>
       </div>
     </header>

@@ -3,12 +3,15 @@ const cors = require("cors");
 const connectDB = require("./configs/database");
 const router = require("./routers");
 require("dotenv").config();
-const bodyParser = require('body-parser');
-const qs = require('qs');
-const CryptoJS = require('crypto-js');
-const moment = require('moment');
-const axios = require('axios');
+const bodyParser = require("body-parser");
+const qs = require("qs");
+const CryptoJS = require("crypto-js");
+const moment = require("moment");
+const axios = require("axios");
+const http = require("http");
+const socketIo = require("socket.io");
 
+const jwt = require('jsonwebtoken');
 const config = {
     app_id: "2554",
     key1: "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn",
@@ -16,8 +19,16 @@ const config = {
     endpoint: "https://sb-openapi.zalopay.vn/v2/create"
 };
 
-
 const app = express();
+const server = http.createServer(app); // Tạo server http
+const io = socketIo(server, {
+  transports: ['websocket', 'polling'],
+  cors: {
+    origin:"http://localhost:5173", // Cập nhật URL frontend của bạn
+    methods: ["GET", "POST"],
+  }
+});
+
 // Middleware
 app.use(
   cors({
@@ -40,8 +51,7 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
+// Xử lý yêu cầu thanh toán ZaloPay
 app.post("/payment", async (req, res) => {
   const embed_data = {
       redirecturl: "http://localhost:5173/Order_suc"
@@ -85,7 +95,7 @@ app.post("/payment", async (req, res) => {
   }
 });
 
-
+// Callback khi ZaloPay trả về thông tin thanh toán
 app.post('/callback', (req, res) => {
   let result = {};
   try {
@@ -111,6 +121,7 @@ app.post('/callback', (req, res) => {
   res.json(result);
 });
 
+// Kiểm tra trạng thái đơn hàng
 app.post('/check-status-order/:app_trans_id', async (req, res) => {
   const app_trans_id = req.params.app_trans_id;
 
@@ -141,13 +152,76 @@ app.post('/check-status-order/:app_trans_id', async (req, res) => {
   }
 });
 
-// Kết nối đến cơ sở dữ liệu
+
 connectDB();
 
-// Sử dụng router
+
 router(app);
 
-app.listen(5000, () => {
+
+let users = {}; 
+
+io.on('connection', (socket) => {
+    console.log('New user connected');
+
+    // Xử lý khi người dùng đăng nhập thành công
+    socket.on('login', (token) => {
+      console.log('Received token:', token);
+        try {
+            const decoded = jwt.verify(token,"123");
+            console.log('Decoded token:', decoded);
+            // Kiểm tra xem socket.id đã có trong users chưa, nếu có thì không thêm
+            if (!users[socket.id]) {
+                users[socket.id] = { userId: decoded.userId, role: decoded.role };
+                console.log(`${decoded.role} logged in with socket id: ${socket.id}`);
+            }
+        } catch (err) {
+            console.log('Invalid token', err.message);
+            socket.disconnect(); 
+        }
+    });
+
+
+socket.on('sendMessage', (data) => {
+    const { message, role } = data;
+    const messageData = { role, message };
+  
+    if (role === 'user') {
+      // Gửi tin nhắn đến Admin
+      for (let id in users) {
+        if (users[id].role === 'adminPage1') {
+          io.to(id).emit('receiveMessage', messageData); // Gửi tin nhắn tới admin
+          break;
+        }
+      }
+    } else if (role === 'adminPage1') {
+      // Gửi tin nhắn từ Admin đến User
+      for (let id in users) {
+        if (users[id].role === 'user') {
+          io.to(id).emit('receiveMessage', messageData); // Gửi tin nhắn tới user
+          break;
+        }
+      }
+    }
+  });
+
+    // Xử lý khi người dùng ngắt kết nối
+    socket.on('disconnect', () => {
+        delete users[socket.id];
+        console.log('User disconnected:', socket.id);
+    });
+
+
+  socket.on('connect', () => {
+    console.log('Socket connected:', socket.id);
+  });
+  socket.on('connect_error', (err) => {
+    console.error('Socket connection error:', err);
+  });
+  
+});
+
+// Lắng nghe server trên cổng 5000
+server.listen(5000, () => {
   console.log("Server đang chạy trên cổng 5000...");
-  console.log("Server đang chạy...");
 });

@@ -1,4 +1,3 @@
-
 // const bcrypt = require("bcrypt");
 // const accountModel = require("../models/account_model");
 // const nodemailer = require("nodemailer");
@@ -139,10 +138,11 @@
 //   },
 // };
 
-
 const bcrypt = require("bcrypt");
 const accountModel = require("../models/account_model");
 const nodemailer = require("nodemailer");
+const mongoose = require("mongoose");
+const orderModel = require("../models/order_model");
 
 const otpStore = {};
 
@@ -580,30 +580,50 @@ module.exports = {
   },
   // Phương thức lấy thông tin người dùng
   getUserInfo: async (req, res) => {
+    const accountId = req.params.account_id;
+
+    // Kiểm tra xem accountId có hợp lệ không
+    if (!mongoose.Types.ObjectId.isValid(accountId)) {
+      return res.status(400).send("Invalid accountId");
+    }
+
     try {
-      const user = await accountModel.findById(req.params.account_id);
+      const objectId = new mongoose.Types.ObjectId(accountId);
+
+      // Tìm kiếm thông tin người dùng
+      const user = await accountModel.findById(objectId);
       if (!user) {
         return res
           .status(404)
-          .json({ success: false, message: "User not found." });
+          .json({ success: false, message: "User not found" });
       }
-      return res.status(200).json({ success: true, user });
+
+      // Tìm kiếm lịch sử đơn hàng dựa trên accountId
+      const orders = await orderModel.find({ accountId: objectId });
+
+      // Trả về thông tin người dùng cùng lịch sử đơn hàng
+      res.status(200).json({
+        success: true,
+        user,
+        orders,
+      });
     } catch (error) {
-      console.error(error);
-      return res
-        .status(500)
-        .json({ success: false, message: "Error fetching user info." });
+      console.error(error.message || error); // In lỗi chi tiết
+      res.status(500).json({
+        success: false,
+        message: "Server error: " + (error.message || error),
+      });
     }
   },
 
   // Phương thức cập nhật thông tin người dùng
   updateUserInfo: async (req, res) => {
-    const { name, email, phone } = req.body;
+    const { name, phone } = req.body;
     try {
       const user = await accountModel.findByIdAndUpdate(
         req.userId,
-        { name, email, phone },
-        { new: true } // Trả về tài khoản mới sau khi cập nhật
+        { name, phone },
+        { new: true }
       );
       if (!user) {
         return res

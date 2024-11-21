@@ -12,7 +12,7 @@ const {
 router.route("/").post(AddToCart);
 router.route("/account/:account_id").get(GetCart);
 router
-  .route("/account/:account_id/item/:item_id")
+  .route("/account/:account_id/item/:productId")
   .delete(removeItem)
   .patch(UpdateItem);
 

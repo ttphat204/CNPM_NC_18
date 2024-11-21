@@ -10,13 +10,13 @@ function Order_inf() {
     address: "",
     phone: "",
     payment_method: "COD",
-    date: "", // Thêm trường ngày giao hàng
-    time: "", // Thêm trường giờ giao hàng
+    date: "", 
+    time: "", 
   });
   const [phoneError, setPhoneError] = useState("");
   const [cartItems, setCartItems] = useState([]);
   const account_id = localStorage.getItem("userId");
-  const navigate = useNavigate(); // Hook to handle navigation
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (account_id) {
@@ -39,12 +39,16 @@ function Order_inf() {
       });
   };
 
+ 
+  
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => {
-      return total + item.product.price * item.quantity;
+      // Check if there is a discounted price, if not use the regular price
+      const price = item.product.newPrice || item.product.price;
+      return total + price * item.quantity;
     }, 0);
   };
-
+  
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -62,65 +66,81 @@ function Order_inf() {
     });
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (!account_id || cartItems.length === 0) {
       alert("Giỏ hàng trống hoặc chưa đăng nhập!");
       return;
     }
-
+    
+    const totalAmount = calculateTotal();
+    
     try {
-      const response = await axios.post("http://localhost:5000/api/orders", {
+      const orderResponse = await axios.post("http://localhost:5000/api/orders", {
         ...formData,
         cart_items: cartItems.map((item) => ({
           product_id: item.product._id,
           quantity: item.quantity,
         })),
+        isPayment: formData.payment_method === "COD" ? false : null,
       });
-
-      alert("Đặt hàng thành công!");
-      console.log("Đặt hàng thành công:", response.data);
-
-      setCartItems([]);
-      if (formData.payment_method === "COD") {
-        navigate("/Order_suc");
+      
+      if (orderResponse.data.order && orderResponse.data.order._id) {
+        const orderId = orderResponse.data.order._id;
+        localStorage.setItem("orderId", orderId);
+        
+        if (formData.payment_method === "ZaloPay") {
+          try {
+            // Sending request to ZaloPay
+            const paymentResponse = await axios.post("http://localhost:5000/payment", {
+              amount: totalAmount,
+              orderId: orderId,
+            });
+            
+            if (paymentResponse.data.order_url) {
+              window.location.href = paymentResponse.data.order_url;
+            } else {
+              console.error("Failed to receive ZaloPay order URL:", paymentResponse);
+              alert("Lỗi khi chuyển hướng đến ZaloPay.");
+            }
+          } catch (paymentError) {
+            console.error("Error during ZaloPay payment request:", paymentError);
+            alert("Lỗi khi tạo đơn hàng thanh toán qua ZaloPay.");
+          }
+        } else {
+          alert("Đặt hàng thành công!");
+          setCartItems([]);
+          navigate("/Order_suc?status=1");
+        }
       } else {
-        navigate("/anotherPage");
+        alert("Không thể tạo đơn hàng. Vui lòng thử lại.");
       }
     } catch (error) {
-      console.error("Lỗi khi đặt hàng:", error);
-      if (error.response) {
-        // In ra thông tin chi tiết lỗi từ server
-        console.error("Response Error:", error.response.data);
-        alert(
-          `Lỗi từ server: ${error.response.data.message || "Không xác định"}`
-        );
-      } else if (error.request) {
-        // Lỗi do không nhận được phản hồi từ server
-        console.error("Request Error:", error.request);
-        alert("Không thể kết nối đến server.");
-      } else {
-        // Lỗi khác
-        console.error("Unknown Error:", error.message);
-        alert("Đã xảy ra lỗi, vui lòng thử lại.");
-      }
+      console.error("Lỗi khi tạo đơn hàng:", error);
+      alert("Đã xảy ra lỗi, vui lòng thử lại.");
     }
   };
+  
 
-  // Lấy ngày hôm nay và ngày trong 3 ngày tới
+
+
+
+
   const today = new Date();
-  const minDate = today.toISOString().split("T")[0]; // Ngày hiện tại
-  today.setDate(today.getDate() + 3); // Cộng thêm 3 ngày
-  const maxDate = today.toISOString().split("T")[0]; // Ngày sau 3 ngày
+  const minDate = today.toISOString().split("T")[0];
+  today.setDate(today.getDate() + 3); 
+  const maxDate = today.toISOString().split("T")[0]; 
 
-  const minTime = "09:00"; // Giờ sớm nhất là 9h sáng
-  const maxTime = "18:00"; // Giờ muộn nhất là 6h chiều
+  const minTime = "09:00"; 
+  const maxTime = "18:00";
 
   return (
     <>
       <Header />
       <div className="flex max-w-6xl mx-auto mt-10 gap-6 pb-10">
-        {/* Cửa sổ nhập thông tin */}
+     
         <div className="w-1/2 bg-gray-100 shadow-md rounded-lg p-6">
           <h2 className="text-2xl font-semibold mb-6 text-center">
             Thông Tin Đơn Hàng
@@ -195,11 +215,11 @@ function Order_inf() {
                 className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-yellow-400"
               >
                 <option value="COD">Thanh toán khi nhận hàng</option>
-                <option value="Momo">Momo</option>
-                <option value="Cart Credit">Thẻ tín dụng</option>
+                <option value="ZaloPay">ZaloPay</option>
+           
               </select>
             </div>
-            {/* Trường chọn ngày giao hàng */}
+         
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Ngày Giao Hàng
@@ -210,12 +230,12 @@ function Order_inf() {
                 value={formData.delivery_date}
                 onChange={handleChange}
                 required
-                min={minDate} // Giới hạn ngày tối thiểu
-                max={maxDate} // Giới hạn ngày tối đa
+                min={minDate} 
+                max={maxDate}
                 className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-yellow-400"
               />
             </div>
-            {/* Trường chọn giờ giao hàng */}
+         
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Giờ Giao Hàng
@@ -226,8 +246,8 @@ function Order_inf() {
                 value={formData.delivery_time}
                 onChange={handleChange}
                 required
-                min={minTime} // Giới hạn giờ sớm nhất là 9h sáng
-                max={maxTime} // Giới hạn giờ muộn nhất là 6h chiều
+                min={minTime} 
+                max={maxTime}
                 className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-yellow-400"
               />
             </div>
@@ -240,40 +260,46 @@ function Order_inf() {
           </form>
         </div>
 
-        {/* Cửa sổ giỏ hàng */}
-        <div className="w-1/2 bg-gray-100 shadow-md rounded-lg p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-center">Giỏ Hàng</h2>
-          {cartItems.length > 0 ? (
-            <div className="space-y-4">
-              {cartItems.map((item) => (
-                <div
-                  key={item._id}
-                  className="flex items-center justify-between"
-                >
-                  <img
-                    src={item.product.img}
-                    alt={item.product.product_name}
-                    className="w-16 h-16 object-cover rounded-md"
-                  />
-                  <div className="flex-1 mx-4">
-                    <p className="font-medium">{item.product.product_name}</p>
-                    <p className="text-gray-500">{item.product.price}₫</p>
+                  <div className="w-1/2 bg-gray-100 shadow-md rounded-lg p-6">
+            <h2 className="text-2xl font-semibold mb-6 text-center">Giỏ Hàng</h2>
+            {cartItems.length > 0 ? (
+              <div className="space-y-4">
+                {cartItems.map((item) => (
+                  <div key={item._id} className="flex items-center justify-between">
+                    <img
+                      src={item.product.img}
+                      alt={item.product.product_name}
+                      className="w-16 h-16 object-cover rounded-md"
+                    />
+                    <div className="flex-1 mx-4">
+                      <p className="font-medium">{item.product.product_name}</p>
+                    
+                      <p className="text-gray-500">
+                        {item.product.newPrice 
+                          ? <>
+                              <span className="line-through text-red-500">{item.product.price}₫</span> 
+                              <span className="text-black">{item.product.newPrice}₫</span>
+                            </>
+                          : `${item.product.price}₫`
+                        }
+                      </p>
+                    </div>
+                    <div className="font-semibold text-lg">
+              
+                      {item.quantity * (item.product.newPrice || item.product.price)}₫
+                    </div>
                   </div>
-                  <div className="font-semibold text-lg">
-                    {item.quantity * item.product.price}₫
-                  </div>
+                ))}
+                <div className="text-right mt-4">
+                  <p className="font-bold text-xl text-red-500">
+                    Tổng cộng: {calculateTotal()}₫
+                  </p>
                 </div>
-              ))}
-              <div className="text-right mt-4">
-                <p className="font-bold text-xl text-red-500">
-                  Tổng cộng: {calculateTotal()}₫
-                </p>
               </div>
-            </div>
-          ) : (
-            <p className="text-center text-gray-500">Giỏ hàng đang trống.</p>
-          )}
-        </div>
+            ) : (
+              <p className="text-center text-gray-500">Giỏ hàng đang trống.</p>
+            )}
+          </div>
       </div>
       <Footer />
     </>

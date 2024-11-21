@@ -4,6 +4,7 @@ const account = require("../models/account_model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const session = require("express-session"); // Cài đặt session
+require('dotenv').config();
 
 const router = express.Router();
 
@@ -20,10 +21,14 @@ router.use(
   })
 );
 
+
+
+// Chỉnh sửa hàm login để thêm JWT
 const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
+    // Kiểm tra người dùng là admin hay user
     const admin = await AdminModel.findOne({ username });
     if (admin) {
       const validPassword = await bcrypt.compare(password, admin.password);
@@ -31,18 +36,30 @@ const login = async (req, res) => {
         return res.status(401).json({ message: "Sai mật khẩu" });
       }
 
-      // Lưu thông tin vào session thay vì cookie
+      // Tạo JWT token
+      const token = jwt.sign(
+        { userId: admin._id, username: admin.username, role: admin.role },
+        '123', // Secret key cho token, cần bảo mật
+        { expiresIn: '1h' } // Token sẽ hết hạn sau 1 giờ
+      );
+
+      // Lưu thông tin vào session
       req.session.user = {
         username: admin.username,
         role: admin.role,
         userId: admin._id,
+        token: token,
       };
 
+      console.log("Session lưu sau khi login:", req.session);
+
+      // Gửi token cùng thông tin người dùng
       return res.json({
         login: true,
         role: admin.role,
         username: admin.username,
         userId: admin._id,
+        token: token,  // Trả lại token cho client
       });
     }
 
@@ -53,18 +70,30 @@ const login = async (req, res) => {
         return res.status(401).json({ message: "Sai mật khẩu" });
       }
 
-      // Lưu thông tin vào session thay vì cookie
+      // Tạo JWT token
+      const token = jwt.sign(
+        { userId: user._id, username: user.username, role: "user" },
+        "123", // Secret key cho token
+        { expiresIn: '1h' } // Token hết hạn sau 1 giờ
+      );
+
+      // Lưu thông tin vào session
       req.session.user = {
         username: user.username,
         role: "user",
         userId: user._id,
+        token: token,
       };
+      
+      console.log("Session lưu sau khi login:", req.session);
 
+      // Gửi token cùng thông tin người dùng
       return res.json({
         login: true,
         role: "user",
         username: user.username,
         userId: user._id,
+        token: token,  // Trả lại token cho client
       });
     }
 
@@ -73,6 +102,7 @@ const login = async (req, res) => {
     res.status(500).json({ message: "Lỗi máy chủ", error: er.message });
   }
 };
+
 
 // Đăng xuất
 const logout = (req, res) => {

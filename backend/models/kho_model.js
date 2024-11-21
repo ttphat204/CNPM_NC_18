@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const khoSchema = mongoose.Schema({
-  product: {
+  Product: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "product",
     required: true,

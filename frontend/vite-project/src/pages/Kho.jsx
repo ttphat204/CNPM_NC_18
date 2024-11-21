@@ -74,7 +74,7 @@ function ListKho() {
       });
       setKhoList((prevKhoList) =>
         prevKhoList.map((item) =>
-          item.product._id === addingProduct
+          item.Product._id === addingProduct
             ? { ...item, quantity: item.quantity + parseInt(quantityToAdd) }
             : item
         )
@@ -93,7 +93,7 @@ function ListKho() {
         quantity: parseInt(newProductQuantity),
       });
       const newProduct = await fetchProductDetails(newProductId);
-      setKhoList([...khoList, { ...response.data, product: newProduct }]);
+      setKhoList([...khoList, { ...response.data, Product: newProduct }]);
       setShowAddProductModal(false);
       setNewProductId("");
       setNewProductQuantity("");
@@ -150,35 +150,39 @@ function ListKho() {
               </tr>
             </thead>
             <tbody>
-              {khoList.map((item) => (
-                <tr
-                  key={item.product._id}
-                  className="hover:bg-gray-100 transition duration-200"
-                >
-                  <td className="py-2 px-4 border-b text-left">
-                    <img
-                      src={item.product.img}
-                      alt={item.product.product_name}
-                      className="w-16 h-16 object-cover"
-                    />
-                  </td>
-                  <td className="py-2 px-4 border-b text-left">
-                    {item.product.product_name}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center">
-                    {item.quantity}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center">
-                    <button
-                      className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition duration-200"
-                      onClick={() => handleAddClick(item.product._id)}
-                    >
-                      Nhập hàng
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {khoList.map((item) => (
+    <tr key={item.Product?._id || item.Product} className="hover:bg-gray-100 transition duration-200">
+      <td className="py-2 px-4 border-b text-left">
+        {/* Kiểm tra xem item.Product có tồn tại không và có ảnh không */}
+        {item.Product?.img ? (
+          <img
+            src={item.Product.img}
+            alt={item.Product.product_name}
+            className="w-16 h-16 object-cover"
+          />
+        ) : (
+          <span>Không có ảnh</span> // Hiển thị nếu không có ảnh
+        )}
+      </td>
+      <td className="py-2 px-4 border-b text-left">
+        {/* Kiểm tra sự tồn tại của tên sản phẩm */}
+        {item.Product?.product_name || 'Chưa có tên'}
+      </td>
+      <td className="py-2 px-4 border-b text-center">
+        {item.quantity}
+      </td>
+      <td className="py-2 px-4 border-b text-center">
+        <button
+          className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 transition duration-200"
+          onClick={() => handleAddClick(item.Product?._id || item.product)} // Sử dụng item.product khi không có Product
+        >
+          Nhập hàng
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
           </table>
         </div>
 

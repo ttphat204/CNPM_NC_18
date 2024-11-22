@@ -1,7 +1,7 @@
 const orderModel = require("../models/order_model");
 const cartModel = require("../models/cart_model");
 const productModel = require("../models/product_model");
-const { deleteCart } = require('./cart_controller');
+const { deleteCart } = require("./cart_controller");
 const Kho = require("../models/kho_model");
 module.exports = {
   createOrder: async (req, res) => {
@@ -31,7 +31,6 @@ module.exports = {
         })),
       });
 
-
       for (const item of cart_items) {
         const product = await productModel.findById(item.product_id);
         if (product) {
@@ -42,7 +41,6 @@ module.exports = {
           await product.save();
         }
       }
-
 
       await cartModel.deleteMany({ account_id: req.account_id });
 
@@ -57,14 +55,13 @@ module.exports = {
           time: newOrder.time,
           items: newOrder.items,
           is_payment: newOrder.is_payment,
-        }
+        },
       });
     } catch (error) {
       console.error("Error creating order:", error);
       return res.status(500).json({ message: "Error creating order", error });
     }
   },
-
 
   getOrder: async (req, res) => {
     const { customer, address, phone, date, time } = req.query;
@@ -87,7 +84,6 @@ module.exports = {
     }
 
     try {
-
       const orders = await orderModel.find(body_query).populate({
         path: "items.product_id",
         select: "product_name price img",
@@ -115,7 +111,6 @@ module.exports = {
     const { orderId } = req.params;
 
     try {
-
       const order = await orderModel.findById(orderId).populate({
         path: "items.product_id",
         select: "product_name price img",
@@ -133,7 +128,6 @@ module.exports = {
         .json({ message: "Error fetching order details", error });
     }
   },
-
 
   getOrderSummary: async (req, res) => {
     try {
@@ -216,15 +210,14 @@ module.exports = {
 
     try {
       // Lấy thông tin đơn hàng
-      const order = await orderModel.findById(orderId).populate('items.product_id');
-
+      const order = await orderModel
+        .findById(orderId)
+        .populate("items.product_id");
       if (!order) {
         return res.status(404).json({ message: "Đơn hàng không tồn tại!" });
       }
 
-
       if (status === 1) {
-
         for (const item of order.items) {
           const productId = item.product_id._id;
           const quantityOrdered = item.quantity;
@@ -239,7 +232,9 @@ module.exports = {
 
           // Kiểm tra số lượng trong kho
           if (productInStock.quantity < quantityOrdered) {
-            console.log(`Số lượng trong kho không đủ cho sản phẩm ${productId}`);
+            console.log(
+              `Số lượng trong kho không đủ cho sản phẩm ${productId}`
+            );
             continue;
           }
 
@@ -247,9 +242,10 @@ module.exports = {
           productInStock.quantity -= quantityOrdered;
           await productInStock.save();
 
-          console.log(`Đã trừ ${quantityOrdered} sản phẩm ${productId} khỏi kho`);
+          console.log(
+            `Đã trừ ${quantityOrdered} sản phẩm ${productId} khỏi kho`
+          );
         }
-
 
         if (order.payment_method === "ZaloPay") {
           order.is_payment = true;
@@ -257,23 +253,23 @@ module.exports = {
           order.is_payment = false;
         }
         await order.save();
-
-
         if (accountId) {
           await deleteCart(accountId);
         }
 
-        return res.status(200).json({ message: "Cập nhật trạng thái thanh toán thành công và xóa giỏ hàng!" });
+        return res.status(200).json({
+          message: "Cập nhật trạng thái thanh toán thành công và xóa giỏ hàng!",
+        });
       } else {
-        return res.status(400).json({ message: "Thanh toán thất bại hoặc chưa hoàn thành!" });
+        return res
+          .status(400)
+          .json({ message: "Thanh toán thất bại hoặc chưa hoàn thành!" });
       }
     } catch (error) {
       console.error("Error updating payment status:", error);
-      return res.status(500).json({ message: "Lỗi khi cập nhật trạng thái thanh toán", error });
+      return res
+        .status(500)
+        .json({ message: "Lỗi khi cập nhật trạng thái thanh toán", error });
     }
   },
-
 };
-
-
-

@@ -10,6 +10,7 @@ import {
   CollectionIcon,
   ChartBarIcon,
   HomeIcon,
+  ChatIcon,
 } from "@heroicons/react/solid";
 import { } from "react";
 import axios from "axios";
@@ -189,7 +190,11 @@ const Sidebar = () => {
             onClick={() => SetChat(!showChat)}
             className="flex items-center hover:text-gray-300 w-full text-left"
           >
+
+            <ChatIcon className="w-5 h-5 mr-2" />
+
             <CollectionIcon className="w-5 h-5 mr-2" />
+
             Chăm sóc khách hàng
             <ChevronDownIcon
               className={`w-5 h-5 ml-auto transition-transform ${showChat ? "rotate-180" : ""

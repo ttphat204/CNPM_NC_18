@@ -12,9 +12,7 @@ const UserPage = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Mock accountId and token, replace with actual values
-  const accountId = "123";
-  const token = localStorage.getItem("token");
+  const account_id = localStorage.getItem("userId");
 
   // Fetch user info
   useEffect(() => {
@@ -23,10 +21,7 @@ const UserPage = () => {
       setErrorMessage(""); // Clear previous errors
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/accounts/info/${accountId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          `http://localhost:5000/api/accounts/info/${account_id}`
         );
         setUserData(response.data.user);
       } catch (error) {
@@ -38,7 +33,7 @@ const UserPage = () => {
     };
 
     fetchUserInfo();
-  }, [accountId, token]);
+  }, [account_id]);
 
   // Fetch orders (mock implementation)
   useEffect(() => {
@@ -46,10 +41,7 @@ const UserPage = () => {
       const fetchOrders = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:5000/api/orders/${accountId}`,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
+            `http://localhost:5000/api/orders/${account_id}`
           );
           setOrders(response.data.orders || []);
         } catch (error) {
@@ -60,7 +52,7 @@ const UserPage = () => {
 
       fetchOrders();
     }
-  }, [showOrderHistory, accountId, token]);
+  }, [showOrderHistory, account_id]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -68,16 +60,19 @@ const UserPage = () => {
   };
 
   const handleUpdateInfo = async () => {
+    const { username, phone, email } = editableData;
     try {
       const response = await axios.put(
         "http://localhost:5000/api/accounts/info",
-        editableData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { username, phone, email } // Send username instead of name
       );
       alert("Thông tin đã được cập nhật!");
-      setUserData((prevState) => ({ ...prevState, ...editableData }));
+      setUserData((prevState) => ({
+        ...prevState,
+        username: username || prevState.username,
+        phone: phone || prevState.phone,
+        email: email || prevState.email
+      }));
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating user data:", error);
@@ -86,7 +81,7 @@ const UserPage = () => {
   };
 
   const handleEditMode = () => {
-    setEditableData(userData); // Populate editableData with current userData
+    setEditableData({ username: userData.username, phone: userData.phone, email: userData.email }); // Populate editableData with current userData
     setIsEditing(true);
   };
 
@@ -106,7 +101,7 @@ const UserPage = () => {
               {!isEditing ? (
                 <div>
                   <p>
-                    <strong>Tên:</strong> {userData.name || "Chưa có dữ liệu"}
+                    <strong>Tên:</strong> {userData.username || "Chưa có dữ liệu"}
                   </p>
                   <p>
                     <strong>Số điện thoại:</strong>{" "}
@@ -116,10 +111,7 @@ const UserPage = () => {
                     <strong>Email:</strong>{" "}
                     {userData.email || "Chưa có dữ liệu"}
                   </p>
-                  <p>
-                    <strong>Địa chỉ:</strong>{" "}
-                    {userData.address || "Chưa có dữ liệu"}
-                  </p>
+
                   <button
                     onClick={handleEditMode}
                     className="bg-blue-500 text-white py-2 px-4 rounded mt-4"
@@ -129,10 +121,10 @@ const UserPage = () => {
                 </div>
               ) : (
                 <div>
-                  {["name", "phone", "email", "address"].map((field) => (
+                  {["username", "phone", "email"].map((field) => (
                     <div className="mb-4" key={field}>
                       <label className="block mb-2 capitalize">
-                        {field === "name" ? "Tên" : field}
+                        {field === "username" ? "Tên" : field}
                       </label>
                       <input
                         type="text"
@@ -171,20 +163,14 @@ const UserPage = () => {
 
               {showOrderHistory && (
                 <div className="mt-6">
-                  <h3 className="text-lg font-semibold mb-4">
-                    Lịch sử mua hàng
-                  </h3>
+                  <h3 className="text-lg font-semibold mb-4">Lịch sử mua hàng</h3>
                   {orders.length > 0 ? (
                     <table className="table-auto w-full border-collapse border border-gray-300">
                       <thead>
                         <tr>
-                          <th className="border border-gray-300 p-2">
-                            Mã đơn hàng
-                          </th>
+                          <th className="border border-gray-300 p-2">Mã đơn hàng</th>
                           <th className="border border-gray-300 p-2">Ngày</th>
-                          <th className="border border-gray-300 p-2">
-                            Sản phẩm
-                          </th>
+                          <th className="border border-gray-300 p-2">Sản phẩm</th>
                         </tr>
                       </thead>
                       <tbody>

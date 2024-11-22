@@ -10,6 +10,7 @@ import {
   CollectionIcon,
   ChartBarIcon,
   HomeIcon,
+  ChatIcon,
 } from "@heroicons/react/solid";
 import {} from "react";
 import axios from "axios";
@@ -158,7 +159,6 @@ const Sidebar = () => {
               </li>
             </ul>
           )}
-          
         </li>
 
         <li className="mb-2">
@@ -194,8 +194,8 @@ const Sidebar = () => {
             onClick={() => SetChat(!showChat)}
             className="flex items-center hover:text-gray-300 w-full text-left"
           >
-            <CollectionIcon className="w-5 h-5 mr-2" />
-         Chăm sóc khách hàng 
+            <ChatIcon className="w-5 h-5 mr-2" />
+            Chăm sóc khách hàng
             <ChevronDownIcon
               className={`w-5 h-5 ml-auto transition-transform ${
                 showChat ? "rotate-180" : ""
@@ -205,11 +205,10 @@ const Sidebar = () => {
           {showChat && (
             <ul className="ml-4 mt-2">
               <li className="mb-1">
-              <Link to="/admin" className="hover:text-gray-300">
-                Chat real time
+                <Link to="/admin" className="hover:text-gray-300">
+                  Chat real time
                 </Link>
               </li>
-             
             </ul>
           )}
         </li>
@@ -241,7 +240,6 @@ const Sidebar = () => {
             </ul>
           )}
         </li>
-        
 
         <li className="mb-2">
           <button
@@ -264,7 +262,6 @@ const Sidebar = () => {
                 </Link>
               </li>
             </ul>
-            
           )}
 
           <div className="mt-12 flex justify-center">

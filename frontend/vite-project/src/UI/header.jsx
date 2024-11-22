@@ -5,6 +5,7 @@ import {
   faChevronDown,
   faCartShopping,
   faHeart,
+  faComment,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -29,7 +30,12 @@ function Header() {
   });
 
   const navigate = useNavigate();
-  const dropdownRefs = useRef({});
+  const dropdownRefs = useRef({
+    search: null,
+    category: null,
+    location: null,
+    user: null,
+  });
 
   const locations = ["Phan Văn Tri", "Sala", "Phan Huy Ich"];
 
@@ -115,10 +121,12 @@ function Header() {
   };
 
   const handleClickOutside = (e) => {
+    // Kiểm tra xem click có nằm ngoài bất kỳ dropdown nào không
     if (
-      Object.values(dropdownRefs.current).every(
-        (ref) => ref && !ref.contains(e.target)
-      )
+      !dropdownRefs.current.category.contains(e.target) &&
+      !dropdownRefs.current.search.contains(e.target) &&
+      !dropdownRefs.current.location.contains(e.target) &&
+      !dropdownRefs.current.user.contains(e.target)
     ) {
       setState((prev) => ({
         ...prev,
@@ -147,28 +155,20 @@ function Header() {
         </Link>
 
         {/* Dropdown danh mục */}
-        <div
-          className="relative ml-8"
-          onMouseEnter={() =>
-            setState((prev) => ({
-              ...prev,
-              isDropdownOpen: { ...prev.isDropdownOpen, category: true },
-            }))
-          }
-          onMouseLeave={() =>
-            setState((prev) => ({
-              ...prev,
-              isDropdownOpen: { ...prev.isDropdownOpen, category: false },
-            }))
-          }
-        >
-          <div className="flex items-center text-white cursor-pointer pr-4 pl-2 py-1 rounded-md hover:bg-amber-500">
+        <div className="relative ml-8">
+          <div
+            className="flex items-center text-white cursor-pointer pr-4 pl-2 py-1 rounded-md hover:bg-amber-500"
+            onClick={() => toggleDropdown("category")}
+          >
             <FontAwesomeIcon icon={faBars} className="text-lg" />
             <p className="ml-2 text-base">Tất cả danh mục</p>
             <FontAwesomeIcon icon={faChevronDown} className="ml-2 text-sm" />
           </div>
           {state.isDropdownOpen.category && (
-            <div className="absolute bg-gray-100 shadow-md rounded-lg mt-2 w-80 z-50 transition-all duration-300 ease-in-out">
+            <div
+              ref={(ref) => (dropdownRefs.current.category = ref)}
+              className="absolute bg-gray-100 shadow-md rounded-lg mt-2 w-80 z-50 transition-all duration-300 ease-in-out"
+            >
               {state.categories.map((category) => (
                 <div
                   key={category._id}
@@ -222,7 +222,7 @@ function Header() {
         {/* Dropdown location */}
         <div className="relative flex items-center ml-8">
           <div
-            className="flex items-center text-white cursor-pointer"
+            className="flex items-center text-white cursor-pointer "
             onClick={() => toggleDropdown("location")}
           >
             <FontAwesomeIcon icon={faChevronDown} className="mr-2" />
@@ -231,12 +231,12 @@ function Header() {
           {state.isDropdownOpen.location && (
             <div
               ref={(ref) => (dropdownRefs.current.location = ref)}
-              className="absolute bg-white shadow-md rounded mt-2 w-56 z-50 transition-all duration-300 ease-in-out"
+              className="absolute bg-white shadow-md rounded mt-2 w-56 z-50 transition-all duration-300 ease-in-out mt-48"
             >
               {locations.map((location) => (
                 <div
                   key={location}
-                  className="p-3 hover:bg-gray-200 cursor-pointer"
+                  className="p-3 hover:bg-gray-200 cursor-pointer "
                   onClick={() => handleLocationChange(location)}
                 >
                   {location}
@@ -271,7 +271,7 @@ function Header() {
                   Đăng xuất
                 </div>
                 <div
-                   onClick={() => navigate("/messages")}
+                  onClick={() => navigate("/messages")}
                   className="p-3 text-gray-700 hover:bg-gray-100 cursor-pointer z-50"
                 >
                   Nhắn tin với Admin
@@ -289,13 +289,95 @@ function Header() {
             className="ml-4 text-2xl text-white cursor-pointer"
             onClick={() => navigate("/cart")}
           />
-              <FontAwesomeIcon
-            icon={faCartShopping}
+          <FontAwesomeIcon
+            icon={faComment}
             className="ml-4 text-2xl text-white cursor-pointer"
             onClick={() => navigate("/user")}
           />
         </div>
       </div>
+      {/* Màn hình nhỏ (dưới 640px) */}
+      <div className="bg-amber-400 w-full px-10 py-4 flex flex-col items-center md:hidden">
+        {/* Logo */}
+        <Link to="/home" className="flex items-center justify-center w-full">
+          <img src="/emart.png" alt="Emart" className="w-36 h-8 mb-4" />
+        </Link>
+
+        {/* Thanh Location và Thanh Tìm kiếm cùng dòng */}
+        <div className="flex flex-row w-full  justify-between">
+          {/* Thanh Location (ngắn hơn thanh Tìm kiếm) */}
+          <div className="relative w-1/3  ">
+            <div
+              className="flex items-center text-gray-500 cursor-pointer pl-2  py-1 rounded-2xl w-full bg-white text-xs"
+              onClick={() => toggleDropdown("location")}
+            >
+
+              {state.selectedLocation || "Phan Huy Ích"}  {/* Hiển thị "Phan Huy Ích" nếu không có giá trị */}
+            </div>
+            {state.isDropdownOpen.location && (
+              <div
+                ref={(ref) => (dropdownRefs.current.location = ref)}
+                className="absolute bg-white shadow-md rounded mt-2 w-full z-50 transition-all duration-300 ease-in-out"
+              >
+                {locations.map((location) => (
+                  <div
+                    key={location}
+                    className="p-3 hover:bg-gray-200 cursor-pointer"
+                    onClick={() => handleLocationChange(location)}
+                  >
+                    {location}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Thanh Tìm kiếm */}
+          <div className="relative w-2/3 pl-2 text-xs">
+            <input
+              ref={(ref) => (dropdownRefs.current.search = ref)}
+              className="bg-white w-full h-6 rounded-2xl pl-5 "
+              type="text"
+              value={state.searchQuery}
+              onChange={handleSearchChange}
+              placeholder="Tìm sản phẩm mong muốn ..."
+            />
+            {state.isDropdownOpen.search && (
+              <div className="absolute left-0 top-full bg-white shadow-lg rounded mt-1 w-full z-50 max-h-[300px] overflow-y-auto transition-all duration-300 ease-in-out">
+                {state.filteredProducts.length > 0 ? (
+                  state.filteredProducts.map((product) => (
+                    <div
+                      key={product._id}
+                      className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                      onClick={() => navigate(`/product/${product._id}`)}
+                    >
+                      {product.product_name}
+                    </div>
+                  ))
+                ) : (
+                  <div className="px-4 py-2 text-gray-500">Không tìm thấy sản phẩm</div>
+                )}
+              </div>
+            )}
+          </div>
+          <FontAwesomeIcon
+            icon={faHeart}
+            className="ml-4 text-2xl text-white cursor-pointer"
+            onClick={() => navigate("/LikeList")}
+          />
+          <FontAwesomeIcon
+            icon={faCartShopping}
+            className="ml-4 text-2xl text-white cursor-pointer"
+            onClick={() => navigate("/cart")}
+          />
+          <FontAwesomeIcon
+            icon={faComment}
+            className="ml-4 text-2xl text-white cursor-pointer"
+            onClick={() => navigate("/user")}
+          />
+        </div>
+      </div>
+
     </header>
   );
 }

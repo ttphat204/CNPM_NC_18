@@ -204,7 +204,6 @@ module.exports = {
         .json({ message: "Error fetching order summary", error });
     }
   },
-
   updatePaymentStatus: async (req, res) => {
     const { orderId, status, accountId } = req.body;
     console.log("Received accountId:", accountId);
@@ -214,7 +213,6 @@ module.exports = {
       const order = await orderModel
         .findById(orderId)
         .populate("items.product_id");
-
       if (!order) {
         return res.status(404).json({ message: "Đơn hàng không tồn tại!" });
       }
@@ -255,7 +253,6 @@ module.exports = {
           order.is_payment = false;
         }
         await order.save();
-
         if (accountId) {
           await deleteCart(accountId);
         }
@@ -275,11 +272,4 @@ module.exports = {
         .json({ message: "Lỗi khi cập nhật trạng thái thanh toán", error });
     }
   },
-
-
-  
-
-
 };
-
-

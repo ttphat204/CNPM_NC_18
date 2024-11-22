@@ -11,7 +11,7 @@ import {
   ChartBarIcon,
   HomeIcon,
 } from "@heroicons/react/solid";
-import {} from "react";
+import { } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
@@ -60,9 +60,8 @@ const Sidebar = () => {
             <UserIcon className="w-5 h-5 mr-2" />
             Quản lý người dùng
             <ChevronDownIcon
-              className={`w-5 h-5 ml-auto transition-transform ${
-                showUserMenu ? "rotate-180" : ""
-              }`}
+              className={`w-5 h-5 ml-auto transition-transform ${showUserMenu ? "rotate-180" : ""
+                }`}
             />
           </button>
           {showUserMenu && (
@@ -83,9 +82,8 @@ const Sidebar = () => {
             <CubeIcon className="w-5 h-5 mr-2" />
             Quản lý sản phẩm
             <ChevronDownIcon
-              className={`w-5 h-5 ml-auto transition-transform ${
-                showProductMenu ? "rotate-180" : ""
-              }`}
+              className={`w-5 h-5 ml-auto transition-transform ${showProductMenu ? "rotate-180" : ""
+                }`}
             />
           </button>
           {showProductMenu && (
@@ -111,9 +109,8 @@ const Sidebar = () => {
             <ClipboardCheckIcon className="w-5 h-5 mr-2" />
             Quản lý đơn hàng
             <ChevronDownIcon
-              className={`w-5 h-5 ml-auto transition-transform ${
-                showOrderMenu ? "rotate-180" : ""
-              }`}
+              className={`w-5 h-5 ml-auto transition-transform ${showOrderMenu ? "rotate-180" : ""
+                }`}
             />
           </button>
           {showOrderMenu && (
@@ -139,9 +136,8 @@ const Sidebar = () => {
             <OfficeBuildingIcon className="w-5 h-5 mr-2" />
             Quản lý nhà cung cấp
             <ChevronDownIcon
-              className={`w-5 h-5 ml-auto transition-transform ${
-                showNCCMenu ? "rotate-180" : ""
-              }`}
+              className={`w-5 h-5 ml-auto transition-transform ${showNCCMenu ? "rotate-180" : ""
+                }`}
             />
           </button>
           {showNCCMenu && (
@@ -158,7 +154,7 @@ const Sidebar = () => {
               </li>
             </ul>
           )}
-          
+
         </li>
 
         <li className="mb-2">
@@ -169,9 +165,8 @@ const Sidebar = () => {
             <TagIcon className="w-5 h-5 mr-2" />
             Quản lý khuyến mãi
             <ChevronDownIcon
-              className={`w-5 h-5 ml-auto transition-transform ${
-                showDiscount ? "rotate-180" : ""
-              }`}
+              className={`w-5 h-5 ml-auto transition-transform ${showDiscount ? "rotate-180" : ""
+                }`}
             />
           </button>
           {showDiscount && (
@@ -195,21 +190,20 @@ const Sidebar = () => {
             className="flex items-center hover:text-gray-300 w-full text-left"
           >
             <CollectionIcon className="w-5 h-5 mr-2" />
-         Chăm sóc khách hàng 
+            Chăm sóc khách hàng
             <ChevronDownIcon
-              className={`w-5 h-5 ml-auto transition-transform ${
-                showChat ? "rotate-180" : ""
-              }`}
+              className={`w-5 h-5 ml-auto transition-transform ${showChat ? "rotate-180" : ""
+                }`}
             />
           </button>
           {showChat && (
             <ul className="ml-4 mt-2">
               <li className="mb-1">
-              <Link to="/admin" className="hover:text-gray-300">
-                Chat real time
+                <Link to="/admin" className="hover:text-gray-300">
+                  Chat real time
                 </Link>
               </li>
-             
+
             </ul>
           )}
         </li>
@@ -221,9 +215,8 @@ const Sidebar = () => {
             <CollectionIcon className="w-5 h-5 mr-2" />
             Quản lý danh mục
             <ChevronDownIcon
-              className={`w-5 h-5 ml-auto transition-transform ${
-                showCategory ? "rotate-180" : ""
-              }`}
+              className={`w-5 h-5 ml-auto transition-transform ${showCategory ? "rotate-180" : ""
+                }`}
             />
           </button>
           {showCategory && (
@@ -241,7 +234,7 @@ const Sidebar = () => {
             </ul>
           )}
         </li>
-        
+
 
         <li className="mb-2">
           <button
@@ -251,9 +244,8 @@ const Sidebar = () => {
             <HomeIcon className="w-5 h-5 mr-2" />
             Quản lý kho
             <ChevronDownIcon
-              className={`w-5 h-5 ml-auto transition-transform ${
-                showKho ? "rotate-180" : ""
-              }`}
+              className={`w-5 h-5 ml-auto transition-transform ${showKho ? "rotate-180" : ""
+                }`}
             />
           </button>
           {showKho && (
@@ -264,7 +256,7 @@ const Sidebar = () => {
                 </Link>
               </li>
             </ul>
-            
+
           )}
 
           <div className="mt-12 flex justify-center">

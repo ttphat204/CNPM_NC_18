@@ -7,7 +7,7 @@ import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import ProductBlock from "./ProductBlock";
 import Footer from "./Footer";
-import Header from "./header";
+import Header from "./Header";
 
 const groupProducts = (products, itemsPerGroup) => {
   return products.reduce((result, product, index) => {
@@ -70,8 +70,8 @@ const Home = () => {
                 {idx === 0
                   ? "NO BRAND"
                   : idx === 1
-                    ? "NÔNG SẢN SẠCH"
-                    : "CHỈ CÓ TRÊN EMART"}
+                  ? "NÔNG SẢN SẠCH"
+                  : "CHỈ CÓ TRÊN EMART"}
               </div>
             </div>
           ))}

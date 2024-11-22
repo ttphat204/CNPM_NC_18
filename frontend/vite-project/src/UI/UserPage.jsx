@@ -64,14 +64,14 @@ const UserPage = () => {
     try {
       const response = await axios.put(
         "http://localhost:5000/api/accounts/info",
-        { username, phone, email } // Send username instead of name
+        { username, phone, email, response } // Send username instead of name
       );
       alert("Thông tin đã được cập nhật!");
       setUserData((prevState) => ({
         ...prevState,
         username: username || prevState.username,
         phone: phone || prevState.phone,
-        email: email || prevState.email
+        email: email || prevState.email,
       }));
       setIsEditing(false);
     } catch (error) {
@@ -81,7 +81,11 @@ const UserPage = () => {
   };
 
   const handleEditMode = () => {
-    setEditableData({ username: userData.username, phone: userData.phone, email: userData.email }); // Populate editableData with current userData
+    setEditableData({
+      username: userData.username,
+      phone: userData.phone,
+      email: userData.email,
+    }); // Populate editableData with current userData
     setIsEditing(true);
   };
 
@@ -101,7 +105,8 @@ const UserPage = () => {
               {!isEditing ? (
                 <div>
                   <p>
-                    <strong>Tên:</strong> {userData.username || "Chưa có dữ liệu"}
+                    <strong>Tên:</strong>{" "}
+                    {userData.username || "Chưa có dữ liệu"}
                   </p>
                   <p>
                     <strong>Số điện thoại:</strong>{" "}
@@ -163,14 +168,20 @@ const UserPage = () => {
 
               {showOrderHistory && (
                 <div className="mt-6">
-                  <h3 className="text-lg font-semibold mb-4">Lịch sử mua hàng</h3>
+                  <h3 className="text-lg font-semibold mb-4">
+                    Lịch sử mua hàng
+                  </h3>
                   {orders.length > 0 ? (
                     <table className="table-auto w-full border-collapse border border-gray-300">
                       <thead>
                         <tr>
-                          <th className="border border-gray-300 p-2">Mã đơn hàng</th>
+                          <th className="border border-gray-300 p-2">
+                            Mã đơn hàng
+                          </th>
                           <th className="border border-gray-300 p-2">Ngày</th>
-                          <th className="border border-gray-300 p-2">Sản phẩm</th>
+                          <th className="border border-gray-300 p-2">
+                            Sản phẩm
+                          </th>
                         </tr>
                       </thead>
                       <tbody>

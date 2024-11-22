@@ -1,6 +1,3 @@
-
-
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
@@ -40,7 +37,7 @@ function DetailProduct() {
       });
 
     axios
-      .get(`http://localhost:5000/api/kho/quantity/${id}`) 
+      .get(`http://localhost:5000/api/kho/quantity/${id}`)
       .then((response) => {
         setInventory(response.data);
       })
@@ -287,4 +284,3 @@ function DetailProduct() {
 }
 
 export default DetailProduct;
-
